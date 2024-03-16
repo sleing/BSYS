@@ -68,6 +68,8 @@ public class TsStudentInfo extends BaseEntity implements Serializable{
 	private String politics;
 
 
+	//111
+
 	public String getStudentId() {
 		return this.studentId;
 	}
