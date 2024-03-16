@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mt.ams.dao.awardeeEntity.AwardeeDao">
+    <!-- 条件查询 -->
+    <sql id="findAwardeesWhere">
+        from ams_awardee t0
+        LEFT JOIN ams_student_info t4 on t0.student_id =t4.eid
+        LEFT JOIN ams_award t5 on t0.award_id =t5.eid
+        <where>
+            <if test="filters!=null">
+                <if test="filters.Eid!=null">
+                    <if test="filterTypes.Eid=='单值'">
+
+                        AND t0.eid = #{filters.Eid}
+
+                    </if>
+                    <if test="filterTypes.Eid=='模糊'">
+
+                        AND t0.eid LIKE '%${filters.Eid}%'
+
+                    </if>
+                    <if test="filterTypes.Eid=='数组'">
+                        AND t0.eid in
+                        <foreach collection="filters.Eid" item="item" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.creatorName!=null">
+                    <if test="filterTypes.creatorName=='单值'">
+
+                        AND t0.creator_name LIKE '%${filters.creatorName}%'
+
+                    </if>
+                    <if test="filterTypes.creatorName=='模糊'">
+
+                        AND t0.creator_name LIKE '%${filters.creatorName}%'
+
+                    </if>
+                    <if test="filterTypes.creatorName=='数组'">
+                        AND t0.creator_name in
+                        <foreach collection="filters.creatorName" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.name!=null">
+                    <if test="filterTypes.name=='单值'">
+
+                        AND t0.name LIKE '%${filters.name}%'
+
+                    </if>
+                    <if test="filterTypes.name=='模糊'">
+
+                        AND t0.name LIKE '%${filters.name}%'
+
+                    </if>
+                    <if test="filterTypes.name=='数组'">
+                        AND t0.name in
+                        <foreach collection="filters.name" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.displayIndex!=null">
+                    <if test="filterTypes.displayIndex=='单值'">
+
+                        AND t0.display_index = #{filters.displayIndex}
+
+                    </if>
+                    <if test="filterTypes.displayIndex=='模糊'">
+
+                        AND t0.display_index LIKE '%${filters.displayIndex}%'
+
+                    </if>
+                    <if test="filterTypes.displayIndex=='数组'">
+                        AND t0.display_index in
+                        <foreach collection="filters.displayIndex" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.studentId!=null">
+                    <if test="filterTypes.studentId=='单值'">
+
+                        AND t0.student_id = #{filters.studentId}
+
+                    </if>
+                    <if test="filterTypes.studentId=='模糊'">
+
+                        AND t0.student_id LIKE '%${filters.studentId}%'
+
+                    </if>
+                    <if test="filterTypes.studentId=='数组'">
+                        AND t0.student_id in
+                        <foreach collection="filters.studentId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.awardId!=null">
+                    <if test="filterTypes.awardId=='单值'">
+
+                        AND t0.award_id = #{filters.awardId}
+
+                    </if>
+                    <if test="filterTypes.awardId=='模糊'">
+
+                        AND t0.award_id LIKE '%${filters.awardId}%'
+
+                    </if>
+                    <if test="filterTypes.awardId=='数组'">
+                        AND t0.award_id in
+                        <foreach collection="filters.awardId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.status!=null">
+                    <if test="filterTypes.status=='单值'">
+
+                        AND t0.status LIKE '%${filters.status}%'
+
+                    </if>
+                    <if test="filterTypes.status=='模糊'">
+
+                        AND t0.status LIKE '%${filters.status}%'
+
+                    </if>
+                    <if test="filterTypes.status=='数组'">
+                        AND t0.status in
+                        <foreach collection="filters.status" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.creatorId!=null">
+                    <if test="filterTypes.creatorId=='单值'">
+
+                        AND t0.creator_id = #{filters.creatorId}
+
+                    </if>
+                    <if test="filterTypes.creatorId=='模糊'">
+
+                        AND t0.creator_id LIKE '%${filters.creatorId}%'
+
+                    </if>
+                    <if test="filterTypes.creatorId=='数组'">
+                        AND t0.creator_id in
+                        <foreach collection="filters.creatorId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.remark!=null">
+                    <if test="filterTypes.remark=='单值'">
+
+                        AND t0.remark LIKE '%${filters.remark}%'
+
+                    </if>
+                    <if test="filterTypes.remark=='模糊'">
+
+                        AND t0.remark LIKE '%${filters.remark}%'
+
+                    </if>
+                    <if test="filterTypes.remark=='数组'">
+                        AND t0.remark in
+                        <foreach collection="filters.remark" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.createDatetime!=null">
+                    <![CDATA[AND DATE_FORMAT(t0.create_datetime,'%Y-%m-%d') >= #{filters.createDatetime[0]} && DATE_FORMAT(t0.create_datetime,'%Y-%m-%d') <= #{filters.createDatetime[1]}]]>
+                    <if test="filterTypes.createDatetime=='单值'">
+                    </if>
+                    <if test="filterTypes.createDatetime=='模糊'">
+                    </if>
+                    <if test="filterTypes.createDatetime=='数组'">
+                    </if>
+                </if>
+            </if>
+        </where>
+    </sql>
+
+
+    <!-- 根据分页参数查询数据集合 -->
+    <select id="findAwardees" resultType="com.mt.ams.entity.awardeeEntity.Awardee"
+            parameterType="com.mt.common.core.web.base.PageDTO">
+        select
+        t0.eid ,
+        t0.creator_name ,
+        t0.name ,
+        t0.display_index ,
+        t0.student_id ,
+        t0.award_id ,
+        t0.status ,
+        t0.creator_id ,
+        t0.remark ,
+        t0.create_datetime
+        ,t4.name as student_name
+
+        ,t5.name as award_name
+
+
+        <include refid="findAwardeesWhere"></include>
+
+        <if test="orderBys!=null">
+            <foreach collection="orderBys" item="item" index="index" open="order by" separator="," close="">
+                ${item}
+            </foreach>
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!-- 根据分页参数查询数据集合总条数 -->
+    <select id="findAwardeeTotalCount" resultType="java.lang.Long" parameterType="com.mt.common.core.web.base.PageDTO">
+        select count(t0.eid) as totalCount
+        <include refid="findAwardeesWhere"></include>
+    </select>
+
+    <!-- 根据查询所有数据集合 -->
+    <select id="findAllAwardees" resultType="com.mt.ams.entity.awardeeEntity.Awardee">
+        select t0.eid,
+               t0.creator_name,
+               t0.name,
+               t0.display_index,
+               t0.student_id,
+               t0.award_id,
+               t0.status,
+               t0.creator_id,
+               t0.remark,
+               t0.create_datetime
+                ,
+               t4.name as student_name
+                ,
+               t5.name as award_name
+
+        from ams_awardee t0
+                 LEFT JOIN ams_student_info t4 on t0.student_id = t4.eid
+                 LEFT JOIN ams_award t5 on t0.award_id = t5.eid
+        ORDER BY t0.create_datetime
+    </select>
+
+    <!-- 根据名称查询数据集合,只提取ID 和 Name -->
+    <select id="findAwardeesWithIdNameByName" resultType="com.mt.ams.entity.awardeeEntity.Awardee"
+            parameterType="java.lang.String">
+        select t0.eid,
+               t0.name
+        from ams_awardee t0
+        where t0.name like '%${awardeeName}%'
+        ORDER BY t0.name
+    </select>
+
+
+    <!-- 查询所有数据集合,只提取ID 和 Name -->
+    <select id="findAllAwardeesWithIdName" resultType="com.mt.ams.entity.awardeeEntity.Awardee">
+        select t0.eid,
+               t0.name
+        from ams_awardee t0
+        ORDER BY t0.name
+    </select>
+
+    <!-- 查询指定的实体,只提取ID 和 Name -->
+    <select id="findAwardeesWithIdNameById" resultType="com.mt.ams.entity.awardeeEntity.Awardee"
+            parameterType="java.lang.Long">
+        select t0.eid,
+               t0.name
+        from ams_awardee t0
+        where eid = #{awardeeId}
+    </select>
+
+    <!--  根据Id查询 -->
+    <select id="findAwardee" resultType="com.mt.ams.entity.awardeeEntity.Awardee" parameterType="java.lang.Long">
+        select *
+        from ams_awardee
+        where eid = #{awardeeId}
+    </select>
+
+    <!-- 根据ID查询指定的实体(包含外键) -->
+    <select id="findAwardeeWithForeignName" resultType="com.mt.ams.entity.awardeeEntity.Awardee"
+            parameterType="java.lang.Long">
+        select t0.eid,
+               t0.creator_name,
+               t0.name,
+               t0.display_index,
+               t0.student_id,
+               t0.award_id,
+               t0.status,
+               t0.creator_id,
+               t0.remark,
+               t0.create_datetime
+                ,
+               t4.name as student_name
+                ,
+               t5.name as award_name
+
+        from ams_awardee t0
+                 LEFT JOIN ams_student_info t4 on t0.student_id = t4.eid
+                 LEFT JOIN ams_award t5 on t0.award_id = t5.eid
+        where t0.eid = #{awardeeId}
+    </select>
+
+
+    <!--  保存 -->
+    <insert id="saveAwardee" parameterType="com.mt.ams.entity.awardeeEntity.Awardee" useGeneratedKeys="true">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into ams_awardee
+        (
+        creator_name ,
+        name ,
+        display_index ,
+        student_id ,
+        award_id ,
+        status ,
+        creator_id ,
+        remark ,
+        create_datetime
+        )
+        values
+        (
+        #{creatorName} ,
+        #{name} ,
+        #{displayIndex} ,
+        #{studentId} ,
+        #{awardId} ,
+        #{status} ,
+        #{creatorId} ,
+        #{remark} ,
+        #{createDatetime}
+        )
+    </insert>
+
+    <!--  编辑 -->
+    <update id="updateAwardee" parameterType="com.mt.ams.entity.awardeeEntity.Awardee">
+        update ams_awardee
+        set creator_name    = #{creatorName},
+            name            = #{name},
+            display_index   = #{displayIndex},
+            student_id      = #{studentId},
+            award_id        = #{awardId},
+            status          = #{status},
+            creator_id      = #{creatorId},
+            remark          = #{remark},
+            create_datetime = #{createDatetime}
+        where eid = #{eid}
+    </update>
+
+
+    <!--  根据Id删除 -->
+    <delete id="deleteAwardee" parameterType="java.lang.Long">
+        delete
+        from ams_awardee
+        where eid = #{awardeeId}
+    </delete>
+
+    <!--   delete by awardId -->
+    <delete id="deleteAwardeeByAwardId" parameterType="java.lang.Long">
+        delete
+        from ams_awardee
+        where award_id = #{awardId}
+    </delete>
+
+    <!--   select by awardId -->
+    <select id="findAwardeeByAwardId" resultType="com.mt.ams.entity.awardeeEntity.Awardee"
+            parameterType="java.lang.Long">
+        select t0.display_index,
+               t0.student_id
+        from ams_awardee t0
+        where t0.award_id = #{AwardId}
+    </select>
+
+    <select id="findStudentNameById" resultType="java.lang.Long">
+        select t0.student_id
+        from ams_awardee t0
+        where t0.award_id = #{awardId}
+    </select>
+
+</mapper>

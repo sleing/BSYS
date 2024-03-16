@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mt.common.system.mapper.BusinessLogDao">
+    <!-- 条件查询 -->
+    <sql id="findBusinessLogsWhere">
+        from erp_business_log t0
+        LEFT JOIN sys_user t3 on t0.user_id =t3.eid
+        <where>
+            <if test="filters!=null">
+                <if test="filters.Eid!=null">
+                    <if test="filterTypes.Eid=='单值'">
+
+                        AND t0.eid = #{filters.Eid}
+
+                    </if>
+                    <if test="filterTypes.Eid=='模糊'">
+
+                        AND t0.eid LIKE '%${filters.Eid}%'
+
+                    </if>
+                    <if test="filterTypes.Eid=='数组'">
+                        AND t0.eid in
+                        <foreach collection="filters.Eid" item="item" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.creatorName!=null">
+                    <if test="filterTypes.creatorName=='单值'">
+
+                        AND t0.creator_name LIKE '%${filters.creatorName}%'
+
+                    </if>
+                    <if test="filterTypes.creatorName=='模糊'">
+
+                        AND t0.creator_name LIKE '%${filters.creatorName}%'
+
+                    </if>
+                    <if test="filterTypes.creatorName=='数组'">
+                        AND t0.creator_name in
+                        <foreach collection="filters.creatorName" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.name!=null">
+                    <if test="filterTypes.name=='单值'">
+
+                        AND t0.name LIKE '%${filters.name}%'
+
+                    </if>
+                    <if test="filterTypes.name=='模糊'">
+
+                        AND t0.name LIKE '%${filters.name}%'
+
+                    </if>
+                    <if test="filterTypes.name=='数组'">
+                        AND t0.name in
+                        <foreach collection="filters.name" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.userId!=null">
+                    <if test="filterTypes.userId=='单值'">
+
+                        AND t0.user_id = #{filters.userId}
+
+                    </if>
+                    <if test="filterTypes.userId=='模糊'">
+
+                        AND t0.user_id LIKE '%${filters.userId}%'
+
+                    </if>
+                    <if test="filterTypes.userId=='数组'">
+                        AND t0.user_id in
+                        <foreach collection="filters.userId" item="item" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.logDate!=null">
+                    <if test="filterTypes.logDate=='单值'">
+                    </if>
+                    <if test="filterTypes.logDate=='模糊'">
+
+                        AND t0.log_date LIKE '%${filters.logDate}%'
+
+                    </if>
+                    <if test="filterTypes.logDate=='数组'">
+                    </if>
+                </if>
+                <if test="filters.entity!=null">
+                    <if test="filterTypes.entity=='单值'">
+
+                        AND t0.entity LIKE '%${filters.entity}%'
+
+                    </if>
+                    <if test="filterTypes.entity=='模糊'">
+
+                        AND t0.entity LIKE '%${filters.entity}%'
+
+                    </if>
+                    <if test="filterTypes.entity=='数组'">
+                        AND t0.entity in
+                        <foreach collection="filters.entity" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.entityLabel!=null">
+                    <if test="filterTypes.entityLabel=='单值'">
+
+                        AND t0.entity_label LIKE '%${filters.entityLabel}%'
+
+                    </if>
+                    <if test="filterTypes.entityLabel=='模糊'">
+
+                        AND t0.entity_label LIKE '%${filters.entityLabel}%'
+
+                    </if>
+                    <if test="filterTypes.entityLabel=='数组'">
+                        AND t0.entity_label in
+                        <foreach collection="filters.entityLabel" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.entityId!=null">
+                    <if test="filterTypes.entityId=='单值'">
+
+                        AND t0.entity_id = #{filters.entityId}
+
+                    </if>
+                    <if test="filterTypes.entityId=='模糊'">
+
+                        AND t0.entity_id LIKE '%${filters.entityId}%'
+
+                    </if>
+                    <if test="filterTypes.entityId=='数组'">
+                        AND t0.entity_id in
+                        <foreach collection="filters.entityId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.business!=null">
+                    <if test="filterTypes.business=='单值'">
+
+                        AND t0.business LIKE '%${filters.business}%'
+
+                    </if>
+                    <if test="filterTypes.business=='模糊'">
+
+                        AND t0.business LIKE '%${filters.business}%'
+
+                    </if>
+                    <if test="filterTypes.business=='数组'">
+                        AND t0.business in
+                        <foreach collection="filters.business" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.businessContent!=null">
+                    <if test="filterTypes.businessContent=='单值'">
+
+                        AND t0.business_content LIKE '%${filters.businessContent}%'
+
+                    </if>
+                    <if test="filterTypes.businessContent=='模糊'">
+
+                        AND t0.business_content LIKE '%${filters.businessContent}%'
+
+                    </if>
+                    <if test="filterTypes.businessContent=='数组'">
+                        AND t0.business_content in
+                        <foreach collection="filters.businessContent" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.data!=null">
+                    <if test="filterTypes.data=='单值'">
+
+                        AND t0.data LIKE '%${filters.data}%'
+
+                    </if>
+                    <if test="filterTypes.data=='模糊'">
+
+                        AND t0.data LIKE '%${filters.data}%'
+
+                    </if>
+                    <if test="filterTypes.data=='数组'">
+                        AND t0.data in
+                        <foreach collection="filters.data" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.status!=null">
+                    <if test="filterTypes.status=='单值'">
+
+                        AND t0.status LIKE '%${filters.status}%'
+
+                    </if>
+                    <if test="filterTypes.status=='模糊'">
+
+                        AND t0.status LIKE '%${filters.status}%'
+
+                    </if>
+                    <if test="filterTypes.status=='数组'">
+                        AND t0.status in
+                        <foreach collection="filters.status" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.creatorId!=null">
+                    <if test="filterTypes.creatorId=='单值'">
+
+                        AND t0.creator_id = #{filters.creatorId}
+
+                    </if>
+                    <if test="filterTypes.creatorId=='模糊'">
+
+                        AND t0.creator_id LIKE '%${filters.creatorId}%'
+
+                    </if>
+                    <if test="filterTypes.creatorId=='数组'">
+                        AND t0.creator_id in
+                        <foreach collection="filters.creatorId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.remark!=null">
+                    <if test="filterTypes.remark=='单值'">
+
+                        AND t0.remark LIKE '%${filters.remark}%'
+
+                    </if>
+                    <if test="filterTypes.remark=='模糊'">
+
+                        AND t0.remark LIKE '%${filters.remark}%'
+
+                    </if>
+                    <if test="filterTypes.remark=='数组'">
+                        AND t0.remark in
+                        <foreach collection="filters.remark" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.createDatetime!=null">
+                    <if test="filterTypes.createDatetime=='单值'">
+                    </if>
+                    <if test="filterTypes.createDatetime=='模糊'">
+
+                        AND t0.create_datetime LIKE '%${filters.createDatetime}%'
+
+                    </if>
+                    <if test="filterTypes.createDatetime=='数组'">
+                    </if>
+                </if>
+            </if>
+        </where>
+    </sql>
+
+
+    <!-- 根据分页参数查询数据集合 -->
+    <select id="findBusinessLogs" resultType="com.mt.common.system.entity.BusinessLog"
+            parameterType="com.mt.common.core.web.base.PageDTO">
+        select
+        t0.eid ,
+        t0.creator_name ,
+        t0.name ,
+        t0.user_id ,
+        t0.log_date ,
+        t0.entity ,
+        t0.entity_label ,
+        t0.entity_id ,
+        t0.business ,
+        t0.business_content ,
+        t0.data ,
+        t0.status ,
+        t0.creator_id ,
+        t0.remark ,
+        t0.create_datetime
+        ,t3.name as user_name
+
+
+        <include refid="findBusinessLogsWhere"></include>
+
+        <if test="orderBys!=null">
+            <foreach collection="orderBys" item="item" index="index" open="order by" separator="," close="">
+                ${item}
+            </foreach>
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!-- 根据分页参数查询数据集合总条数 -->
+    <select id="findBusinessLogTotalCount" resultType="java.lang.Long"
+            parameterType="com.mt.common.core.web.base.PageDTO">
+        select count(t0.eid) as totalCount
+        <include refid="findBusinessLogsWhere"></include>
+    </select>
+
+    <!-- 根据查询所有数据集合 -->
+    <select id="findAllBusinessLogs" resultType="com.mt.common.system.entity.BusinessLog">
+        select t0.eid,
+               t0.creator_name,
+               t0.name,
+               t0.user_id,
+               t0.log_date,
+               t0.entity,
+               t0.entity_label,
+               t0.entity_id,
+               t0.business,
+               t0.business_content,
+               t0.data,
+               t0.status,
+               t0.creator_id,
+               t0.remark,
+               t0.create_datetime
+                ,
+               t3.name as user_name
+
+        from erp_business_log t0
+                 LEFT JOIN sys_user t3 on t0.user_id = t3.eid
+        ORDER BY t0.create_datetime
+    </select>
+
+    <!-- 根据名称查询数据集合,只提取ID 和 Name -->
+    <select id="findBusinessLogsWithIdNameByName" resultType="com.mt.common.system.entity.BusinessLog"
+            parameterType="java.lang.String">
+        select t0.eid,
+               t0.name
+        from erp_business_log t0
+        where t0.name like '%${businessLogName}%'
+        ORDER BY t0.name
+    </select>
+
+
+    <!-- 查询所有数据集合,只提取ID 和 Name -->
+    <select id="findAllBusinessLogsWithIdName" resultType="com.mt.common.system.entity.BusinessLog">
+        select t0.eid,
+               t0.name
+        from erp_business_log t0
+        ORDER BY t0.name
+    </select>
+
+    <!-- 查询指定的实体,只提取ID 和 Name -->
+    <select id="findBusinessLogsWithIdNameById" resultType="com.mt.common.system.entity.BusinessLog"
+            parameterType="java.lang.Long">
+        select t0.eid,
+               t0.name
+        from erp_business_log t0
+        where eid = #{businessLogId}
+    </select>
+
+    <!--  根据Id查询 -->
+    <select id="findBusinessLog" resultType="com.mt.common.system.entity.BusinessLog" parameterType="java.lang.Long">
+        select *
+        from erp_business_log
+        where eid = #{businessLogId}
+    </select>
+
+    <!-- 根据ID查询指定的实体(包含外键) -->
+    <select id="findBusinessLogWithForeignName" resultType="com.mt.common.system.entity.BusinessLog"
+            parameterType="java.lang.Long">
+        select t0.eid,
+               t0.creator_name,
+               t0.name,
+               t0.user_id,
+               t0.log_date,
+               t0.entity,
+               t0.entity_label,
+               t0.entity_id,
+               t0.business,
+               t0.business_content,
+               t0.data,
+               t0.status,
+               t0.creator_id,
+               t0.remark,
+               t0.create_datetime
+                ,
+               t3.name as user_name
+
+        from erp_business_log t0
+                 LEFT JOIN sys_user t3 on t0.user_id = t3.eid
+        where t0.eid = #{businessLogId}
+    </select>
+
+
+    <!--  保存 -->
+    <insert id="saveBusinessLog" parameterType="com.mt.common.system.entity.BusinessLog" useGeneratedKeys="true">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into erp_business_log
+        (
+        creator_name ,
+        name ,
+        user_id ,
+        log_date ,
+        entity ,
+        entity_label ,
+        entity_id ,
+        business ,
+        business_content ,
+        data ,
+        status ,
+        creator_id ,
+        remark ,
+        create_datetime
+        )
+        values
+        (
+        #{creatorName} ,
+        #{name} ,
+        #{userId} ,
+        #{logDate} ,
+        #{entity} ,
+        #{entityLabel} ,
+        #{entityId} ,
+        #{business} ,
+        #{businessContent} ,
+        #{data} ,
+        #{status} ,
+        #{creatorId} ,
+        #{remark} ,
+        #{createDatetime}
+        )
+    </insert>
+
+    <!--  编辑 -->
+    <update id="updateBusinessLog" parameterType="com.mt.common.system.entity.BusinessLog">
+        update erp_business_log
+        set creator_name     = #{creatorName},
+            name             = #{name},
+            user_id          = #{userId},
+            log_date         = #{logDate},
+            entity           = #{entity},
+            entity_label     = #{entityLabel},
+            entity_id        = #{entityId},
+            business         = #{business},
+            business_content = #{businessContent},
+            data             = #{data},
+            status           = #{status},
+            creator_id       = #{creatorId},
+            remark           = #{remark},
+            create_datetime  = #{createDatetime}
+        where eid = #{eid}
+    </update>
+
+
+    <!--  根据Id删除 -->
+    <delete id="deleteBusinessLog" parameterType="java.lang.Long">
+        delete
+        from erp_business_log
+        where eid = #{businessLogId}
+    </delete>
+
+
+</mapper>

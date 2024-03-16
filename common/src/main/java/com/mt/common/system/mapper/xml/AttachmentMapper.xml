@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mt.common.system.mapper.AttachmentDao">
+    <!-- 条件查询 -->
+    <sql id="findAttachmentsWhere">
+        from sys_attachment t0
+        LEFT JOIN sys_user t6 on t0.upload_user_id =t6.EId
+        <where>
+            <if test="filters!=null">
+                <if test="filters.Eid!=null">
+                    <if test="filterTypes.Eid=='单值'">
+
+                        AND t0.eid = #{filters.Eid}
+
+                    </if>
+                    <if test="filterTypes.Eid=='模糊'">
+
+                        AND t0.eid LIKE  concat('%',#{filters.Eid},'%')
+
+                    </if>
+                    <if test="filterTypes.Eid=='数组'">
+                        AND t0.eid in
+                        <foreach collection="filters.Eid" item="item" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.creatorName!=null">
+                    <if test="filterTypes.creatorName=='单值'">
+
+                        AND t0.creator_name LIKE  concat('%',#{filters.creatorName},'%')
+
+                    </if>
+                    <if test="filterTypes.creatorName=='模糊'">
+
+                        AND t0.creator_name LIKE  concat('%',#{filters.creatorName},'%')
+
+                    </if>
+                    <if test="filterTypes.creatorName=='数组'">
+                        AND t0.creator_name in
+                        <foreach collection="filters.creatorName" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.name!=null">
+                    <if test="filterTypes.name=='单值'">
+
+                        AND t0.name LIKE  concat('%',#{filters.name},'%')
+
+                    </if>
+                    <if test="filterTypes.name=='模糊'">
+
+                        AND t0.name LIKE  concat('%',#{filters.name},'%')
+
+                    </if>
+                    <if test="filterTypes.name=='数组'">
+                        AND t0.name in
+                        <foreach collection="filters.name" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.attachmentRealName!=null">
+                    <if test="filterTypes.attachmentRealName=='单值'">
+
+                        AND t0.attachment_real_name LIKE  concat('%',#{filters.attachmentRealName},'%')
+
+                    </if>
+                    <if test="filterTypes.attachmentRealName=='模糊'">
+
+                        AND t0.attachment_real_name LIKE  concat('%',#{filters.attachmentRealName},'%')
+
+                    </if>
+                    <if test="filterTypes.attachmentRealName=='数组'">
+                        AND t0.attachment_real_name in
+                        <foreach collection="filters.attachmentRealName" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.attachmentLogicalName!=null">
+                    <if test="filterTypes.attachmentLogicalName=='单值'">
+
+                        AND t0.attachment_logical_name LIKE  concat('%',#{filters.attachmentLogicalName},'%')
+
+                    </if>
+                    <if test="filterTypes.attachmentLogicalName=='模糊'">
+
+                        AND t0.attachment_logical_name LIKE  concat('%',#{filters.attachmentLogicalName},'%')
+
+                    </if>
+                    <if test="filterTypes.attachmentLogicalName=='数组'">
+                        AND t0.attachment_logical_name in
+                        <foreach collection="filters.attachmentLogicalName" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.uploadTime!=null">
+                    <if test="filterTypes.uploadTime=='单值'">
+                    </if>
+                    <if test="filterTypes.uploadTime=='模糊'">
+
+                        AND t0.upload_time LIKE  concat('%',#{filters.uploadTime},'%')
+
+                    </if>
+                    <if test="filterTypes.uploadTime=='数组'">
+                    </if>
+                </if>
+                <if test="filters.uploadUserId!=null">
+                    <if test="filterTypes.uploadUserId=='单值'">
+
+                        AND t0.upload_user_id = #{filters.uploadUserId}
+
+                    </if>
+                    <if test="filterTypes.uploadUserId=='模糊'">
+
+                        AND t0.upload_user_id LIKE  concat('%',#{filters.uploadUserId},'%')
+
+                    </if>
+                    <if test="filterTypes.uploadUserId=='数组'">
+                        AND t0.upload_user_id in
+                        <foreach collection="filters.uploadUserId" item="item" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.attachmentAddr!=null">
+                    <if test="filterTypes.attachmentAddr=='单值'">
+
+                        AND t0.attachment_addr LIKE  concat('%',#{filters.attachmentAddr},'%')
+
+                    </if>
+                    <if test="filterTypes.attachmentAddr=='模糊'">
+
+                        AND t0.attachment_addr LIKE  concat('%',#{filters.attachmentAddr},'%')
+
+                    </if>
+                    <if test="filterTypes.attachmentAddr=='数组'">
+                        AND t0.attachment_addr in
+                        <foreach collection="filters.attachmentAddr" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.associateFormId!=null">
+                    <if test="filterTypes.associateFormId=='单值'">
+
+                        AND t0.associate_form_id LIKE  concat('%',#{filters.associateFormId},'%')
+
+                    </if>
+                    <if test="filterTypes.associateFormId=='模糊'">
+
+                        AND t0.associate_form_id LIKE  concat('%',#{filters.associateFormId},'%')
+
+                    </if>
+                    <if test="filterTypes.associateFormId=='数组'">
+                        AND t0.associate_form_id in
+                        <foreach collection="filters.associateFormId" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.associateFormName!=null">
+                    <if test="filterTypes.associateFormName=='单值'">
+
+                        AND t0.associate_form_name LIKE  concat('%',#{filters.associateFormName},'%')
+
+                    </if>
+                    <if test="filterTypes.associateFormName=='模糊'">
+
+                        AND t0.associate_form_name LIKE  concat('%',#{filters.associateFormName},'%')
+
+                    </if>
+                    <if test="filterTypes.associateFormName=='数组'">
+                        AND t0.associate_form_name in
+                        <foreach collection="filters.associateFormName" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.associateSize!=null">
+                    <if test="filterTypes.associateSize=='单值'">
+
+                        AND t0.associate_size = #{filters.associateSize}
+
+                    </if>
+                    <if test="filterTypes.associateSize=='模糊'">
+
+                        AND t0.associate_size LIKE  concat('%',#{filters.associateSize},'%')
+
+                    </if>
+                    <if test="filterTypes.associateSize=='数组'">
+                        AND t0.associate_size in
+                        <foreach collection="filters.associateSize" item="item" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.isEffective!=null">
+                    <if test="filterTypes.isEffective=='单值'">
+                    </if>
+                    <if test="filterTypes.isEffective=='模糊'">
+
+                        AND t0.is_effective LIKE  concat('%',#{filters.isEffective},'%')
+
+                    </if>
+                    <if test="filterTypes.isEffective=='数组'">
+                    </if>
+                </if>
+                <if test="filters.groupName!=null">
+                    <if test="filterTypes.groupName=='单值'">
+
+                        AND t0.group_name LIKE  concat('%',#{filters.groupName},'%')
+
+                    </if>
+                    <if test="filterTypes.groupName=='模糊'">
+
+                        AND t0.group_name LIKE  concat('%',#{filters.groupName},'%')
+
+                    </if>
+                    <if test="filterTypes.groupName=='数组'">
+                        AND t0.group_name in
+                        <foreach collection="filters.groupName" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.organizationId!=null">
+                    <if test="filterTypes.organizationId=='单值'">
+
+                        AND t0.organization_id = #{filters.organizationId}
+
+                    </if>
+                    <if test="filterTypes.organizationId=='模糊'">
+
+                        AND t0.organization_id LIKE  concat('%',#{filters.organizationId},'%')
+
+                    </if>
+                    <if test="filterTypes.organizationId=='数组'">
+                        AND t0.organization_id in
+                        <foreach collection="filters.organizationId" item="item" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.organizationName!=null">
+                    <if test="filterTypes.organizationName=='单值'">
+
+                        AND t0.organization_name LIKE  concat('%',#{filters.organizationName},'%')
+
+                    </if>
+                    <if test="filterTypes.organizationName=='模糊'">
+
+                        AND t0.organization_name LIKE  concat('%',#{filters.organizationName},'%')
+
+                    </if>
+                    <if test="filterTypes.organizationName=='数组'">
+                        AND t0.organization_name in
+                        <foreach collection="filters.organizationName" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.status!=null">
+                    <if test="filterTypes.status=='单值'">
+
+                        AND t0.status LIKE  concat('%',#{filters.status},'%')
+
+                    </if>
+                    <if test="filterTypes.status=='模糊'">
+
+                        AND t0.status LIKE  concat('%',#{filters.status},'%')
+
+                    </if>
+                    <if test="filterTypes.status=='数组'">
+                        AND t0.status in
+                        <foreach collection="filters.status" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.creatorId!=null">
+                    <if test="filterTypes.creatorId=='单值'">
+
+                        AND t0.creator_id = #{filters.creatorId}
+
+                    </if>
+                    <if test="filterTypes.creatorId=='模糊'">
+
+                        AND t0.creator_id LIKE  concat('%',#{filters.creatorId},'%')
+
+                    </if>
+                    <if test="filterTypes.creatorId=='数组'">
+                        AND t0.creator_id in
+                        <foreach collection="filters.creatorId" item="item" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.remark!=null">
+                    <if test="filterTypes.remark=='单值'">
+
+                        AND t0.remark LIKE  concat('%',#{filters.remark},'%')
+
+                    </if>
+                    <if test="filterTypes.remark=='模糊'">
+
+                        AND t0.remark LIKE  concat('%',#{filters.remark},'%')
+
+                    </if>
+                    <if test="filterTypes.remark=='数组'">
+                        AND t0.remark in
+                        <foreach collection="filters.remark" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.createDatetime!=null">
+                    <if test="filterTypes.createDatetime=='单值'">
+                    </if>
+                    <if test="filterTypes.createDatetime=='模糊'">
+
+                        AND t0.create_datetime LIKE  concat('%',#{filters.createDatetime},'%')
+
+                    </if>
+                    <if test="filterTypes.createDatetime=='数组'">
+                    </if>
+                </if>
+            </if>
+        </where>
+    </sql>
+
+
+    <!-- 根据分页参数查询数据集合 -->
+    <select id="findAttachments" resultType="com.mt.common.system.entity.Attachment" parameterType="com.mt.common.core.web.base.PageDTO">
+        select
+        t0.eid  ,
+        t0.creator_name  ,
+        t0.name  ,
+        t0.attachment_real_name  ,
+        t0.attachment_logical_name  ,
+        t0.upload_time  ,
+        t0.upload_user_id  ,
+        t0.attachment_addr  ,
+        t0.associate_form_id  ,
+        t0.associate_form_name  ,
+        t0.associate_size  ,
+        t0.is_effective  ,
+        t0.group_name  ,
+        t0.organization_id  ,
+        t0.organization_name  ,
+        t0.status  ,
+        t0.creator_id  ,
+        t0.remark  ,
+        t0.create_datetime
+        ,t6.name as upload_user_name
+
+
+        <include refid="findAttachmentsWhere"></include>
+
+        <if test="orderBys!=null">
+            <foreach collection="orderBys" item="item" index="index" open="order by" separator="," close="">
+                #{item}
+            </foreach>
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!-- 根据分页参数查询数据集合总条数 -->
+    <select id="findAttachmentTotalCount" resultType="java.lang.Long" parameterType="com.mt.common.core.web.base.PageDTO">
+        select count(Eid) as totalCount
+        <include refid="findAttachmentsWhere"></include>
+    </select>
+
+    <!-- 根据查询所有数据集合 -->
+    <select id="findAllAttachments" resultType="com.mt.common.system.entity.Attachment" >
+        select
+            t0.eid  ,
+            t0.creator_name  ,
+            t0.name  ,
+            t0.attachment_real_name  ,
+            t0.attachment_logical_name  ,
+            t0.upload_time  ,
+            t0.upload_user_id  ,
+            t0.attachment_addr  ,
+            t0.associate_form_id  ,
+            t0.associate_form_name  ,
+            t0.associate_size  ,
+            t0.is_effective  ,
+            t0.group_name  ,
+            t0.organization_id  ,
+            t0.organization_name  ,
+            t0.status  ,
+            t0.creator_id  ,
+            t0.remark  ,
+            t0.create_datetime,
+            t0.attachment_id
+                ,t6.name as upload_user_name
+
+        from sys_attachment t0
+                 LEFT JOIN sys_user t6 on t0.upload_user_id =t6.EId
+        ORDER BY t0.create_datetime
+    </select>
+
+    <!-- 根据名称查询数据集合,只提取ID 和 Name -->
+    <select id="findAttachmentsWithIdNameByName" resultType="com.mt.common.system.entity.Attachment" parameterType="java.lang.String">
+        select
+            t0.Eid,t0.Name
+        from sys_attachment t0
+        where t0.name LIKE  concat('%',#{attachmentName},'%')
+        ORDER BY t0.Name
+    </select>
+
+
+    <!-- 查询所有数据集合,只提取ID 和 Name -->
+    <select id="findAllAttachmentsWithIdName" resultType="com.mt.common.system.entity.Attachment" >
+        select
+            t0.Eid,t0.Name
+        from sys_attachment t0
+        ORDER BY t0.Name
+    </select>
+
+    <!-- 查询指定的实体,只提取ID 和 Name -->
+    <select id="findAttachmentsWithIdNameById" resultType="com.mt.common.system.entity.Attachment" parameterType="java.lang.Long">
+        select
+            t0.Eid,t0.Name
+        from sys_attachment t0
+        where eid = #{attachmentId}
+    </select>
+
+    <!--  根据Id查询 -->
+    <select id="findAttachment" resultType="com.mt.common.system.entity.Attachment" parameterType="java.lang.Long">
+        select * from sys_attachment where eid = #{attachmentId}
+    </select>
+
+    <!-- 根据ID查询指定的实体(包含外键) -->
+    <select id="findAttachmentWithForeignName" resultType="com.mt.common.system.entity.Attachment" parameterType="java.lang.Long">
+        select
+            t0.eid  ,
+            t0.creator_name  ,
+            t0.name  ,
+            t0.attachment_real_name  ,
+            t0.attachment_logical_name  ,
+            t0.upload_time  ,
+            t0.upload_user_id  ,
+            t0.attachment_addr  ,
+            t0.associate_form_id  ,
+            t0.associate_form_name  ,
+            t0.associate_size  ,
+            t0.is_effective  ,
+            t0.group_name  ,
+            t0.organization_id  ,
+            t0.organization_name  ,
+            t0.status  ,
+            t0.creator_id  ,
+            t0.remark  ,
+            t0.create_datetime,
+            t0.attachment_id
+                ,t6.name as upload_user_name
+
+        from sys_attachment t0
+                 LEFT JOIN sys_user t6 on t0.upload_user_id =t6.EId
+        where t0.eid = #{attachmentId}
+    </select>
+
+
+    <!--  保存 -->
+    <insert id="saveAttachment" parameterType="com.mt.common.system.entity.Attachment" useGeneratedKeys="true">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long" >
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into sys_attachment
+        (
+        creator_name ,
+        name ,
+        attachment_real_name ,
+        attachment_logical_name ,
+        upload_time ,
+        upload_user_id ,
+        attachment_addr ,
+        associate_form_id ,
+        associate_form_name ,
+        associate_size ,
+        is_effective ,
+        group_name ,
+        organization_id ,
+        organization_name ,
+        status ,
+        creator_id ,
+        remark ,
+        create_datetime,
+        attachment_id
+        )
+        values
+        (
+        #{creatorName} ,
+        #{name} ,
+        #{attachmentRealName} ,
+        #{attachmentLogicalName} ,
+        #{uploadTime} ,
+        #{uploadUserId} ,
+        #{attachmentAddr} ,
+        #{associateFormId} ,
+        #{associateFormName} ,
+        #{associateSize} ,
+        #{isEffective} ,
+        #{groupName} ,
+        #{organizationId} ,
+        #{organizationName} ,
+        #{status} ,
+        #{creatorId} ,
+        #{remark} ,
+        #{createDatetime},
+        #{attachmentId}
+
+        )
+    </insert>
+
+    <!--  编辑 -->
+    <update id="updateAttachment" parameterType="com.mt.common.system.entity.Attachment" >
+        update sys_attachment set
+                                  creator_name = #{creatorName} ,
+                                  name = #{name} ,
+                                  attachment_real_name = #{attachmentRealName} ,
+                                  attachment_logical_name = #{attachmentLogicalName} ,
+                                  upload_time = #{uploadTime} ,
+                                  upload_user_id = #{uploadUserId} ,
+                                  attachment_addr = #{attachmentAddr} ,
+                                  associate_form_id = #{associateFormId} ,
+                                  associate_form_name = #{associateFormName} ,
+                                  associate_size = #{associateSize} ,
+                                  is_effective = #{isEffective} ,
+                                  group_name = #{groupName} ,
+                                  organization_id = #{organizationId} ,
+                                  organization_name = #{organizationName} ,
+                                  status = #{status} ,
+                                  creator_id = #{creatorId} ,
+                                  remark = #{remark} ,
+                                  create_datetime = #{createDatetime},
+                                  attachment_id=#{attachment_id}
+        where eid=#{eid}
+    </update>
+
+
+    <!--  根据Id删除 -->
+    <delete id="deleteAttachment"  parameterType="java.lang.Long">
+        delete from sys_attachment where eid = #{attachmentId}
+    </delete>
+
+    <!--  根据attachmentId删除 -->
+    <delete id="deleteAttachmentOfAttId"  parameterType="java.lang.String">
+        delete from sys_attachment where attachment_id = #{attachmentId}
+    </delete>
+
+<!--    通过associate_form_id和associate_form_id删除附件-->
+    <delete id="deleteAttachmentByFormIdAndFromName"  parameterType="java.lang.String">
+        delete from sys_attachment where asscioate_form_id =#{formId} and asscioate_form_name =#{formName}
+    </delete>
+
+    <!--  根据attachmentId查找附件 -->
+    <select id="findAttachmentByAttachmentId" resultType="com.mt.common.system.entity.Attachment" parameterType="java.lang.String">
+        select * from sys_attachment where attachment_id = #{attachmentId}
+    </select>
+
+    <select id="findLicenseByIdAndName" resultType="java.lang.Long"  parameterType="com.mt.common.system.entity.Attachment">
+        select eid from sys_attachment where associate_form_id=#{associateFormId} and associate_form_name=#{associateFormName} and remark=#{remark}
+    </select>
+
+
+
+
+<!--   1111111111111111111 -->
+    <!--  根据code查询 -->
+    <select id="findEmployeeByCode" resultType="com.mt.common.system.entity.User" parameterType="java.lang.String">
+        select * from sys_user where code = #{code}
+    </select>
+
+    <select id="getFileRealName" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT attachment_real_name  from sys_attachment where attachment_addr=#{fileAddress}
+    </select>
+
+    <select id="findAllUploadedFilesByIdAndName" resultType="com.mt.common.system.entity.Attachment" parameterType="com.mt.common.system.entity.Attachment">
+        select
+            t0.*
+        from sys_attachment t0
+        where  associate_form_id=#{associateFormId} and associate_form_name=#{associateFormName}
+    </select>
+
+
+    <!--根据id/name/人的id查询公示表-->
+    <select id="findAttachmentByIdAndName" resultType="com.mt.common.system.entity.Attachment">
+        select * from sys_attachment where associate_form_id=#{formId} and associate_form_name=#{formName} and remark=#{remark}
+    </select>
+    <delete id="deleteUploadedFile" >
+        delete from sys_attachment where associate_form_id=#{formId} and associate_form_name=#{formName}
+    </delete>
+
+    <select id="findUploadedFileByFormIdAndFormName" parameterType="java.lang.String"  resultType="com.mt.common.system.entity.Attachment">
+        select * from sys_attachment where associate_form_id=#{formId} and associate_form_name=#{formName}
+    </select>
+
+    <select id="findUploadedFileByFormIdAndFormNameAndGroupName" parameterType="java.lang.String"  resultType="com.mt.common.system.entity.Attachment">
+        select * from sys_attachment where associate_form_id=#{formId} and associate_form_name=#{formName} and group_name=#{groupName}
+    </select>
+
+    <delete id="deleteUploadedFileByGroupName" >
+        delete from sys_attachment where associate_form_id=#{formId} and associate_form_name=#{formName} and group_name=#{groupName}
+    </delete>
+    <select id="findAttachmentByFormIdAndFromName" resultType="com.mt.common.system.entity.Attachment" parameterType="java.lang.String">
+        select * from sys_attachment where associate_form_id=#{formId} and associate_form_name=#{formName}
+    </select>
+</mapper>

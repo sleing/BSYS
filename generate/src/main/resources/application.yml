@@ -1,0 +1,38 @@
+server:
+  port: 8111
+
+
+spring:
+  application:
+    name: cisdi-info-ms-cms_sample
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    #    url: jdbc:mysql://47.106.35.50:3306/lj?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Hongkong&allowMultiQueries=true
+    #    username: ddd
+    #    password: ddd306ddd
+
+    #    新的数据库地址
+    url: jdbc:mysql://39.98.84.42:3306/lj_dev?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Hongkong&allowMultiQueries=true
+    username: root
+    password: ddd306ddd
+
+#    url: jdbc:mysql://localhost:3306/dcm?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Hongkong
+#    username: root
+#    password: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQL5InnoDBDialect           #指定数据库引擎
+logging:
+  file: d:/D4/DDDLog/ddd.log #日志文件输出目录
+  level:
+    com.ddd.info: debug #日志Level设定
+mybatis:
+  mapper-locations:
+  - classpath*:/com/ddd/info/sqlMapper/**/*.xml     #mybaits mapperxml文件路径，使用了cms后不要修改或者删除
+  - classpath*:/com/ddd/info/**/dao/**/mapper/*.xml     #mybaits mapperxml文件路径
+  configuration:
+    map-underscore-to-camel-case: true

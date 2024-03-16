@@ -1,0 +1,81 @@
+#set($vmType="")
+#set($extension=".sql")
+#set($packageName="${entityClass.packages.replace('entity', 'dao')}.mapper")
+#set($EntityNameUp="${entityClass.className}")
+#set($EntityNameLow="${entityClass.className.substring(0,1).toLowerCase()}${entityClass.className.substring(1)}")
+#set($className="${entityClass.className}")
+#set($path="${config.serverPath}/src/main/resources/${packageName.replace('.', '/')}")
+#set($outputFile="${path}/${className}${extension}")
+
+/* find(newMenuId)  */ select max(`menu_id`)+1  as value from  `sys_menu`;
+/* find(moduleId)  */ select `menu_id` from  `sys_menu` where `title`  ="${entityClass.moduleLabel}";
+/* find(sort_number)  */ select IFNULL(max(t.sort_number),0)+1 as value from sys_menu  t where parent_id  = 0 ;
+/* execute(!moduleId)  */ insert into `sys_menu`(`menu_id`, `parent_id`,`title`,`icon`,`path`,`component`,`menu_type`,`open_type`,`sort_number`,`authority`) values
+(${newMenuId}, 0, '${entityClass.moduleLabel}', 'MenuOutlined', '','', 0,0, ${sort_number}, '');
+/* execute(!moduleId)  */ insert into `sys_role_menu`(`role_id`,`menu_id`) values (1, ${newMenuId});
+/* find(moduleId)  */ select `menu_id` from  `sys_menu` where `title`  ="${entityClass.moduleLabel}";
+
+/* find(menuId)  */ select `menu_id` from  `sys_menu` where `title`  ="${entityClass.label}管理";
+/* find(newMenuId)  */ select max(`menu_id`)+1 as value  from  `sys_menu`;
+/* find(sort_number)  */ select IFNULL(max(t.sort_number),0)+1 as value from sys_menu  t where parent_id  = ${moduleId} ;
+/* execute(!menuId)  */ insert into `sys_menu`(`menu_id`, `parent_id`,`title`,`icon`,`path`,`component`,`menu_type`,`open_type`,`sort_number`,`authority`) values
+(${newMenuId}, ${moduleId}, '${entityClass.label}管理', 'MenuOutlined', '/${entityClass.subSystemName}/${entityClass.moduleName}/${entityClass.className.substring(0,1).toLowerCase()}${entityClass.className.substring(1)}',
+'/${entityClass.subSystemName}/${entityClass.moduleName}/${entityClass.className.substring(0,1).toLowerCase()}${entityClass.className.substring(1)}',0, 0,${sort_number}, '${entityClass.subSystemName}:${entityClass.moduleName}:${entityClass.className}:view');
+/* execute(!menuId)  */ insert into `sys_role_menu`(`role_id`,`menu_id`) values (1, ${newMenuId});
+/* find(moduleId)  */ select `menu_id` from  `sys_menu` where `title`  ="${entityClass.label}管理";
+
+/* find(menuId)  */ select `menu_id` from  `sys_menu` where `title`  = "查询${entityClass.label}";
+/* find(newMenuId)  */ select max(`menu_id`)+1 as value  from  `sys_menu`;
+/* find(sort_number)  */ select IFNULL(max(t.sort_number),0)+1 as value from sys_menu  t where parent_id  = ${moduleId} ;
+/* execute(!menuId)  */ insert into `sys_menu`(`menu_id`, `parent_id`,`title`,`icon`,`path`,`component`,`menu_type`,`open_type`,`sort_number`,`authority`) values
+(${newMenuId}, ${moduleId}, '查询${entityClass.label}', '', '',
+'',1,0, ${sort_number}, '${entityClass.subSystemName}:${entityClass.moduleName}:${entityClass.className}:view');
+/* execute(!menuId)  */ insert into `sys_role_menu`(`role_id`,`menu_id`) values (1, ${newMenuId});
+
+/* find(menuId)  */ select `menu_id` from  `sys_menu` where `title`  = "添加${entityClass.label}";
+/* find(newMenuId)  */ select max(`menu_id`)+1 as value from  `sys_menu`;
+/* find(sort_number)  */ select IFNULL(max(t.sort_number),0)+1 as value from sys_menu  t where parent_id  = ${moduleId} ;
+/* execute(!menuId)  */ insert into `sys_menu`(`menu_id`, `parent_id`,`title`,`icon`,`path`,`component`,`menu_type`,`open_type`,`sort_number`,`authority`) values
+(${newMenuId}, ${moduleId}, '添加${entityClass.label}', '', '', '', 1, 0,${sort_number}, '${entityClass.subSystemName}:${entityClass.moduleName}:${entityClass.className}:add');
+/* execute(!menuId)  */ insert into `sys_role_menu`(`role_id`,`menu_id`) values (1, ${newMenuId});
+
+/* find(menuId)  */ select `menu_id` from  `sys_menu` where `title`  = "修改${entityClass.label}";
+/* find(newMenuId)  */ select max(`menu_id`) +1 as value from  `sys_menu`;
+/* find(sort_number)  */ select IFNULL(max(t.sort_number),0)+1  as value from sys_menu  t where parent_id  = ${moduleId} ;
+/* execute(!menuId)  */ insert into `sys_menu`(`menu_id`, `parent_id`,`title`,`icon`,`path`,`component`,`menu_type`,`open_type`,`sort_number`,`authority`) values
+(${newMenuId}, ${moduleId}, '修改${entityClass.label}', '', '',
+'', 1,0, ${sort_number}, '${entityClass.subSystemName}:${entityClass.moduleName}:${entityClass.className}:update');
+/* execute(!menuId)  */ insert into `sys_role_menu`(`role_id`,`menu_id`) values (1, ${newMenuId});
+
+/* find(menuId)  */ select `menu_id` from  `sys_menu` where `title`  = "删除${entityClass.label}";
+/* find(newMenuId)  */ select max(`menu_id`)+1 as value from  `sys_menu`;
+/* find(sort_number)  */ select IFNULL(max(t.sort_number),0)+1 as value from sys_menu  t where parent_id  =  ${moduleId} ;
+/* execute(!menuId)  */ insert into `sys_menu`(`menu_id`, `parent_id`,`title`,`icon`,`path`,`component`,`menu_type`,`open_type`,`sort_number`,`authority`) values
+(${newMenuId}, ${moduleId}, '删除${entityClass.label}', '', '',
+'', 1, 0,${sort_number}, '${entityClass.subSystemName}:${entityClass.moduleName}:${entityClass.className}:remove');
+/* execute(!menuId)  */ insert into `sys_role_menu`(`role_id`,`menu_id`) values (1, ${newMenuId});
+
+
+
+
+#foreach($columnInfo in $entityClass.columnInfos)
+    #if($columnInfo.definitionType == "CodeTable")
+
+/* find(dict_id)  */ select `dict_id` from  `sys_dict` where `dict_name`  ="${columnInfo.codeTable}";
+/* find(new_dict_id)  */ select max(`dict_id`) +1 as value from  `sys_dict` ;
+/* find(sort_number)  */ select IFNULL(max(t.sort_number),0)+1  as value from sys_dict  t ;
+/* execute(!dict_id)  */ insert INTO `sys_dict` (dict_id,dict_name,sort_number)
+    VALUES (${new_dict_id}, "${columnInfo.codeTable}", ${sort_number});
+/* find(dict_id)  */ select `dict_id` from  `sys_dict` where `dict_name`  ="${columnInfo.codeTable}";
+
+        #foreach($codeTableOption in $columnInfo.codeTableOptions)
+
+/* find(dict_parent_id)  */ select `dict_id` from  `sys_dict` where parent_id = ${dict_id} and `dict_name`  ="${codeTableOption}";
+/* find(new_dict_id)  */ select max(`dict_id`) +1 as value from  `sys_dict` ;
+/* find(sort_number)  */ select IFNULL(max(t.sort_number),0)+1  as value from sys_dict t  where t.parent_id = ${dict_id} ;
+/* execute(!dict_parent_id)  */ insert INTO `sys_dict` (dict_id,parent_id,dict_name,sort_number)
+        VALUES (${new_dict_id},${dict_id}, "${codeTableOption}", ${sort_number});
+        #end
+
+    #end
+#end

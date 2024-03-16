@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mt.tms.dao.tsactivityEntity.TsActivityDao">
+    <!-- 条件查询 -->
+    <sql id="findTsActivitysWhere">
+        from tms_ts_activity t0
+                    LEFT JOIN tms_ts_student_info t6 on t0.activity_host_id =t6.eid
+                <where>
+            <if test="filters!=null">
+                                    <if test="filters.Eid!=null">
+                        <if test="filterTypes.Eid=='单值'">
+                                                        
+                                AND t0.eid = #{filters.Eid}
+
+                                                    </if>
+                        <if test="filterTypes.Eid=='模糊'">
+
+                            AND t0.eid LIKE  '%${filters.Eid}%'
+
+                        </if>
+                        <if test="filterTypes.Eid=='数组'">
+                                                                                        AND t0.eid in
+                                <foreach collection="filters.Eid" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.creatorName!=null">
+                        <if test="filterTypes.creatorName=='单值'">
+                            
+                                AND t0.creator_name LIKE  '%${filters.creatorName}%'
+
+                                                                                </if>
+                        <if test="filterTypes.creatorName=='模糊'">
+
+                            AND t0.creator_name LIKE  '%${filters.creatorName}%'
+
+                        </if>
+                        <if test="filterTypes.creatorName=='数组'">
+                                                            AND t0.creator_name in
+                                <foreach collection="filters.creatorName" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.name!=null">
+                        <if test="filterTypes.name=='单值'">
+                            
+                                AND t0.name LIKE  '%${filters.name}%'
+
+                                                                                </if>
+                        <if test="filterTypes.name=='模糊'">
+
+                            AND t0.name LIKE  '%${filters.name}%'
+
+                        </if>
+                        <if test="filterTypes.name=='数组'">
+                                                            AND t0.name in
+                                <foreach collection="filters.name" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.activityIndex!=null">
+                        <if test="filterTypes.activityIndex=='单值'">
+                                                        
+                                AND t0.activity_index = #{filters.activityIndex}
+
+                                                    </if>
+                        <if test="filterTypes.activityIndex=='模糊'">
+
+                            AND t0.activity_index LIKE  '%${filters.activityIndex}%'
+
+                        </if>
+                        <if test="filterTypes.activityIndex=='数组'">
+                                                                                        AND t0.activity_index in
+                                <foreach collection="filters.activityIndex" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.activityType!=null">
+                        <if test="filterTypes.activityType=='单值'">
+                            
+                                AND t0.activity_type LIKE  '%${filters.activityType}%'
+
+                                                                                </if>
+                        <if test="filterTypes.activityType=='模糊'">
+
+                            AND t0.activity_type LIKE  '%${filters.activityType}%'
+
+                        </if>
+                        <if test="filterTypes.activityType=='数组'">
+                                                            AND t0.activity_type in
+                                <foreach collection="filters.activityType" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.activityDate!=null">
+                        <if test="filterTypes.activityDate=='单值'">
+                                                                                </if>
+                        <if test="filterTypes.activityDate=='模糊'">
+
+                            AND t0.activity_date LIKE  '%${filters.activityDate}%'
+
+                        </if>
+                        <if test="filterTypes.activityDate=='数组'">
+                                                                                </if>
+                    </if>
+                                    <if test="filters.activityHostId!=null">
+                        <if test="filterTypes.activityHostId=='单值'">
+                                                        
+                                AND t0.activity_host_id = #{filters.activityHostId}
+
+                                                    </if>
+                        <if test="filterTypes.activityHostId=='模糊'">
+
+                            AND t0.activity_host_id LIKE  '%${filters.activityHostId}%'
+
+                        </if>
+                        <if test="filterTypes.activityHostId=='数组'">
+                                                                                        AND t0.activity_host_id in
+                                <foreach collection="filters.activityHostId" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.activityAdd!=null">
+                        <if test="filterTypes.activityAdd=='单值'">
+                            
+                                AND t0.activity_add LIKE  '%${filters.activityAdd}%'
+
+                                                                                </if>
+                        <if test="filterTypes.activityAdd=='模糊'">
+
+                            AND t0.activity_add LIKE  '%${filters.activityAdd}%'
+
+                        </if>
+                        <if test="filterTypes.activityAdd=='数组'">
+                                                            AND t0.activity_add in
+                                <foreach collection="filters.activityAdd" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.participant!=null">
+                        <if test="filterTypes.participant=='单值'">
+                            
+                                AND t0.participant LIKE  '%${filters.participant}%'
+
+                                                                                </if>
+                        <if test="filterTypes.participant=='模糊'">
+
+                            AND t0.participant LIKE  '%${filters.participant}%'
+
+                        </if>
+                        <if test="filterTypes.participant=='数组'">
+                                                            AND t0.participant in
+                                <foreach collection="filters.participant" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.activityContent!=null">
+                        <if test="filterTypes.activityContent=='单值'">
+                            
+                                AND t0.activity_content LIKE  '%${filters.activityContent}%'
+
+                                                                                </if>
+                        <if test="filterTypes.activityContent=='模糊'">
+
+                            AND t0.activity_content LIKE  '%${filters.activityContent}%'
+
+                        </if>
+                        <if test="filterTypes.activityContent=='数组'">
+                                                            AND t0.activity_content in
+                                <foreach collection="filters.activityContent" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.activityEval!=null">
+                        <if test="filterTypes.activityEval=='单值'">
+                            
+                                AND t0.activity_eval LIKE  '%${filters.activityEval}%'
+
+                                                                                </if>
+                        <if test="filterTypes.activityEval=='模糊'">
+
+                            AND t0.activity_eval LIKE  '%${filters.activityEval}%'
+
+                        </if>
+                        <if test="filterTypes.activityEval=='数组'">
+                                                            AND t0.activity_eval in
+                                <foreach collection="filters.activityEval" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.activityFile!=null">
+                        <if test="filterTypes.activityFile=='单值'">
+                            
+                                AND t0.activity_file LIKE  '%${filters.activityFile}%'
+
+                                                                                </if>
+                        <if test="filterTypes.activityFile=='模糊'">
+
+                            AND t0.activity_file LIKE  '%${filters.activityFile}%'
+
+                        </if>
+                        <if test="filterTypes.activityFile=='数组'">
+                                                            AND t0.activity_file in
+                                <foreach collection="filters.activityFile" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.holdTime!=null">
+                        <if test="filterTypes.holdTime=='单值'">
+                            
+                                AND t0.hold_time LIKE  '%${filters.holdTime}%'
+
+                                                                                </if>
+                        <if test="filterTypes.holdTime=='模糊'">
+
+                            AND t0.hold_time LIKE  '%${filters.holdTime}%'
+
+                        </if>
+                        <if test="filterTypes.holdTime=='数组'">
+                                                            AND t0.hold_time in
+                                <foreach collection="filters.holdTime" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.status!=null">
+                        <if test="filterTypes.status=='单值'">
+                            
+                                AND t0.status LIKE  '%${filters.status}%'
+
+                                                                                </if>
+                        <if test="filterTypes.status=='模糊'">
+
+                            AND t0.status LIKE  '%${filters.status}%'
+
+                        </if>
+                        <if test="filterTypes.status=='数组'">
+                                                            AND t0.status in
+                                <foreach collection="filters.status" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.creatorId!=null">
+                        <if test="filterTypes.creatorId=='单值'">
+                                                        
+                                AND t0.creator_id = #{filters.creatorId}
+
+                                                    </if>
+                        <if test="filterTypes.creatorId=='模糊'">
+
+                            AND t0.creator_id LIKE  '%${filters.creatorId}%'
+
+                        </if>
+                        <if test="filterTypes.creatorId=='数组'">
+                                                                                        AND t0.creator_id in
+                                <foreach collection="filters.creatorId" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.remark!=null">
+                        <if test="filterTypes.remark=='单值'">
+                            
+                                AND t0.remark LIKE  '%${filters.remark}%'
+
+                                                                                </if>
+                        <if test="filterTypes.remark=='模糊'">
+
+                            AND t0.remark LIKE  '%${filters.remark}%'
+
+                        </if>
+                        <if test="filterTypes.remark=='数组'">
+                                                            AND t0.remark in
+                                <foreach collection="filters.remark" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.createDatetime!=null">
+                        <if test="filterTypes.createDatetime=='单值'">
+                                                                                </if>
+                        <if test="filterTypes.createDatetime=='模糊'">
+
+                            AND t0.create_datetime LIKE  '%${filters.createDatetime}%'
+
+                        </if>
+                        <if test="filterTypes.createDatetime=='数组'">
+                                                                                </if>
+                    </if>
+                            </if>
+        </where>
+    </sql>
+
+
+    <!-- 根据分页参数查询数据集合 -->
+    <select id="findTsActivitys" resultType="com.mt.tms.entity.tsactivityEntity.TsActivity" parameterType="com.mt.common.core.web.base.PageDTO">
+        select
+            t0.eid  ,
+            t0.creator_name  ,
+            t0.name  ,
+            t0.activity_index  ,
+            t0.activity_type  ,
+            t0.activity_date  ,
+            t0.activity_host_id  ,
+            t0.activity_add  ,
+            t0.participant  ,
+            t0.activity_content  ,
+            t0.activity_eval  ,
+            t0.activity_file  ,
+            t0.hold_time  ,
+            t0.status  ,
+            t0.creator_id  ,
+            t0.remark  ,
+            t0.create_datetime  
+                ,t6.name as activity_host_name
+
+    
+        <include refid="findTsActivitysWhere"></include>
+
+        <if test="orderBys!=null">
+            <foreach collection="orderBys" item="item" index="index" open="order by" separator="," close="">
+                ${item}
+            </foreach>
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!-- 根据分页参数查询数据集合总条数 -->
+    <select id="findTsActivityTotalCount" resultType="java.lang.Long" parameterType="com.mt.common.core.web.base.PageDTO">
+        select count(t0.eid) as totalCount
+        <include refid="findTsActivitysWhere"></include>
+    </select>
+
+    <!-- 根据查询所有数据集合 -->
+    <select id="findAllTsActivitys" resultType="com.mt.tms.entity.tsactivityEntity.TsActivity" >
+        select
+                    t0.eid  ,
+                    t0.creator_name  ,
+                    t0.name  ,
+                    t0.activity_index  ,
+                    t0.activity_type  ,
+                    t0.activity_date  ,
+                    t0.activity_host_id  ,
+                    t0.activity_add  ,
+                    t0.participant  ,
+                    t0.activity_content  ,
+                    t0.activity_eval  ,
+                    t0.activity_file  ,
+                    t0.hold_time  ,
+                    t0.status  ,
+                    t0.creator_id  ,
+                    t0.remark  ,
+                    t0.create_datetime  
+                            ,t6.name as activity_host_name
+
+                from tms_ts_activity t0
+                    LEFT JOIN tms_ts_student_info t6 on t0.activity_host_id =t6.eid
+                ORDER BY t0.create_datetime
+    </select>
+
+    <!-- 根据名称查询数据集合,只提取ID 和 Name -->
+    <select id="findTsActivitysWithIdNameByName" resultType="com.mt.tms.entity.tsactivityEntity.TsActivity" parameterType="java.lang.String">
+        select
+            t0.eid,t0.name
+        from tms_ts_activity t0
+        where t0.name like  '%${tsActivityName}%'
+        ORDER BY t0.name
+    </select>
+
+
+    <!-- 查询所有数据集合,只提取ID 和 Name -->
+    <select id="findAllTsActivitysWithIdName" resultType="com.mt.tms.entity.tsactivityEntity.TsActivity" >
+        select
+        t0.eid,t0.name
+        from tms_ts_activity t0
+        ORDER BY t0.name
+    </select>
+
+    <!-- 查询指定的实体,只提取ID 和 Name -->
+    <select id="findTsActivitysWithIdNameById" resultType="com.mt.tms.entity.tsactivityEntity.TsActivity" parameterType="java.lang.Long">
+        select
+        t0.eid,t0.name
+        from tms_ts_activity t0
+        where eid = #{tsActivityId}
+    </select>
+
+    <!--  根据Id查询 -->
+    <select id="findTsActivity" resultType="com.mt.tms.entity.tsactivityEntity.TsActivity" parameterType="java.lang.Long">
+        select * from tms_ts_activity where eid = #{tsActivityId}
+    </select>
+
+    <!-- 根据ID查询指定的实体(包含外键) -->
+    <select id="findTsActivityWithForeignName" resultType="com.mt.tms.entity.tsactivityEntity.TsActivity" parameterType="java.lang.Long">
+        select
+                    t0.eid  ,
+                    t0.creator_name  ,
+                    t0.name  ,
+                    t0.activity_index  ,
+                    t0.activity_type  ,
+                    t0.activity_date  ,
+                    t0.activity_host_id  ,
+                    t0.activity_add  ,
+                    t0.participant  ,
+                    t0.activity_content  ,
+                    t0.activity_eval  ,
+                    t0.activity_file  ,
+                    t0.hold_time  ,
+                    t0.status  ,
+                    t0.creator_id  ,
+                    t0.remark  ,
+                    t0.create_datetime  
+                            ,t6.name as activity_host_name
+
+                from tms_ts_activity t0
+                    LEFT JOIN tms_ts_student_info t6 on t0.activity_host_id =t6.eid
+                where t0.eid = #{tsActivityId}
+    </select>
+
+
+    <!--  保存 -->
+    <insert id="saveTsActivity" parameterType="com.mt.tms.entity.tsactivityEntity.TsActivity" useGeneratedKeys="true">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long" >
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into tms_ts_activity
+        (
+                                                        creator_name ,
+                                                name ,
+                                                activity_index ,
+                                                activity_type ,
+                                                activity_date ,
+                                                activity_host_id ,
+                                                activity_add ,
+                                                participant ,
+                                                activity_content ,
+                                                activity_eval ,
+                                                activity_file ,
+                                                hold_time ,
+                                                status ,
+                                                creator_id ,
+                                                remark ,
+                                                create_datetime 
+                            )
+        values
+        (
+                                                        #{creatorName} ,
+                                                #{name} ,
+                                                #{activityIndex} ,
+                                                #{activityType} ,
+                                                #{activityDate} ,
+                                                #{activityHostId} ,
+                                                #{activityAdd} ,
+                                                #{participant} ,
+                                                #{activityContent} ,
+                                                #{activityEval} ,
+                                                #{activityFile} ,
+                                                #{holdTime} ,
+                                                #{status} ,
+                                                #{creatorId} ,
+                                                #{remark} ,
+                                                #{createDatetime} 
+                            )
+    </insert>
+
+    <!--  编辑 -->
+    <update id="updateTsActivity" parameterType="com.mt.tms.entity.tsactivityEntity.TsActivity" >
+        update tms_ts_activity set
+                                                        creator_name = #{creatorName} ,
+                                                name = #{name} ,
+                                                activity_index = #{activityIndex} ,
+                                                activity_type = #{activityType} ,
+                                                activity_date = #{activityDate} ,
+                                                activity_host_id = #{activityHostId} ,
+                                                activity_add = #{activityAdd} ,
+                                                participant = #{participant} ,
+                                                activity_content = #{activityContent} ,
+                                                activity_eval = #{activityEval} ,
+                                                activity_file = #{activityFile} ,
+                                                hold_time = #{holdTime} ,
+                                                status = #{status} ,
+                                                creator_id = #{creatorId} ,
+                                                remark = #{remark} ,
+                                                create_datetime = #{createDatetime} 
+                            where eid=#{eid}
+    </update>
+
+
+    <!--  根据Id删除 -->
+    <delete id="deleteTsActivity"  parameterType="java.lang.Long">
+        delete from tms_ts_activity where eid = #{tsActivityId}
+    </delete>
+
+
+</mapper>

@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mt.tms.dao.tsmeetingEntity.TsMeetingDao">
+    <!-- 条件查询 -->
+    <sql id="findTsMeetingsWhere">
+        from tms_ts_meeting t0
+                    LEFT JOIN tms_ts_department t4 on t0.organization_id =t4.eid
+                    LEFT JOIN tms_ts_department t5 on t0.vice_organization_id =t5.eid
+                <where>
+            <if test="filters!=null">
+                                    <if test="filters.Eid!=null">
+                        <if test="filterTypes.Eid=='单值'">
+                                                        
+                                AND t0.eid = #{filters.Eid}
+
+                                                    </if>
+                        <if test="filterTypes.Eid=='模糊'">
+
+                            AND t0.eid LIKE  '%${filters.Eid}%'
+
+                        </if>
+                        <if test="filterTypes.Eid=='数组'">
+                                                                                        AND t0.eid in
+                                <foreach collection="filters.Eid" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.creatorName!=null">
+                        <if test="filterTypes.creatorName=='单值'">
+                            
+                                AND t0.creator_name LIKE  '%${filters.creatorName}%'
+
+                                                                                </if>
+                        <if test="filterTypes.creatorName=='模糊'">
+
+                            AND t0.creator_name LIKE  '%${filters.creatorName}%'
+
+                        </if>
+                        <if test="filterTypes.creatorName=='数组'">
+                                                            AND t0.creator_name in
+                                <foreach collection="filters.creatorName" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.name!=null">
+                        <if test="filterTypes.name=='单值'">
+                            
+                                AND t0.name LIKE  '%${filters.name}%'
+
+                                                                                </if>
+                        <if test="filterTypes.name=='模糊'">
+
+                            AND t0.name LIKE  '%${filters.name}%'
+
+                        </if>
+                        <if test="filterTypes.name=='数组'">
+                                                            AND t0.name in
+                                <foreach collection="filters.name" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.theme!=null">
+                        <if test="filterTypes.theme=='单值'">
+                            
+                                AND t0.theme LIKE  '%${filters.theme}%'
+
+                                                                                </if>
+                        <if test="filterTypes.theme=='模糊'">
+
+                            AND t0.theme LIKE  '%${filters.theme}%'
+
+                        </if>
+                        <if test="filterTypes.theme=='数组'">
+                                                            AND t0.theme in
+                                <foreach collection="filters.theme" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.organizationId!=null">
+                        <if test="filterTypes.organizationId=='单值'">
+                                                        
+                                AND t0.organization_id = #{filters.organizationId}
+
+                                                    </if>
+                        <if test="filterTypes.organizationId=='模糊'">
+
+                            AND t0.organization_id LIKE  '%${filters.organizationId}%'
+
+                        </if>
+                        <if test="filterTypes.organizationId=='数组'">
+                                                                                        AND t0.organization_id in
+                                <foreach collection="filters.organizationId" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.viceOrganizationId!=null">
+                        <if test="filterTypes.viceOrganizationId=='单值'">
+                                                        
+                                AND t0.vice_organization_id = #{filters.viceOrganizationId}
+
+                                                    </if>
+                        <if test="filterTypes.viceOrganizationId=='模糊'">
+
+                            AND t0.vice_organization_id LIKE  '%${filters.viceOrganizationId}%'
+
+                        </if>
+                        <if test="filterTypes.viceOrganizationId=='数组'">
+                                                                                        AND t0.vice_organization_id in
+                                <foreach collection="filters.viceOrganizationId" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.meetingDate!=null">
+                        <if test="filterTypes.meetingDate=='单值'">
+                                                                                </if>
+                        <if test="filterTypes.meetingDate=='模糊'">
+
+                            AND t0.meeting_date LIKE  '%${filters.meetingDate}%'
+
+                        </if>
+                        <if test="filterTypes.meetingDate=='数组'">
+                                                                                </if>
+                    </if>
+                                    <if test="filters.conferee!=null">
+                        <if test="filterTypes.conferee=='单值'">
+                            
+                                AND t0.conferee LIKE  '%${filters.conferee}%'
+
+                                                                                </if>
+                        <if test="filterTypes.conferee=='模糊'">
+
+                            AND t0.conferee LIKE  '%${filters.conferee}%'
+
+                        </if>
+                        <if test="filterTypes.conferee=='数组'">
+                                                            AND t0.conferee in
+                                <foreach collection="filters.conferee" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.meetingRecord!=null">
+                        <if test="filterTypes.meetingRecord=='单值'">
+                            
+                                AND t0.meeting_record LIKE  '%${filters.meetingRecord}%'
+
+                                                                                </if>
+                        <if test="filterTypes.meetingRecord=='模糊'">
+
+                            AND t0.meeting_record LIKE  '%${filters.meetingRecord}%'
+
+                        </if>
+                        <if test="filterTypes.meetingRecord=='数组'">
+                                                            AND t0.meeting_record in
+                                <foreach collection="filters.meetingRecord" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.meetingMode!=null">
+                        <if test="filterTypes.meetingMode=='单值'">
+                            
+                                AND t0.meeting_mode LIKE  '%${filters.meetingMode}%'
+
+                                                                                </if>
+                        <if test="filterTypes.meetingMode=='模糊'">
+
+                            AND t0.meeting_mode LIKE  '%${filters.meetingMode}%'
+
+                        </if>
+                        <if test="filterTypes.meetingMode=='数组'">
+                                                            AND t0.meeting_mode in
+                                <foreach collection="filters.meetingMode" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.meetingAddress!=null">
+                        <if test="filterTypes.meetingAddress=='单值'">
+                            
+                                AND t0.meeting_address LIKE  '%${filters.meetingAddress}%'
+
+                                                                                </if>
+                        <if test="filterTypes.meetingAddress=='模糊'">
+
+                            AND t0.meeting_address LIKE  '%${filters.meetingAddress}%'
+
+                        </if>
+                        <if test="filterTypes.meetingAddress=='数组'">
+                                                            AND t0.meeting_address in
+                                <foreach collection="filters.meetingAddress" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.status!=null">
+                        <if test="filterTypes.status=='单值'">
+                            
+                                AND t0.status LIKE  '%${filters.status}%'
+
+                                                                                </if>
+                        <if test="filterTypes.status=='模糊'">
+
+                            AND t0.status LIKE  '%${filters.status}%'
+
+                        </if>
+                        <if test="filterTypes.status=='数组'">
+                                                            AND t0.status in
+                                <foreach collection="filters.status" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.creatorId!=null">
+                        <if test="filterTypes.creatorId=='单值'">
+                                                        
+                                AND t0.creator_id = #{filters.creatorId}
+
+                                                    </if>
+                        <if test="filterTypes.creatorId=='模糊'">
+
+                            AND t0.creator_id LIKE  '%${filters.creatorId}%'
+
+                        </if>
+                        <if test="filterTypes.creatorId=='数组'">
+                                                                                        AND t0.creator_id in
+                                <foreach collection="filters.creatorId" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.remark!=null">
+                        <if test="filterTypes.remark=='单值'">
+                            
+                                AND t0.remark LIKE  '%${filters.remark}%'
+
+                                                                                </if>
+                        <if test="filterTypes.remark=='模糊'">
+
+                            AND t0.remark LIKE  '%${filters.remark}%'
+
+                        </if>
+                        <if test="filterTypes.remark=='数组'">
+                                                            AND t0.remark in
+                                <foreach collection="filters.remark" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.createDatetime!=null">
+                        <if test="filterTypes.createDatetime=='单值'">
+                                                                                </if>
+                        <if test="filterTypes.createDatetime=='模糊'">
+
+                            AND t0.create_datetime LIKE  '%${filters.createDatetime}%'
+
+                        </if>
+                        <if test="filterTypes.createDatetime=='数组'">
+                                                                                </if>
+                    </if>
+                            </if>
+        </where>
+    </sql>
+
+
+    <!-- 根据分页参数查询数据集合 -->
+    <select id="findTsMeetings" resultType="com.mt.tms.entity.tsmeetingEntity.TsMeeting" parameterType="com.mt.common.core.web.base.PageDTO">
+        select
+            t0.eid  ,
+            t0.creator_name  ,
+            t0.name  ,
+            t0.theme  ,
+            t0.organization_id  ,
+            t0.vice_organization_id  ,
+            t0.meeting_date  ,
+            t0.conferee  ,
+            t0.meeting_record  ,
+            t0.meeting_mode  ,
+            t0.meeting_address  ,
+            t0.status  ,
+            t0.creator_id  ,
+            t0.remark  ,
+            t0.create_datetime  
+                ,t4.name as organization_name
+
+            ,t5.name as vice_organization_name
+
+    
+        <include refid="findTsMeetingsWhere"></include>
+
+        <if test="orderBys!=null">
+            <foreach collection="orderBys" item="item" index="index" open="order by" separator="," close="">
+                ${item}
+            </foreach>
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!-- 根据分页参数查询数据集合总条数 -->
+    <select id="findTsMeetingTotalCount" resultType="java.lang.Long" parameterType="com.mt.common.core.web.base.PageDTO">
+        select count(t0.eid) as totalCount
+        <include refid="findTsMeetingsWhere"></include>
+    </select>
+
+    <!-- 根据查询所有数据集合 -->
+    <select id="findAllTsMeetings" resultType="com.mt.tms.entity.tsmeetingEntity.TsMeeting" >
+        select
+                    t0.eid  ,
+                    t0.creator_name  ,
+                    t0.name  ,
+                    t0.theme  ,
+                    t0.organization_id  ,
+                    t0.vice_organization_id  ,
+                    t0.meeting_date  ,
+                    t0.conferee  ,
+                    t0.meeting_record  ,
+                    t0.meeting_mode  ,
+                    t0.meeting_address  ,
+                    t0.status  ,
+                    t0.creator_id  ,
+                    t0.remark  ,
+                    t0.create_datetime  
+                            ,t4.name as organization_name
+
+                    ,t5.name as vice_organization_name
+
+                from tms_ts_meeting t0
+                    LEFT JOIN tms_ts_department t4 on t0.organization_id =t4.eid
+                    LEFT JOIN tms_ts_department t5 on t0.vice_organization_id =t5.eid
+                ORDER BY t0.create_datetime
+    </select>
+
+    <!-- 根据名称查询数据集合,只提取ID 和 Name -->
+    <select id="findTsMeetingsWithIdNameByName" resultType="com.mt.tms.entity.tsmeetingEntity.TsMeeting" parameterType="java.lang.String">
+        select
+            t0.eid,t0.name
+        from tms_ts_meeting t0
+        where t0.name like  '%${tsMeetingName}%'
+        ORDER BY t0.name
+    </select>
+
+
+    <!-- 查询所有数据集合,只提取ID 和 Name -->
+    <select id="findAllTsMeetingsWithIdName" resultType="com.mt.tms.entity.tsmeetingEntity.TsMeeting" >
+        select
+        t0.eid,t0.name
+        from tms_ts_meeting t0
+        ORDER BY t0.name
+    </select>
+
+    <!-- 查询指定的实体,只提取ID 和 Name -->
+    <select id="findTsMeetingsWithIdNameById" resultType="com.mt.tms.entity.tsmeetingEntity.TsMeeting" parameterType="java.lang.Long">
+        select
+        t0.eid,t0.name
+        from tms_ts_meeting t0
+        where eid = #{tsMeetingId}
+    </select>
+
+    <!--  根据Id查询 -->
+    <select id="findTsMeeting" resultType="com.mt.tms.entity.tsmeetingEntity.TsMeeting" parameterType="java.lang.Long">
+        select * from tms_ts_meeting where eid = #{tsMeetingId}
+    </select>
+
+    <!-- 根据ID查询指定的实体(包含外键) -->
+    <select id="findTsMeetingWithForeignName" resultType="com.mt.tms.entity.tsmeetingEntity.TsMeeting" parameterType="java.lang.Long">
+        select
+                    t0.eid  ,
+                    t0.creator_name  ,
+                    t0.name  ,
+                    t0.theme  ,
+                    t0.organization_id  ,
+                    t0.vice_organization_id  ,
+                    t0.meeting_date  ,
+                    t0.conferee  ,
+                    t0.meeting_record  ,
+                    t0.meeting_mode  ,
+                    t0.meeting_address  ,
+                    t0.status  ,
+                    t0.creator_id  ,
+                    t0.remark  ,
+                    t0.create_datetime  
+                            ,t4.name as organization_name
+
+                    ,t5.name as vice_organization_name
+
+                from tms_ts_meeting t0
+                    LEFT JOIN tms_ts_department t4 on t0.organization_id =t4.eid
+                    LEFT JOIN tms_ts_department t5 on t0.vice_organization_id =t5.eid
+                where t0.eid = #{tsMeetingId}
+    </select>
+
+
+    <!--  保存 -->
+    <insert id="saveTsMeeting" parameterType="com.mt.tms.entity.tsmeetingEntity.TsMeeting" useGeneratedKeys="true">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long" >
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into tms_ts_meeting
+        (
+                                                        creator_name ,
+                                                name ,
+                                                theme ,
+                                                organization_id ,
+                                                vice_organization_id ,
+                                                meeting_date ,
+                                                conferee ,
+                                                meeting_record ,
+                                                meeting_mode ,
+                                                meeting_address ,
+                                                status ,
+                                                creator_id ,
+                                                remark ,
+                                                create_datetime 
+                            )
+        values
+        (
+                                                        #{creatorName} ,
+                                                #{name} ,
+                                                #{theme} ,
+                                                #{organizationId} ,
+                                                #{viceOrganizationId} ,
+                                                #{meetingDate} ,
+                                                #{conferee} ,
+                                                #{meetingRecord} ,
+                                                #{meetingMode} ,
+                                                #{meetingAddress} ,
+                                                #{status} ,
+                                                #{creatorId} ,
+                                                #{remark} ,
+                                                #{createDatetime} 
+                            )
+    </insert>
+
+    <!--  编辑 -->
+    <update id="updateTsMeeting" parameterType="com.mt.tms.entity.tsmeetingEntity.TsMeeting" >
+        update tms_ts_meeting set
+                                                        creator_name = #{creatorName} ,
+                                                name = #{name} ,
+                                                theme = #{theme} ,
+                                                organization_id = #{organizationId} ,
+                                                vice_organization_id = #{viceOrganizationId} ,
+                                                meeting_date = #{meetingDate} ,
+                                                conferee = #{conferee} ,
+                                                meeting_record = #{meetingRecord} ,
+                                                meeting_mode = #{meetingMode} ,
+                                                meeting_address = #{meetingAddress} ,
+                                                status = #{status} ,
+                                                creator_id = #{creatorId} ,
+                                                remark = #{remark} ,
+                                                create_datetime = #{createDatetime} 
+                            where eid=#{eid}
+    </update>
+
+
+    <!--  根据Id删除 -->
+    <delete id="deleteTsMeeting"  parameterType="java.lang.Long">
+        delete from tms_ts_meeting where eid = #{tsMeetingId}
+    </delete>
+
+
+</mapper>

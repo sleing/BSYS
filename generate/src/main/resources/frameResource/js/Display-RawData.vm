@@ -1,0 +1,114 @@
+#set($vmType="Display")
+#set($extension=".vue")
+#set($EntityNameUp="${entityClass.className}")
+#set($EntityNameLow="${entityClass.className.substring(0,1).toLowerCase()}${entityClass.className.substring(1)}")
+#set($path="${config.uiPath}/src/views/${entityClass.subSystemName}/${entityClass.moduleName}")
+#set($outputFile="${path}/${EntityNameUp}${vmType}${extension}")
+
+<template>
+    <div class="spanControl-list" style="width: 100%;margin-left: 0!important;">
+        <el-card class="box-card card-head" style="margin: 0px; width: 100%; min-height: 99%">
+            <div class="clearfix card-my-header">
+                <el-breadcrumb separator-class="el-icon-arrow-right">
+                    <el-breadcrumb-item :to="{ path: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameLow}' }">${entityClass.label}管理列表</el-breadcrumb-item>
+                    <el-breadcrumb-item>查看${entityClass.label}</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+
+            <div class="text item">
+                <el-form label-position="left" inline class="display-form">
+                    #foreach($columnInfo in $entityClass.columnInfos)
+                        #if($columnInfo.fieldName != "EId" && $columnInfo.pageShow != false)
+                            <el-form-item  v-if="rename.${columnInfo.fieldName} != null ? rename.${columnInfo.fieldName}.show:true"
+                                           :label="rename.${columnInfo.fieldName} != null && rename.${columnInfo.fieldName}.cname ?rename.${columnInfo.fieldName}.cname:'${columnInfo.label}'" >
+                                <span>{{ ${EntityNameLow}.${columnInfo.fieldName} }}</span>
+                            </el-form-item>
+                        #end
+                    #end
+                </el-form>
+            </div>
+        </el-card>
+        <el-card class="cardMargin" v-show="rename.rawDataAuthor != null ? rename.rawDataAuthor.show:true">
+            <div class="inconText">
+                <i class="iconfont icon-articleUser inconColor"></i>
+                <span class="iconSpan">{{rename.rawDataAuthor != null && rename.rawDataAuthor.cname ? rename.rawDataAuthor.cname:'参与人员'}}</span>
+            </div>
+            <contestants ref="headerChild" :author="${EntityNameLow}.rawDataAuthor" isDisplay="true"></contestants>
+        </el-card>
+
+        <el-card class="cardMargin">
+            <div class="inconText">
+                <i class="iconfont icon-fujian inconColor"></i>
+                <span class="iconSpan">附件</span>
+            </div>
+            <div style="padding-left: 7%;margin-bottom: 1%">
+                <attachment :associate-form-id="${EntityNameLow}.eid" associate-form-name="${EntityNameLow}" operator-type="view"
+                            ref="attachment"></attachment>
+            </div>
+        </el-card>
+        <el-card v-if="operatorType != '录入'" class="cardMargin">
+            <div>
+                <auditRawData :rawEntity="${EntityNameLow}" @rawData="rawData"></auditRawData>
+            </div>
+            <div>
+                <submitRawData :rawEntity="${EntityNameLow}" @rawData="rawData"></submitRawData>
+            </div>
+        </el-card>
+    </div>
+    </div>
+</template>
+
+<script>
+import {${EntityNameUp}Service} from './${EntityNameUp}Service';
+import submitRawData from './components/SubmitRawData'
+import auditRawData from './components/AuditRawData'
+import contestants from './components/Contestants'
+import Attachment from "../../simple/components/attachment/Attachment";
+
+export default {
+    components: {
+        submitRawData,
+        auditRawData,
+        contestants,
+        Attachment
+    },
+    data() {
+        return {
+            ${EntityNameLow}:{},
+        rename: this.$store.state.rawData.operatorType.rename ? this.$store.state.rawData.operatorType.rename : {},
+        typeName: this.$store.state.rawData.operatorType.name,
+                routeTab:{
+            title:"查看"+this.$store.state.rawData.operatorType.name
+        },
+        operatorType: this.$store.state.rawData.operatorType.operatorType,
+        }
+    },
+    methods: {
+        find${EntityNameUp}ForView(${EntityNameLow}Id)//查找${entityClass.label}
+        {
+            this.buttonRequestProgressStart("正在查询,请稍后...");
+            ${EntityNameUp}Service.find${EntityNameUp}ForView(${EntityNameLow}Id).then((resp) => {
+                this.buttonRequestProgressClose();
+                this.${EntityNameLow} = resp.data;
+        }).catch((error) => {
+            this.buttonRequestProgressClose();
+            this.$message({
+            type: 'error',
+            message: '查询${entityClass.label}出错'
+        })
+        })
+        },
+        rawData(id) {
+            this.find${EntityNameUp}ForView(id);
+        },
+    },
+    created() {
+        const ${EntityNameLow}Id = this.$route.params.${EntityNameLow}Id;
+        this.find${EntityNameUp}ForView(${EntityNameLow}Id);
+    },
+}
+
+</script>
+<style scoped lang="scss">
+
+</style>

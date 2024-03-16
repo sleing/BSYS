@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mt.tms.dao.tsnoticeEntity.TsNoticeDao">
+    <!-- 条件查询 -->
+    <sql id="findTsNoticesWhere">
+        from tms_ts_notice t0
+                    LEFT JOIN tms_ts_department t5 on t0.notice_department_id =t5.eid
+                <where>
+            <if test="filters!=null">
+                                    <if test="filters.Eid!=null">
+                        <if test="filterTypes.Eid=='单值'">
+                                                        
+                                AND t0.eid = #{filters.Eid}
+
+                                                    </if>
+                        <if test="filterTypes.Eid=='模糊'">
+
+                            AND t0.eid LIKE  '%${filters.Eid}%'
+
+                        </if>
+                        <if test="filterTypes.Eid=='数组'">
+                                                                                        AND t0.eid in
+                                <foreach collection="filters.Eid" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.creatorName!=null">
+                        <if test="filterTypes.creatorName=='单值'">
+                            
+                                AND t0.creator_name LIKE  '%${filters.creatorName}%'
+
+                                                                                </if>
+                        <if test="filterTypes.creatorName=='模糊'">
+
+                            AND t0.creator_name LIKE  '%${filters.creatorName}%'
+
+                        </if>
+                        <if test="filterTypes.creatorName=='数组'">
+                                                            AND t0.creator_name in
+                                <foreach collection="filters.creatorName" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.name!=null">
+                        <if test="filterTypes.name=='单值'">
+                            
+                                AND t0.name LIKE  '%${filters.name}%'
+
+                                                                                </if>
+                        <if test="filterTypes.name=='模糊'">
+
+                            AND t0.name LIKE  '%${filters.name}%'
+
+                        </if>
+                        <if test="filterTypes.name=='数组'">
+                                                            AND t0.name in
+                                <foreach collection="filters.name" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.title!=null">
+                        <if test="filterTypes.title=='单值'">
+                            
+                                AND t0.title LIKE  '%${filters.title}%'
+
+                                                                                </if>
+                        <if test="filterTypes.title=='模糊'">
+
+                            AND t0.title LIKE  '%${filters.title}%'
+
+                        </if>
+                        <if test="filterTypes.title=='数组'">
+                                                            AND t0.title in
+                                <foreach collection="filters.title" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.noticeDate!=null">
+                        <if test="filterTypes.noticeDate=='单值'">
+                                                                                </if>
+                        <if test="filterTypes.noticeDate=='模糊'">
+
+                            AND t0.notice_date LIKE  '%${filters.noticeDate}%'
+
+                        </if>
+                        <if test="filterTypes.noticeDate=='数组'">
+                                                                                </if>
+                    </if>
+                                    <if test="filters.noticeDepartmentId!=null">
+                        <if test="filterTypes.noticeDepartmentId=='单值'">
+                                                        
+                                AND t0.notice_department_id = #{filters.noticeDepartmentId}
+
+                                                    </if>
+                        <if test="filterTypes.noticeDepartmentId=='模糊'">
+
+                            AND t0.notice_department_id LIKE  '%${filters.noticeDepartmentId}%'
+
+                        </if>
+                        <if test="filterTypes.noticeDepartmentId=='数组'">
+                                                                                        AND t0.notice_department_id in
+                                <foreach collection="filters.noticeDepartmentId" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.content!=null">
+                        <if test="filterTypes.content=='单值'">
+                            
+                                AND t0.content LIKE  '%${filters.content}%'
+
+                                                                                </if>
+                        <if test="filterTypes.content=='模糊'">
+
+                            AND t0.content LIKE  '%${filters.content}%'
+
+                        </if>
+                        <if test="filterTypes.content=='数组'">
+                                                            AND t0.content in
+                                <foreach collection="filters.content" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.auditStatu!=null">
+                        <if test="filterTypes.auditStatu=='单值'">
+                            
+                                AND t0.audit_statu LIKE  '%${filters.auditStatu}%'
+
+                                                                                </if>
+                        <if test="filterTypes.auditStatu=='模糊'">
+
+                            AND t0.audit_statu LIKE  '%${filters.auditStatu}%'
+
+                        </if>
+                        <if test="filterTypes.auditStatu=='数组'">
+                                                            AND t0.audit_statu in
+                                <foreach collection="filters.auditStatu" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.status!=null">
+                        <if test="filterTypes.status=='单值'">
+                            
+                                AND t0.status LIKE  '%${filters.status}%'
+
+                                                                                </if>
+                        <if test="filterTypes.status=='模糊'">
+
+                            AND t0.status LIKE  '%${filters.status}%'
+
+                        </if>
+                        <if test="filterTypes.status=='数组'">
+                                                            AND t0.status in
+                                <foreach collection="filters.status" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.creatorId!=null">
+                        <if test="filterTypes.creatorId=='单值'">
+                                                        
+                                AND t0.creator_id = #{filters.creatorId}
+
+                                                    </if>
+                        <if test="filterTypes.creatorId=='模糊'">
+
+                            AND t0.creator_id LIKE  '%${filters.creatorId}%'
+
+                        </if>
+                        <if test="filterTypes.creatorId=='数组'">
+                                                                                        AND t0.creator_id in
+                                <foreach collection="filters.creatorId" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.remark!=null">
+                        <if test="filterTypes.remark=='单值'">
+                            
+                                AND t0.remark LIKE  '%${filters.remark}%'
+
+                                                                                </if>
+                        <if test="filterTypes.remark=='模糊'">
+
+                            AND t0.remark LIKE  '%${filters.remark}%'
+
+                        </if>
+                        <if test="filterTypes.remark=='数组'">
+                                                            AND t0.remark in
+                                <foreach collection="filters.remark" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.createDatetime!=null">
+                        <if test="filterTypes.createDatetime=='单值'">
+                                                                                </if>
+                        <if test="filterTypes.createDatetime=='模糊'">
+
+                            AND t0.create_datetime LIKE  '%${filters.createDatetime}%'
+
+                        </if>
+                        <if test="filterTypes.createDatetime=='数组'">
+                                                                                </if>
+                    </if>
+                            </if>
+        </where>
+    </sql>
+
+
+    <!-- 根据分页参数查询数据集合 -->
+    <select id="findTsNotices" resultType="com.mt.tms.entity.tsnoticeEntity.TsNotice" parameterType="com.mt.common.core.web.base.PageDTO">
+        select
+            t0.eid  ,
+            t0.creator_name  ,
+            t0.name  ,
+            t0.title  ,
+            t0.notice_date  ,
+            t0.notice_department_id  ,
+            t0.content  ,
+            t0.audit_statu  ,
+            t0.status  ,
+            t0.creator_id  ,
+            t0.remark  ,
+            t0.create_datetime  
+                ,t5.name as notice_department_name
+
+    
+        <include refid="findTsNoticesWhere"></include>
+
+        <if test="orderBys!=null">
+            <foreach collection="orderBys" item="item" index="index" open="order by" separator="," close="">
+                ${item}
+            </foreach>
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!-- 根据分页参数查询数据集合总条数 -->
+    <select id="findTsNoticeTotalCount" resultType="java.lang.Long" parameterType="com.mt.common.core.web.base.PageDTO">
+        select count(t0.eid) as totalCount
+        <include refid="findTsNoticesWhere"></include>
+    </select>
+
+    <!-- 根据查询所有数据集合 -->
+    <select id="findAllTsNotices" resultType="com.mt.tms.entity.tsnoticeEntity.TsNotice" >
+        select
+                    t0.eid  ,
+                    t0.creator_name  ,
+                    t0.name  ,
+                    t0.title  ,
+                    t0.notice_date  ,
+                    t0.notice_department_id  ,
+                    t0.content  ,
+                    t0.audit_statu  ,
+                    t0.status  ,
+                    t0.creator_id  ,
+                    t0.remark  ,
+                    t0.create_datetime  
+                            ,t5.name as notice_department_name
+
+                from tms_ts_notice t0
+                    LEFT JOIN tms_ts_department t5 on t0.notice_department_id =t5.eid
+                ORDER BY t0.create_datetime
+    </select>
+
+    <!-- 根据名称查询数据集合,只提取ID 和 Name -->
+    <select id="findTsNoticesWithIdNameByName" resultType="com.mt.tms.entity.tsnoticeEntity.TsNotice" parameterType="java.lang.String">
+        select
+            t0.eid,t0.name
+        from tms_ts_notice t0
+        where t0.name like  '%${tsNoticeName}%'
+        ORDER BY t0.name
+    </select>
+
+
+    <!-- 查询所有数据集合,只提取ID 和 Name -->
+    <select id="findAllTsNoticesWithIdName" resultType="com.mt.tms.entity.tsnoticeEntity.TsNotice" >
+        select
+        t0.eid,t0.name
+        from tms_ts_notice t0
+        ORDER BY t0.name
+    </select>
+
+    <!-- 查询指定的实体,只提取ID 和 Name -->
+    <select id="findTsNoticesWithIdNameById" resultType="com.mt.tms.entity.tsnoticeEntity.TsNotice" parameterType="java.lang.Long">
+        select
+        t0.eid,t0.name
+        from tms_ts_notice t0
+        where eid = #{tsNoticeId}
+    </select>
+
+    <!--  根据Id查询 -->
+    <select id="findTsNotice" resultType="com.mt.tms.entity.tsnoticeEntity.TsNotice" parameterType="java.lang.Long">
+        select * from tms_ts_notice where eid = #{tsNoticeId}
+    </select>
+
+    <!-- 根据ID查询指定的实体(包含外键) -->
+    <select id="findTsNoticeWithForeignName" resultType="com.mt.tms.entity.tsnoticeEntity.TsNotice" parameterType="java.lang.Long">
+        select
+                    t0.eid  ,
+                    t0.creator_name  ,
+                    t0.name  ,
+                    t0.title  ,
+                    t0.notice_date  ,
+                    t0.notice_department_id  ,
+                    t0.content  ,
+                    t0.audit_statu  ,
+                    t0.status  ,
+                    t0.creator_id  ,
+                    t0.remark  ,
+                    t0.create_datetime  
+                            ,t5.name as notice_department_name
+
+                from tms_ts_notice t0
+                    LEFT JOIN tms_ts_department t5 on t0.notice_department_id =t5.eid
+                where t0.eid = #{tsNoticeId}
+    </select>
+
+
+    <!--  保存 -->
+    <insert id="saveTsNotice" parameterType="com.mt.tms.entity.tsnoticeEntity.TsNotice" useGeneratedKeys="true">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long" >
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into tms_ts_notice
+        (
+                                                        creator_name ,
+                                                name ,
+                                                title ,
+                                                notice_date ,
+                                                notice_department_id ,
+                                                content ,
+                                                audit_statu ,
+                                                status ,
+                                                creator_id ,
+                                                remark ,
+                                                create_datetime 
+                            )
+        values
+        (
+                                                        #{creatorName} ,
+                                                #{name} ,
+                                                #{title} ,
+                                                #{noticeDate} ,
+                                                #{noticeDepartmentId} ,
+                                                #{content} ,
+                                                #{auditStatu} ,
+                                                #{status} ,
+                                                #{creatorId} ,
+                                                #{remark} ,
+                                                #{createDatetime} 
+                            )
+    </insert>
+
+    <!--  编辑 -->
+    <update id="updateTsNotice" parameterType="com.mt.tms.entity.tsnoticeEntity.TsNotice" >
+        update tms_ts_notice set
+                                                        creator_name = #{creatorName} ,
+                                                name = #{name} ,
+                                                title = #{title} ,
+                                                notice_date = #{noticeDate} ,
+                                                notice_department_id = #{noticeDepartmentId} ,
+                                                content = #{content} ,
+                                                audit_statu = #{auditStatu} ,
+                                                status = #{status} ,
+                                                creator_id = #{creatorId} ,
+                                                remark = #{remark} ,
+                                                create_datetime = #{createDatetime} 
+                            where eid=#{eid}
+    </update>
+
+
+    <!--  根据Id删除 -->
+    <delete id="deleteTsNotice"  parameterType="java.lang.Long">
+        delete from tms_ts_notice where eid = #{tsNoticeId}
+    </delete>
+
+
+</mapper>

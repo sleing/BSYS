@@ -1,0 +1,318 @@
+#set($vmType="serviceBean")
+#set($extension=".java")
+#set($packageName="${entityClass.packages.replace('entity', 'service')}.impl")
+#set($EntityNameUp="${entityClass.className}")
+#set($EntityNameLow="${entityClass.className.substring(0,1).toLowerCase()}${entityClass.className.substring(1)}")
+#set($className="${entityClass.className}${stringUtils.capitalize(${vmType})}")
+#set($path="${config.serverPath}/src/main/java/${packageName.replace('.', '/')}")
+#set($outputFile="${path}/$className${extension}")
+package ${packageName};
+
+import ${config.basePackage}.${entityClass.subSystemName}.dao.${entityClass.moduleName}.${EntityNameUp}Dao;
+
+import com.ddd.info.simple.DDDException;
+import com.ddd.info.pfm.util.RawDataSqlUtil;
+import com.ddd.info.simple.dto.base.PageDTO;
+import com.ddd.info.simple.dto.base.PageResultDTO;
+import com.ddd.info.simple.entity.base.BaseEntity;
+import com.ddd.info.simple.service.base.imp.BaseService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import ${entityClass.clazz.name};
+import ${config.basePackage}.${entityClass.subSystemName}.service.${entityClass.moduleName}.${EntityNameUp}Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.Map;
+import com.ddd.info.simple.DDDException;
+import com.ddd.info.pfm.service.rawDataHandler.RawDataHandlerService;
+import com.ddd.info.simple.service.groovy.GroovyCalculateInterface;
+import com.ddd.info.pfm.service.rawData.HandleEntityRulesService;
+import com.ddd.info.simple.entity.setting.ResultsType;
+import com.ddd.info.simple.util.ListUtils;
+import com.ddd.info.pfm.dao.util.RawDataPageDTO;
+
+@Service
+@Transactional
+public class ${EntityNameUp}ServiceBean extends BaseService implements ${EntityNameUp}Service,GroovyCalculateInterface{
+
+    private static Logger logger = LogManager.getLogger();
+
+	@Autowired
+	private ${EntityNameUp}Dao ${EntityNameLow}Dao;
+
+	@Autowired
+	private RawDataHandlerService rawDataHandlerService;
+
+	@Autowired
+	private HandleEntityRulesService handleEntityRulesService;
+	/**
+	 * 根据分页参数查询${entityClass.label}集合
+	 *
+	 * @param pageDTO 分页条件
+	 */
+	@Override
+	public PageResultDTO find${EntityNameUp}s(RawDataPageDTO pageDTO){
+        pageDTO.setStartIndex((pageDTO.getCurrentPage()-1)*pageDTO.getPageSize());
+		pageDTO.setOrganizationId(this.getCurrentLoginOrganization().getEId());
+		pageDTO.setSql(pageDTO.getSql() + RawDataSqlUtil.getSqlWhere(pageDTO, this));
+		pageDTO.siteForeignKey("leadEmployeeName","name","t5").siteSQL("t0");
+
+		List<${EntityNameUp}> ${EntityNameLow}DTOS = this.${EntityNameLow}Dao.find${EntityNameUp}s(pageDTO);
+		Long totalCount = this.${EntityNameLow}Dao.find${EntityNameUp}TotalCount(pageDTO);
+
+		PageResultDTO pageResultDTO = new PageResultDTO();
+		pageResultDTO.setTotalCount(totalCount);
+		pageResultDTO.setDatas(${EntityNameLow}DTOS);
+
+		return pageResultDTO;
+	}
+
+	/**
+	 * 查询全部${entityClass.label}集合
+	 *
+	 */
+	@Override
+	public List<${EntityNameUp}> findAll${EntityNameUp}s(){
+		return this.${EntityNameLow}Dao.findAll${EntityNameUp}s();
+	}
+
+	/**
+	 * 查询所有${entityClass.label}集合(只提取ID 和 Name)
+	 *
+	 */
+	@Override
+	public List<${EntityNameUp}> findAll${EntityNameUp}sWithIdName(){
+		return this.${EntityNameLow}Dao.findAll${EntityNameUp}sWithIdName();
+	}
+
+	/**
+	 * 根据名称查询${entityClass.label}集合(只提取ID 和 Name)
+	 *
+	 * @param ${EntityNameLow}Name 名称
+	 */
+	@Override
+	public List<${EntityNameUp}> find${EntityNameUp}sWithIdNameByName(String ${EntityNameLow}Name){
+		return this.${EntityNameLow}Dao.find${EntityNameUp}sWithIdNameByName(${EntityNameLow}Name);
+	}
+
+	/**
+	 * 根据ID查询指定的${entityClass.label}(只提取ID 和 Name)
+	 *
+	 * @param ${EntityNameLow}Id Id
+	 */
+	@Override
+	public ${EntityNameUp} find${EntityNameUp}sWithIdNameById(Long ${EntityNameLow}Id){
+		return this.${EntityNameLow}Dao.find${EntityNameUp}sWithIdNameById(${EntityNameLow}Id);
+	}
+
+	/**
+	 * 根据ID查询指定的${entityClass.label}
+	 *
+	 * @param ${EntityNameLow}Id Id
+	 */
+	@Override
+	public ${EntityNameUp} find${EntityNameUp}(Long ${EntityNameLow}Id){
+		return this.${EntityNameLow}Dao.find${EntityNameUp}(${EntityNameLow}Id);
+	}
+
+	/**
+	 * 根据ID查询指定的${entityClass.label}(包含外键)
+	 *
+	 * @param ${EntityNameLow}Id Id
+	 */
+	@Override
+	public ${EntityNameUp} find${EntityNameUp}WithForeignName(Long ${EntityNameLow}Id){
+		return this.${EntityNameLow}Dao.find${EntityNameUp}WithForeignName(${EntityNameLow}Id);
+	}
+
+	/**
+	 * 新增${entityClass.label}
+	 *
+	 * @param ${EntityNameLow} 实体对象
+	 */
+	@Override
+	public ${EntityNameUp} save${EntityNameUp}(${EntityNameUp} ${EntityNameLow}){
+		//TODO:请在此校验参数的合法性
+		${EntityNameLow}.setReviewState("草稿");
+		${EntityNameLow}.setOrganizationId(this.getCurrentLoginEmployee().getOrganizationId());
+		this.setSavePulicColumns(${EntityNameLow});
+
+		//验证重复
+		${EntityNameUp} ${EntityNameLow}s = this.${EntityNameLow}Dao.find${EntityNameUp}ByKeys(${EntityNameLow});
+		if (${EntityNameLow}s != null) {
+			throw new DDDException("重复录入：“***” 重复！ ");
+		} else {
+		}
+		try {
+		//计算成果负责人、成果产生时间、工作量
+		//            ${EntityNameLow} = (${EntityNameUp}) GroovyCalculate.getInstance(null).groovyCalculate(${EntityNameLow});
+		this.handleEntityRulesService.handleEntityByName(${EntityNameLow}.getPrincipal(),${EntityNameLow}.getReleaseTime(),${EntityNameLow},"findFirstOrganationByChargeMan",null);
+		} catch (Exception e) {
+		throw new DDDException("计算公式出错，请联系管理员！");
+		}
+
+		Integer rows = this.${EntityNameLow}Dao.save${EntityNameUp}(${EntityNameLow});
+		if (rows != 1) {
+		String error = "新增保存${entityClass.label}出错，数据库应该返回1,但返回了 " + rows;
+		throw new DDDException(error);
+		}
+		//保存后的处理
+		this.rawDataHandlerService.saveRawDataAfer(${EntityNameLow});
+
+		return ${EntityNameLow};
+	}
+
+	/**
+	 * 更新${entityClass.label}
+	 *
+	 * @param ${EntityNameLow} 实体对象
+	 */
+	@Override
+	public ${EntityNameUp} update${EntityNameUp}(${EntityNameUp} ${EntityNameLow}){
+		//TODO:请在此校验参数的合法性
+		${EntityNameLow}.setOrganizationId(this.getCurrentLoginEmployee().getOrganizationId());
+		this.setUpdatePulicColumns(${EntityNameLow});
+
+		//验证重复
+		${EntityNameUp} ${EntityNameLow}s = this.${EntityNameLow}Dao.find${EntityNameUp}ByKeys(${EntityNameLow});
+		if (${EntityNameLow}s != null && ${EntityNameLow}s.getEId().longValue() != ${EntityNameLow}.getEId()) {
+		throw new DDDException("重复录入：“” 重复！ ");
+		}
+
+		//验证是否可以更新
+		String warn = ${EntityNameLow}.repeatCreate(this.getCurrentLoginEmployee().getEId());
+		if (!"".equals(warn)) {
+		throw new DDDException(warn);
+		} else {
+
+		}
+
+		Long oldLeadEmployeeId = ${EntityNameLow}.getLeadEmployeeId();
+		try {
+		//计算成果负责人、成果产生时间、工作量
+		//            ${EntityNameLow} = (${EntityNameUp}) GroovyCalculate.getInstance(null).groovyCalculate(${EntityNameLow});
+		this.handleEntityRulesService.handleEntityByName(${EntityNameLow}.getPrincipal(),${EntityNameLow}.getReleaseTime(),${EntityNameLow},"findFirstOrganationByChargeMan",null);
+		} catch (Exception e) {
+		throw new DDDException("计算公式出错，请联系管理员！");
+		}
+
+		//驳回后提交
+		${EntityNameLow}.rejectSubmit();
+
+		Integer rows = this.${EntityNameLow}Dao.update${EntityNameUp}(${EntityNameLow});
+		if (rows != 1) {
+		String error = "修改保存${entityClass.label}出错，数据库应该返回1,但返回了 " + rows + ",数据可能被删除";
+		throw new DDDException(error);
+		}
+		//更新后的处理
+		this.rawDataHandlerService.updateRawDataAfer(oldLeadEmployeeId, ${EntityNameLow});
+
+		return ${EntityNameLow};
+	}
+
+	/**
+	 * 根据ID删除${entityClass.label}
+	 *
+	 * @param ${EntityNameLow}Id ID
+	 */
+	@Override
+	public void delete${EntityNameUp}(Long ${EntityNameLow}Id){
+		Map<Class<? extends BaseEntity>,EntityUsage> entityUsageMap = this.checkForeignEntity(${EntityNameUp}.class, ${EntityNameLow}Id);
+		if(entityUsageMap != null && entityUsageMap.size() >0){
+			StringBuilder errors = new StringBuilder();
+			errors.append("计划删除的数据正在被以下数引用\n");
+			for(EntityUsage entityUsage : entityUsageMap.values()){
+				errors.append("\t").append(entityUsage.getEntityLabel()).append("\n");
+				for(Map.Entry<Long,String> entry : entityUsage.getUsageIdNames().entrySet() ){
+					errors.append("\t\t").append(entry.getKey()).append("\t").append(entry.getValue()).append("\n");
+				}
+			}
+			errors.append("，不能删除，请检查处理后再删除");
+			throw  new DDDException(errors.toString());
+		}
+
+		Integer rows = this.${EntityNameLow}Dao.delete${EntityNameUp}(${EntityNameLow}Id);
+		if(rows != 1){
+			String error = "删除${entityClass.label}出错，数据可能已经被删除";
+			throw new DDDException(error);
+		}
+	}
+
+	/**
+	* 批量保存
+	*
+	* @param ${EntityNameLow}s
+	*/
+	public void save${EntityNameUp}s(List<${EntityNameUp}> ${EntityNameLow}s) {
+		if (${EntityNameLow}s == null || ${EntityNameLow}s.size() == 0) {
+		return;
+		}
+
+		Map<String, List<${EntityNameUp}>> group${EntityNameUp} = ListUtils.groupList(${EntityNameLow}s, null);
+		for (List<${EntityNameUp}> ${EntityNameLow}List : group${EntityNameUp}.values()) {
+			this.${EntityNameLow}Dao.save${EntityNameUp}s(${EntityNameLow}List);
+			}
+	}
+
+	/**
+	* 批量更新
+	*
+	* @param ${EntityNameLow}s
+	*/
+	public void update${EntityNameUp}s(List<${EntityNameUp}> ${EntityNameLow}s) {
+		if (${EntityNameLow}s == null || ${EntityNameLow}s.size() == 0) {
+		return;
+		}
+
+		Map<String, List<${EntityNameUp}>> group${EntityNameUp} = ListUtils.groupList(${EntityNameLow}s, null);
+			for (List<${EntityNameUp}> ${EntityNameLow}List : group${EntityNameUp}.values()) {
+				this.${EntityNameLow}Dao.update${EntityNameUp}s(${EntityNameLow}List);
+				}
+	}
+
+	/**
+	* 导入根据关键字查询
+	*/
+	public List<${EntityNameUp}> import${EntityNameUp}ByKeys(List<List> ${EntityNameLow}){
+		return this.${EntityNameLow}Dao.import${EntityNameUp}ByKeys(${EntityNameLow});
+	}
+
+	/**
+	* 根据关键字查询
+	*
+	* @param ${EntityNameLow}
+	* @return
+	*/
+	public ${EntityNameUp} find${EntityNameUp}ByKeys(${EntityNameUp} ${EntityNameLow}) {
+		return this.${EntityNameLow}Dao.find${EntityNameUp}ByKeys(${EntityNameLow});
+	}
+
+	/**
+	* 重新计算
+	*
+	* @param resultsType
+	* @param rawDataPageDTO
+	*/
+	@Override
+	public void recalculation(ResultsType resultsType, RawDataPageDTO rawDataPageDTO) {
+	try {
+	List<${EntityNameUp}> ${EntityNameLow}s = this.${EntityNameLow}Dao.find${EntityNameUp}s(rawDataPageDTO);
+	if (${EntityNameLow}s == null || ${EntityNameLow}s.size() == 0) {
+	return;
+	}
+	List<${EntityNameUp}> old${EntityNameUp}s = Util.deepCopy(${EntityNameLow}s);
+
+	for (${EntityNameUp} ${EntityNameLow} : ${EntityNameLow}s) {
+	//计算成果负责人、成果产生时间、工作量
+	${EntityNameLow} = (${EntityNameUp}) GroovyCalculate.getInstance(resultsType).groovyCalculate(${EntityNameLow});
+	}
+	this.update${EntityNameUp}s(${EntityNameLow}s);
+	this.rawDataHandlerService.updateRawDataAfers(old${EntityNameUp}s, ${EntityNameLow}s);
+	} catch (Exception e) {
+	e.printStackTrace();
+	}
+
+	}
+}

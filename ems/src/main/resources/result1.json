@@ -1,0 +1,37 @@
+[
+  {
+    "major": {
+      "probability": 0.9865816831588745,
+      "words": "中国机器人及人工智能大事"
+    },
+    "minor": [
+      {
+        "probability": 0.9995187520980835,
+        "words": "组委会"
+      }
+    ],
+    "probability": 0.9974399209022522,
+    "location": {
+      "top": 528,
+      "left": 746,
+      "width": 151,
+      "height": 148
+    },
+    "type": "circle"
+  },
+  {
+    "major": {
+      "probability": 0.9999594688415527,
+      "words": "重庆市人工智能学会"
+    },
+    "minor": [],
+    "probability": 0.9931500554084778,
+    "location": {
+      "top": 525,
+      "left": 457,
+      "width": 147,
+      "height": 146
+    },
+    "type": "circle"
+  }
+]

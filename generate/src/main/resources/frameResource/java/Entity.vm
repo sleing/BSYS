@@ -1,0 +1,28 @@
+#set($packageName=${entityClass.packages})
+#set($extension=".java")
+#set($path="${config.serverPath}/src/main/java/${entityClass.packages.replace('.', '/')}")
+#set($outputFile="${path}/${entityClass.className}${extension}")
+package ${entityClass.packages};
+
+import javax.persistence.*;
+import java.io.Serializable;
+import com.mt.common.core.annotation.DColumn;
+import com.mt.common.core.annotation.DEntity;
+import com.mt.common.core.web.base.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+
+${importArea}
+
+@DEntity(label="${entityClass.label}",comment="${entityClass.comment}",moduleLabel="${entityClass.moduleLabel}")
+@Entity(name="${entityClass.subSystemName}_${entityClass.tableName}")
+@Table(name = "${entityClass.subSystemName}_${entityClass.tableName}" , indexes = { $!{indexes}  })
+@ApiModel(description = "${entityClass.label}:${entityClass.comment}")
+public class ${entityClass.className} extends BaseEntity implements Serializable{
+	private static final long serialVersionUID = 1L;
+
+${fieldArea}
+${funcArea}
+
+}

@@ -1,0 +1,30 @@
+# 开发环境配置
+
+simple:
+  workspapce: D:\\workspace\\erp
+  serverPath: ${workspapce}\\erp-boot\\erp
+  uiPath: ${workspapce}\\erp-ui
+  codeTablesFile: ${serverPath}\\src\\main\\resources\\codetables.json
+  moduleFile: ${serverPath}\\src\\main\\resources\\modules.json
+  velocityTemplate: ${workspapce}\\erp-boot\\generate\\src\\main\\resources
+  exceptionLogPath: D:\\BusinessException
+  uploadFileAddress: D:\\spring_files
+#  uploadFileAddress: /usr/local/web/spring_files
+  staticFilePath: D:\\DDDFile\\
+  staticOthFilePath: D:\\DDDOthFile\\
+
+
+
+  applicationName: 框架
+  applicationCode: DDD4
+  shortCode: DD
+  basePackage: com.mt
+  src: src\\
+  charset_UTF8: UTF-8
+  charset_ISO: ISO-8859-1
+  dataBase: mysql
+  serverId: app1
+  logPath: d:\\BusinessException\\
+  isDeveloping: true
+  whiteURLs: /favicon.ico, /api/file/**,/api/actuator/**,/actuator/**,/,/assets/**,/**.html,/api/login,/error,/druid/**,/webjars/**,/swagger-ui.html,/swagger-resources/**,/v2/api-docs
+

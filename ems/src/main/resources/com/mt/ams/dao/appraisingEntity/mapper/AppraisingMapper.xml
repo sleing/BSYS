@@ -1,0 +1,1155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mt.ams.dao.appraisingEntity.AppraisingDao">
+    <!-- 条件查询 -->
+    <sql id="findAppraisingsWhere">
+        from ams_appraising t0
+        LEFT JOIN ams_student_info t3 on t0.student_id =t3.eid
+        LEFT JOIN ams_college t5 on t0.college_id =t5.eid
+        LEFT JOIN ams_appraising_type t33 on t0.target_name_id =t33.eid
+        LEFT JOIN sys_user t35 on t0.reviewer_id =t35.eid
+        <where>
+            <if test="filters!=null">
+                <if test="filters.Eid!=null">
+                    <if test="filterTypes.Eid=='单值'">
+
+                        AND t0.eid = #{filters.Eid}
+
+                    </if>
+                    <if test="filterTypes.Eid=='模糊'">
+
+                        AND t0.eid LIKE '%${filters.Eid}%'
+
+                    </if>
+                    <if test="filterTypes.Eid=='数组'">
+                        AND t0.eid in
+                        <foreach collection="filters.Eid" item="item" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.name!=null">
+                    <if test="filterTypes.name=='单值'">
+
+                        AND t0.name LIKE '%${filters.name}%'
+
+                    </if>
+                    <if test="filterTypes.name=='模糊'">
+
+                        AND t0.name LIKE '%${filters.name}%'
+
+                    </if>
+                    <if test="filterTypes.name=='数组'">
+                        AND t0.name in
+                        <foreach collection="filters.name" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.creatorName!=null">
+                    <if test="filterTypes.creatorName=='单值'">
+
+                        AND t0.creator_name LIKE '%${filters.creatorName}%'
+
+                    </if>
+                    <if test="filterTypes.creatorName=='模糊'">
+
+                        AND t0.creator_name LIKE '%${filters.creatorName}%'
+
+                    </if>
+                    <if test="filterTypes.creatorName=='数组'">
+                        AND t0.creator_name in
+                        <foreach collection="filters.creatorName" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.studentId!=null">
+                    <if test="filterTypes.studentId=='单值'">
+
+                        AND t0.student_id = #{filters.studentId}
+
+                    </if>
+                    <if test="filterTypes.studentId=='模糊'">
+
+                        AND t0.student_id LIKE '%${filters.studentId}%'
+
+                    </if>
+                    <if test="filterTypes.studentId=='数组'">
+                        AND t0.student_id in
+                        <foreach collection="filters.studentId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.sex!=null">
+                    <if test="filterTypes.sex=='单值'">
+
+                        AND t0.sex LIKE '%${filters.sex}%'
+
+                    </if>
+                    <if test="filterTypes.sex=='模糊'">
+
+                        AND t0.sex LIKE '%${filters.sex}%'
+
+                    </if>
+                    <if test="filterTypes.sex=='数组'">
+                        AND t0.sex in
+                        <foreach collection="filters.sex" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.collegeId!=null">
+                    <if test="filterTypes.collegeId=='单值'">
+
+                        AND t0.college_id = #{filters.collegeId}
+
+                    </if>
+                    <if test="filterTypes.collegeId=='模糊'">
+
+                        AND t0.college_id LIKE '%${filters.collegeId}%'
+
+                    </if>
+                    <if test="filterTypes.collegeId=='数组'">
+                        AND t0.college_id in
+                        <foreach collection="filters.collegeId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.major!=null">
+                    <if test="filterTypes.major=='单值'">
+
+                        AND t0.major LIKE '%${filters.major}%'
+
+                    </if>
+                    <if test="filterTypes.major=='模糊'">
+
+                        AND t0.major LIKE '%${filters.major}%'
+
+                    </if>
+                    <if test="filterTypes.major=='数组'">
+                        AND t0.major in
+                        <foreach collection="filters.major" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.grade!=null">
+                    <if test="filterTypes.grade=='单值'">
+
+                        AND t0.grade LIKE '%${filters.grade}%'
+
+                    </if>
+                    <if test="filterTypes.grade=='模糊'">
+
+                        AND t0.grade LIKE '%${filters.grade}%'
+
+                    </if>
+                    <if test="filterTypes.grade=='数组'">
+                        AND t0.grade in
+                        <foreach collection="filters.grade" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.instructor!=null">
+                    <if test="filterTypes.instructor=='单值'">
+
+                        AND t0.instructor LIKE '%${filters.instructor}%'
+
+                    </if>
+                    <if test="filterTypes.instructor=='模糊'">
+
+                        AND t0.instructor LIKE '%${filters.instructor}%'
+
+                    </if>
+                    <if test="filterTypes.instructor=='数组'">
+                        AND t0.instructor in
+                        <foreach collection="filters.instructor" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.nation!=null">
+                    <if test="filterTypes.nation=='单值'">
+
+                        AND t0.nation LIKE '%${filters.nation}%'
+
+                    </if>
+                    <if test="filterTypes.nation=='模糊'">
+
+                        AND t0.nation LIKE '%${filters.nation}%'
+
+                    </if>
+                    <if test="filterTypes.nation=='数组'">
+                        AND t0.nation in
+                        <foreach collection="filters.nation" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.political!=null">
+                    <if test="filterTypes.political=='单值'">
+
+                        AND t0.political LIKE '%${filters.political}%'
+
+                    </if>
+                    <if test="filterTypes.political=='模糊'">
+
+                        AND t0.political LIKE '%${filters.political}%'
+
+                    </if>
+                    <if test="filterTypes.political=='数组'">
+                        AND t0.political in
+                        <foreach collection="filters.political" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.job!=null">
+                    <if test="filterTypes.job=='单值'">
+
+                        AND t0.job LIKE '%${filters.job}%'
+
+                    </if>
+                    <if test="filterTypes.job=='模糊'">
+
+                        AND t0.job LIKE '%${filters.job}%'
+
+                    </if>
+                    <if test="filterTypes.job=='数组'">
+                        AND t0.job in
+                        <foreach collection="filters.job" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.firstAverageScore!=null">
+                    <if test="filterTypes.firstAverageScore=='单值'">
+
+                        AND t0.first_average_score = #{filters.firstAverageScore}
+
+                    </if>
+                    <if test="filterTypes.firstAverageScore=='模糊'">
+
+                        AND t0.first_average_score LIKE '%${filters.firstAverageScore}%'
+
+                    </if>
+                    <if test="filterTypes.firstAverageScore=='数组'">
+                        AND t0.first_average_score in
+                        <foreach collection="filters.firstAverageScore" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.secondAverageScore!=null">
+                    <if test="filterTypes.secondAverageScore=='单值'">
+
+                        AND t0.second_average_score = #{filters.secondAverageScore}
+
+                    </if>
+                    <if test="filterTypes.secondAverageScore=='模糊'">
+
+                        AND t0.second_average_score LIKE '%${filters.secondAverageScore}%'
+
+                    </if>
+                    <if test="filterTypes.secondAverageScore=='数组'">
+                        AND t0.second_average_score in
+                        <foreach collection="filters.secondAverageScore" item="item" index="index" open="("
+                                 separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.fristScholarshipRanking!=null">
+                    <if test="filterTypes.fristScholarshipRanking=='单值'">
+
+                        AND t0.frist_scholarship_ranking = #{filters.fristScholarshipRanking}
+
+                    </if>
+                    <if test="filterTypes.fristScholarshipRanking=='模糊'">
+
+                        AND t0.frist_scholarship_ranking LIKE '%${filters.fristScholarshipRanking}%'
+
+                    </if>
+                    <if test="filterTypes.fristScholarshipRanking=='数组'">
+                        AND t0.frist_scholarship_ranking in
+                        <foreach collection="filters.fristScholarshipRanking" item="item" index="index" open="("
+                                 separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.secondScholarshipRanking!=null">
+                    <if test="filterTypes.secondScholarshipRanking=='单值'">
+
+                        AND t0.second_scholarship_ranking = #{filters.secondScholarshipRanking}
+
+                    </if>
+                    <if test="filterTypes.secondScholarshipRanking=='模糊'">
+
+                        AND t0.second_scholarship_ranking LIKE '%${filters.secondScholarshipRanking}%'
+
+                    </if>
+                    <if test="filterTypes.secondScholarshipRanking=='数组'">
+                        AND t0.second_scholarship_ranking in
+                        <foreach collection="filters.secondScholarshipRanking" item="item" index="index" open="("
+                                 separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.englishScore!=null">
+                    <if test="filterTypes.englishScore=='单值'">
+                    </if>
+                    <if test="filterTypes.englishScore=='模糊'">
+
+                        AND t0.english_score LIKE '%${filters.englishScore}%'
+
+                    </if>
+                    <if test="filterTypes.englishScore=='数组'">
+                    </if>
+                </if>
+                <if test="filters.computerScore!=null">
+                    <if test="filterTypes.computerScore=='单值'">
+                    </if>
+                    <if test="filterTypes.computerScore=='模糊'">
+
+                        AND t0.computer_score LIKE '%${filters.computerScore}%'
+
+                    </if>
+                    <if test="filterTypes.computerScore=='数组'">
+                    </if>
+                </if>
+                <if test="filters.firstSportsScore!=null">
+                    <if test="filterTypes.firstSportsScore=='单值'">
+                    </if>
+                    <if test="filterTypes.firstSportsScore=='模糊'">
+
+                        AND t0.first_sports_score LIKE '%${filters.firstSportsScore}%'
+
+                    </if>
+                    <if test="filterTypes.firstSportsScore=='数组'">
+                    </if>
+                </if>
+                <if test="filters.secondSportsScore!=null">
+                    <if test="filterTypes.secondSportsScore=='单值'">
+                    </if>
+                    <if test="filterTypes.secondSportsScore=='模糊'">
+
+                        AND t0.second_sports_score LIKE '%${filters.secondSportsScore}%'
+
+                    </if>
+                    <if test="filterTypes.secondSportsScore=='数组'">
+                    </if>
+                </if>
+                <if test="filters.schoolPunishment!=null">
+                    <if test="filterTypes.schoolPunishment=='单值'">
+
+                        AND t0.school_punishment LIKE '%${filters.schoolPunishment}%'
+
+                    </if>
+                    <if test="filterTypes.schoolPunishment=='模糊'">
+
+                        AND t0.school_punishment LIKE '%${filters.schoolPunishment}%'
+
+                    </if>
+                    <if test="filterTypes.schoolPunishment=='数组'">
+                        AND t0.school_punishment in
+                        <foreach collection="filters.schoolPunishment" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.punishment!=null">
+                    <if test="filterTypes.punishment=='单值'">
+
+                        AND t0.punishment LIKE '%${filters.punishment}%'
+
+                    </if>
+                    <if test="filterTypes.punishment=='模糊'">
+
+                        AND t0.punishment LIKE '%${filters.punishment}%'
+
+                    </if>
+                    <if test="filterTypes.punishment=='数组'">
+                        AND t0.punishment in
+                        <foreach collection="filters.punishment" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.failedSubjects!=null">
+                    <if test="filterTypes.failedSubjects=='单值'">
+
+                        AND t0.failed_subjects = #{filters.failedSubjects}
+
+                    </if>
+                    <if test="filterTypes.failedSubjects=='模糊'">
+
+                        AND t0.failed_subjects LIKE '%${filters.failedSubjects}%'
+
+                    </if>
+                    <if test="filterTypes.failedSubjects=='数组'">
+                        AND t0.failed_subjects in
+                        <foreach collection="filters.failedSubjects" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.isCivilizedDormitory!=null">
+                    <if test="filterTypes.isCivilizedDormitory=='单值'">
+
+                        AND t0.is_civilized_dormitory LIKE '%${filters.isCivilizedDormitory}%'
+
+                    </if>
+                    <if test="filterTypes.isCivilizedDormitory=='模糊'">
+
+                        AND t0.is_civilized_dormitory LIKE '%${filters.isCivilizedDormitory}%'
+
+                    </if>
+                    <if test="filterTypes.isCivilizedDormitory=='数组'">
+                        AND t0.is_civilized_dormitory in
+                        <foreach collection="filters.isCivilizedDormitory" item="item" index="index" open="("
+                                 separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.award!=null">
+                    <if test="filterTypes.award=='单值'">
+
+                        AND t0.award LIKE '%${filters.award}%'
+
+                    </if>
+                    <if test="filterTypes.award=='模糊'">
+
+                        AND t0.award LIKE '%${filters.award}%'
+
+                    </if>
+                    <if test="filterTypes.award=='数组'">
+                        AND t0.award in
+                        <foreach collection="filters.award" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.deeds!=null">
+                    <if test="filterTypes.deeds=='单值'">
+
+                        AND t0.deeds LIKE '%${filters.deeds}%'
+
+                    </if>
+                    <if test="filterTypes.deeds=='模糊'">
+
+                        AND t0.deeds LIKE '%${filters.deeds}%'
+
+                    </if>
+                    <if test="filterTypes.deeds=='数组'">
+                        AND t0.deeds in
+                        <foreach collection="filters.deeds" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.collegeOpinion!=null">
+                    <if test="filterTypes.collegeOpinion=='单值'">
+
+                        AND t0.college_opinion LIKE '%${filters.collegeOpinion}%'
+
+                    </if>
+                    <if test="filterTypes.collegeOpinion=='模糊'">
+
+                        AND t0.college_opinion LIKE '%${filters.collegeOpinion}%'
+
+                    </if>
+                    <if test="filterTypes.collegeOpinion=='数组'">
+                        AND t0.college_opinion in
+                        <foreach collection="filters.collegeOpinion" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.schoolOpinion!=null">
+                    <if test="filterTypes.schoolOpinion=='单值'">
+
+                        AND t0.school_opinion LIKE '%${filters.schoolOpinion}%'
+
+                    </if>
+                    <if test="filterTypes.schoolOpinion=='模糊'">
+
+                        AND t0.school_opinion LIKE '%${filters.schoolOpinion}%'
+
+                    </if>
+                    <if test="filterTypes.schoolOpinion=='数组'">
+                        AND t0.school_opinion in
+                        <foreach collection="filters.schoolOpinion" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.prove!=null">
+                    <if test="filterTypes.prove=='单值'">
+
+                        AND t0.prove LIKE '%${filters.prove}%'
+
+                    </if>
+                    <if test="filterTypes.prove=='模糊'">
+
+                        AND t0.prove LIKE '%${filters.prove}%'
+
+                    </if>
+                    <if test="filterTypes.prove=='数组'">
+                        AND t0.prove in
+                        <foreach collection="filters.prove" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.mark1!=null">
+                    <if test="filterTypes.mark1=='单值'">
+
+                        AND t0.mark_1 LIKE '%${filters.mark1}%'
+
+                    </if>
+                    <if test="filterTypes.mark1=='模糊'">
+
+                        AND t0.mark_1 LIKE '%${filters.mark1}%'
+
+                    </if>
+                    <if test="filterTypes.mark1=='数组'">
+                        AND t0.mark_1 in
+                        <foreach collection="filters.mark1" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.mark2!=null">
+                    <if test="filterTypes.mark2=='单值'">
+
+                        AND t0.mark_2 LIKE '%${filters.mark2}%'
+
+                    </if>
+                    <if test="filterTypes.mark2=='模糊'">
+
+                        AND t0.mark_2 LIKE '%${filters.mark2}%'
+
+                    </if>
+                    <if test="filterTypes.mark2=='数组'">
+                        AND t0.mark_2 in
+                        <foreach collection="filters.mark2" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.ranking!=null">
+                    <if test="filterTypes.ranking=='单值'">
+
+                        AND t0.ranking = #{filters.ranking}
+
+                    </if>
+                    <if test="filterTypes.ranking=='模糊'">
+
+                        AND t0.ranking LIKE '%${filters.ranking}%'
+
+                    </if>
+                    <if test="filterTypes.ranking=='数组'">
+                        AND t0.ranking in
+                        <foreach collection="filters.ranking" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.date!=null">
+                    <if test="filterTypes.date=='单值'">
+                    </if>
+                    <if test="filterTypes.date=='模糊'">
+
+                        AND t0.date LIKE '%${filters.date}%'
+
+                    </if>
+                    <if test="filterTypes.date=='数组'">
+                    </if>
+                </if>
+                <if test="filters.targetNameId!=null">
+                    <if test="filterTypes.targetNameId=='单值'">
+
+                        AND t0.target_name_id = #{filters.targetNameId}
+
+                    </if>
+                    <if test="filterTypes.targetNameId=='模糊'">
+
+                        AND t0.target_name_id LIKE '%${filters.targetNameId}%'
+
+                    </if>
+                    <if test="filterTypes.targetNameId=='数组'">
+                        AND t0.target_name_id in
+                        <foreach collection="filters.targetNameId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.auditStatus!=null">
+                    <if test="filterTypes.auditStatus=='单值'">
+
+                        AND t0.audit_status LIKE '%${filters.auditStatus}%'
+
+                    </if>
+                    <if test="filterTypes.auditStatus=='模糊'">
+
+                        AND t0.audit_status LIKE '%${filters.auditStatus}%'
+
+                    </if>
+                    <if test="filterTypes.auditStatus=='数组'">
+                        AND t0.audit_status in
+                        <foreach collection="filters.auditStatus" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.reviewerId!=null">
+                    <if test="filterTypes.reviewerId=='单值'">
+
+                        AND t0.reviewer_id = #{filters.reviewerId}
+
+                    </if>
+                    <if test="filterTypes.reviewerId=='模糊'">
+
+                        AND t0.reviewer_id LIKE '%${filters.reviewerId}%'
+
+                    </if>
+                    <if test="filterTypes.reviewerId=='数组'">
+                        AND t0.reviewer_id in
+                        <foreach collection="filters.reviewerId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.feedBack!=null">
+                    <if test="filterTypes.feedBack=='单值'">
+
+                        AND t0.feed_back LIKE '%${filters.feedBack}%'
+
+                    </if>
+                    <if test="filterTypes.feedBack=='模糊'">
+
+                        AND t0.feed_back LIKE '%${filters.feedBack}%'
+
+                    </if>
+                    <if test="filterTypes.feedBack=='数组'">
+                        AND t0.feed_back in
+                        <foreach collection="filters.feedBack" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.status!=null">
+                    <if test="filterTypes.status=='单值'">
+
+                        AND t0.status LIKE '%${filters.status}%'
+
+                    </if>
+                    <if test="filterTypes.status=='模糊'">
+
+                        AND t0.status LIKE '%${filters.status}%'
+
+                    </if>
+                    <if test="filterTypes.status=='数组'">
+                        AND t0.status in
+                        <foreach collection="filters.status" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.creatorId!=null">
+                    <if test="filterTypes.creatorId=='单值'">
+
+                        AND t0.creator_id = #{filters.creatorId}
+
+                    </if>
+                    <if test="filterTypes.creatorId=='模糊'">
+
+                        AND t0.creator_id LIKE '%${filters.creatorId}%'
+
+                    </if>
+                    <if test="filterTypes.creatorId=='数组'">
+                        AND t0.creator_id in
+                        <foreach collection="filters.creatorId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.remark!=null">
+                    <if test="filterTypes.remark=='单值'">
+
+                        AND t0.remark LIKE '%${filters.remark}%'
+
+                    </if>
+                    <if test="filterTypes.remark=='模糊'">
+
+                        AND t0.remark LIKE '%${filters.remark}%'
+
+                    </if>
+                    <if test="filterTypes.remark=='数组'">
+                        AND t0.remark in
+                        <foreach collection="filters.remark" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.createDatetime!=null">
+                    <if test="filterTypes.createDatetime=='单值'">
+                    </if>
+                    <if test="filterTypes.createDatetime=='模糊'">
+
+                        AND t0.create_datetime LIKE '%${filters.createDatetime}%'
+
+                    </if>
+                    <if test="filterTypes.createDatetime=='数组'">
+                    </if>
+                </if>
+            </if>
+        </where>
+    </sql>
+
+
+    <!-- 根据分页参数查询数据集合 -->
+    <select id="findAppraisings" resultType="com.mt.ams.entity.appraisingEntity.Appraising"
+            parameterType="com.mt.common.core.web.base.PageDTO">
+        select
+        t0.eid ,
+        t0.name ,
+        t0.creator_name ,
+        t0.student_id ,
+        t0.sex ,
+        t0.college_id ,
+        t0.major ,
+        t0.grade ,
+        t0.instructor ,
+        t0.nation ,
+        t0.political ,
+        t0.job ,
+        t0.first_average_score ,
+        t0.second_average_score ,
+        t0.frist_scholarship_ranking ,
+        t0.second_scholarship_ranking ,
+        t0.english_score ,
+        t0.computer_score ,
+        t0.first_sports_score ,
+        t0.second_sports_score ,
+        t0.school_punishment ,
+        t0.punishment ,
+        t0.failed_subjects ,
+        t0.is_civilized_dormitory ,
+        t0.award ,
+        t0.deeds ,
+        t0.college_opinion ,
+        t0.school_opinion ,
+        t0.prove ,
+        t0.mark_1 ,
+        t0.mark_2 ,
+        t0.ranking ,
+        t0.date ,
+        t0.target_name_id ,
+        t0.audit_status ,
+        t0.reviewer_id ,
+        t0.feed_back ,
+        t0.status ,
+        t0.creator_id ,
+        t0.remark ,
+        t0.create_datetime
+        ,t3.name as student_name
+
+        ,t5.name as college_name
+
+        ,t33.name as target_name_name
+
+        ,t35.name as reviewer_name
+
+
+        <include refid="findAppraisingsWhere"></include>
+
+        <if test="orderBys!=null">
+            <foreach collection="orderBys" item="item" index="index" open="order by" separator="," close="">
+                ${item}
+            </foreach>
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!-- 根据分页参数查询数据集合总条数 -->
+    <select id="findAppraisingTotalCount" resultType="java.lang.Long"
+            parameterType="com.mt.common.core.web.base.PageDTO">
+        select count(t0.eid) as totalCount
+        <include refid="findAppraisingsWhere"></include>
+    </select>
+
+    <!-- 根据查询所有数据集合 -->
+    <select id="findAllAppraisings" resultType="com.mt.ams.entity.appraisingEntity.Appraising">
+        select t0.eid,
+               t0.name,
+               t0.creator_name,
+               t0.student_id,
+               t0.sex,
+               t0.college_id,
+               t0.major,
+               t0.grade,
+               t0.instructor,
+               t0.nation,
+               t0.political,
+               t0.job,
+               t0.first_average_score,
+               t0.second_average_score,
+               t0.frist_scholarship_ranking,
+               t0.second_scholarship_ranking,
+               t0.english_score,
+               t0.computer_score,
+               t0.first_sports_score,
+               t0.second_sports_score,
+               t0.school_punishment,
+               t0.punishment,
+               t0.failed_subjects,
+               t0.is_civilized_dormitory,
+               t0.award,
+               t0.deeds,
+               t0.college_opinion,
+               t0.school_opinion,
+               t0.prove,
+               t0.mark_1,
+               t0.mark_2,
+               t0.ranking,
+               t0.date,
+               t0.target_name_id,
+               t0.audit_status,
+               t0.reviewer_id,
+               t0.feed_back,
+               t0.status,
+               t0.creator_id,
+               t0.remark,
+               t0.create_datetime
+                ,
+               t3.name  as student_name
+                ,
+               t5.name  as college_name
+                ,
+               t33.name as target_name_name
+                ,
+               t35.name as reviewer_name
+
+        from ams_appraising t0
+                 LEFT JOIN ams_student_info t3 on t0.student_id = t3.eid
+                 LEFT JOIN ams_college t5 on t0.college_id = t5.eid
+                 LEFT JOIN ams_appraising_type t33 on t0.target_name_id = t33.eid
+                 LEFT JOIN sys_user t35 on t0.reviewer_id = t35.eid
+        ORDER BY t0.create_datetime
+    </select>
+
+    <!-- 根据名称查询数据集合,只提取ID 和 Name -->
+    <select id="findAppraisingsWithIdNameByName" resultType="com.mt.ams.entity.appraisingEntity.Appraising"
+            parameterType="java.lang.String">
+        select t0.eid,
+               t0.name
+        from ams_appraising t0
+        where t0.name like '%${appraisingName}%'
+        ORDER BY t0.name
+    </select>
+
+
+    <!-- 查询所有数据集合,只提取ID 和 Name -->
+    <select id="findAllAppraisingsWithIdName" resultType="com.mt.ams.entity.appraisingEntity.Appraising">
+        select t0.eid,
+               t0.name
+        from ams_appraising t0
+        ORDER BY t0.name
+    </select>
+
+    <!-- 查询指定的实体,只提取ID 和 Name -->
+    <select id="findAppraisingsWithIdNameById" resultType="com.mt.ams.entity.appraisingEntity.Appraising"
+            parameterType="java.lang.Long">
+        select t0.eid,
+               t0.name
+        from ams_appraising t0
+        where eid = #{appraisingId}
+    </select>
+
+    <!--  根据Id查询 -->
+    <select id="findAppraising" resultType="com.mt.ams.entity.appraisingEntity.Appraising"
+            parameterType="java.lang.Long">
+        select *
+        from ams_appraising
+        where eid = #{appraisingId}
+    </select>
+
+    <!-- 根据ID查询指定的实体(包含外键) -->
+    <select id="findAppraisingWithForeignName" resultType="com.mt.ams.entity.appraisingEntity.Appraising"
+            parameterType="java.lang.Long">
+        select t0.eid,
+               t0.name,
+               t0.creator_name,
+               t0.student_id,
+               t0.sex,
+               t0.college_id,
+               t0.major,
+               t0.grade,
+               t0.instructor,
+               t0.nation,
+               t0.political,
+               t0.job,
+               t0.first_average_score,
+               t0.second_average_score,
+               t0.frist_scholarship_ranking,
+               t0.second_scholarship_ranking,
+               t0.english_score,
+               t0.computer_score,
+               t0.first_sports_score,
+               t0.second_sports_score,
+               t0.school_punishment,
+               t0.punishment,
+               t0.failed_subjects,
+               t0.is_civilized_dormitory,
+               t0.award,
+               t0.deeds,
+               t0.college_opinion,
+               t0.school_opinion,
+               t0.prove,
+               t0.mark_1,
+               t0.mark_2,
+               t0.ranking,
+               t0.date,
+               t0.target_name_id,
+               t0.audit_status,
+               t0.reviewer_id,
+               t0.feed_back,
+               t0.status,
+               t0.creator_id,
+               t0.remark,
+               t0.create_datetime
+                ,
+               t3.name  as student_name
+                ,
+               t5.name  as college_name
+                ,
+               t33.name as target_name_name
+                ,
+               t35.name as reviewer_name
+
+        from ams_appraising t0
+                 LEFT JOIN ams_student_info t3 on t0.student_id = t3.eid
+                 LEFT JOIN ams_college t5 on t0.college_id = t5.eid
+                 LEFT JOIN ams_appraising_type t33 on t0.target_name_id = t33.eid
+                 LEFT JOIN sys_user t35 on t0.reviewer_id = t35.eid
+        where t0.eid = #{appraisingId}
+    </select>
+
+
+    <!--  保存 -->
+    <insert id="saveAppraising" parameterType="com.mt.ams.entity.appraisingEntity.Appraising" useGeneratedKeys="true">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into ams_appraising
+        (
+        name ,
+        creator_name ,
+        student_id ,
+        sex ,
+        college_id ,
+        major ,
+        grade ,
+        instructor ,
+        nation ,
+        political ,
+        job ,
+        first_average_score ,
+        second_average_score ,
+        frist_scholarship_ranking ,
+        second_scholarship_ranking ,
+        english_score ,
+        computer_score ,
+        first_sports_score ,
+        second_sports_score ,
+        school_punishment ,
+        punishment ,
+        failed_subjects ,
+        is_civilized_dormitory ,
+        award ,
+        deeds ,
+        college_opinion ,
+        school_opinion ,
+        prove ,
+        mark_1 ,
+        mark_2 ,
+        ranking ,
+        date ,
+        target_name_id ,
+        audit_status ,
+        reviewer_id ,
+        feed_back ,
+        status ,
+        creator_id ,
+        remark ,
+        create_datetime
+        )
+        values
+        (
+        #{name} ,
+        #{creatorName} ,
+        #{studentId} ,
+        #{sex} ,
+        #{collegeId} ,
+        #{major} ,
+        #{grade} ,
+        #{instructor} ,
+        #{nation} ,
+        #{political} ,
+        #{job} ,
+        #{firstAverageScore} ,
+        #{secondAverageScore} ,
+        #{fristScholarshipRanking} ,
+        #{secondScholarshipRanking} ,
+        #{englishScore} ,
+        #{computerScore} ,
+        #{firstSportsScore} ,
+        #{secondSportsScore} ,
+        #{schoolPunishment} ,
+        #{punishment} ,
+        #{failedSubjects} ,
+        #{isCivilizedDormitory} ,
+        #{award} ,
+        #{deeds} ,
+        #{collegeOpinion} ,
+        #{schoolOpinion} ,
+        #{prove} ,
+        #{mark1} ,
+        #{mark2} ,
+        #{ranking} ,
+        #{date} ,
+        #{targetNameId} ,
+        #{auditStatus} ,
+        #{reviewerId} ,
+        #{feedBack} ,
+        #{status} ,
+        #{creatorId} ,
+        #{remark} ,
+        #{createDatetime}
+        )
+    </insert>
+
+    <!--  编辑 -->
+    <update id="updateAppraising" parameterType="com.mt.ams.entity.appraisingEntity.Appraising">
+        update ams_appraising
+        set name                       = #{name},
+            creator_name               = #{creatorName},
+            student_id                 = #{studentId},
+            sex                        = #{sex},
+            college_id                 = #{collegeId},
+            major                      = #{major},
+            grade                      = #{grade},
+            instructor                 = #{instructor},
+            nation                     = #{nation},
+            political                  = #{political},
+            job                        = #{job},
+            first_average_score        = #{firstAverageScore},
+            second_average_score       = #{secondAverageScore},
+            frist_scholarship_ranking  = #{fristScholarshipRanking},
+            second_scholarship_ranking = #{secondScholarshipRanking},
+            english_score              = #{englishScore},
+            computer_score             = #{computerScore},
+            first_sports_score         = #{firstSportsScore},
+            second_sports_score        = #{secondSportsScore},
+            school_punishment          = #{schoolPunishment},
+            punishment                 = #{punishment},
+            failed_subjects            = #{failedSubjects},
+            is_civilized_dormitory     = #{isCivilizedDormitory},
+            award                      = #{award},
+            deeds                      = #{deeds},
+            college_opinion            = #{collegeOpinion},
+            school_opinion             = #{schoolOpinion},
+            prove                      = #{prove},
+            mark_1                     = #{mark1},
+            mark_2                     = #{mark2},
+            ranking                    = #{ranking},
+            date                       = #{date},
+            target_name_id             = #{targetNameId},
+            audit_status               = #{auditStatus},
+            reviewer_id                = #{reviewerId},
+            feed_back                  = #{feedBack},
+            status                     = #{status},
+            creator_id                 = #{creatorId},
+            remark                     = #{remark},
+            create_datetime            = #{createDatetime}
+        where eid = #{eid}
+    </update>
+
+
+    <!--  根据Id删除 -->
+    <delete id="deleteAppraising" parameterType="java.lang.Long">
+        delete
+        from ams_appraising
+        where eid = #{appraisingId}
+    </delete>
+
+    <update id="auditForCon">
+        update ams_appraising
+        set audit_status = '审核未通过',
+            feed_back=#{remarkContent}
+        where eid = #{Id}
+    </update>
+
+    <update id="myUpdate">
+        update ams_appraising
+        set audit_status = '审核通过'
+        where eid = #{Id}
+    </update>
+
+    <update id="updateReviewer">
+        update ams_appraising
+        set reviewer_id = #{Id}
+        where eid = #{eid}
+    </update>
+
+</mapper>

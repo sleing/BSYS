@@ -1,0 +1,57 @@
+[
+  {
+    "major": {
+      "probability": 0.8713333010673523,
+      "words": "中国人工智险学会"
+    },
+    "minor": [],
+    "probability": 0.9964094161987305,
+    "location": {
+      "top": 391,
+      "left": 376,
+      "width": 130,
+      "height": 127
+    },
+    "type": "circle"
+  },
+  {
+    "major": {
+      "probability": 0.9551764726638794,
+      "words": "中国计算机博奔锦标赛"
+    },
+    "minor": [
+      {
+        "probability": 0.9999956488609314,
+        "words": "组委会"
+      }
+    ],
+    "probability": 0.9926051497459412,
+    "location": {
+      "top": 387,
+      "left": 589,
+      "width": 122,
+      "height": 120
+    },
+    "type": "circle"
+  },
+  {
+    "major": {
+      "probability": 0.9427887201309204,
+      "words": "中国大学生计算机博弈公赛"
+    },
+    "minor": [
+      {
+        "probability": 0.9999476075172424,
+        "words": "组委会"
+      }
+    ],
+    "probability": 0.989922285079956,
+    "location": {
+      "top": 388,
+      "left": 141,
+      "width": 121,
+      "height": 121
+    },
+    "type": "circle"
+  }
+]

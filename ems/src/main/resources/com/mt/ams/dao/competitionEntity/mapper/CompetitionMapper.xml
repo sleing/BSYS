@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mt.ams.dao.competitionEntity.CompetitionDao">
+    <!-- 条件查询 -->
+    <sql id="findCompetitionsWhere">
+        from ams_competition t0
+        LEFT JOIN ams_unit t4 on t0.units_id =t4.eid
+        <where>
+            <if test="filters!=null">
+                <if test="filters.Eid!=null">
+                    <if test="filterTypes.Eid=='单值'">
+
+                        AND t0.eid = #{filters.Eid}
+
+                    </if>
+                    <if test="filterTypes.Eid=='模糊'">
+
+                        AND t0.eid LIKE '%${filters.Eid}%'
+
+                    </if>
+                    <if test="filterTypes.Eid=='数组'">
+                        AND t0.eid in
+                        <foreach collection="filters.Eid" item="item" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.creatorName!=null">
+                    <if test="filterTypes.creatorName=='单值'">
+
+                        AND t0.creator_name LIKE '%${filters.creatorName}%'
+
+                    </if>
+                    <if test="filterTypes.creatorName=='模糊'">
+
+                        AND t0.creator_name LIKE '%${filters.creatorName}%'
+
+                    </if>
+                    <if test="filterTypes.creatorName=='数组'">
+                        AND t0.creator_name in
+                        <foreach collection="filters.creatorName" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.name!=null">
+                    <if test="filterTypes.name=='单值'">
+
+                        AND t0.name LIKE '%${filters.name}%'
+
+                    </if>
+                    <if test="filterTypes.name=='模糊'">
+
+                        AND t0.name LIKE '%${filters.name}%'
+
+                    </if>
+                    <if test="filterTypes.name=='数组'">
+                        AND t0.name in
+                        <foreach collection="filters.name" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.awardLevel!=null">
+                    <if test="filterTypes.awardLevel=='单值'">
+
+                        AND t0.award_level LIKE '%${filters.awardLevel}%'
+
+                    </if>
+                    <if test="filterTypes.awardLevel=='模糊'">
+
+                        AND t0.award_level LIKE '%${filters.awardLevel}%'
+
+                    </if>
+                    <if test="filterTypes.awardLevel=='数组'">
+                        AND t0.award_level in
+                        <foreach collection="filters.awardLevel" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.unitsId!=null">
+                    <if test="filterTypes.unitsId=='单值'">
+
+                        AND t0.units_id = #{filters.unitsId}
+
+                    </if>
+                    <if test="filterTypes.unitsId=='模糊'">
+
+                        AND t0.units_id LIKE '%${filters.unitsId}%'
+
+                    </if>
+                    <if test="filterTypes.unitsId=='数组'">
+                        AND t0.units_id in
+                        <foreach collection="filters.unitsId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.competitionCategory!=null">
+                    <if test="filterTypes.competitionCategory=='单值'">
+
+                        AND t0.competition_category LIKE '%${filters.competitionCategory}%'
+
+                    </if>
+                    <if test="filterTypes.competitionCategory=='模糊'">
+
+                        AND t0.competition_category LIKE '%${filters.competitionCategory}%'
+
+                    </if>
+                    <if test="filterTypes.competitionCategory=='数组'">
+                        AND t0.competition_category in
+                        <foreach collection="filters.competitionCategory" item="item" index="index" open="("
+                                 separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.competitionLevel!=null">
+                    <if test="filterTypes.competitionLevel=='单值'">
+
+                        AND t0.competition_level LIKE '%${filters.competitionLevel}%'
+
+                    </if>
+                    <if test="filterTypes.competitionLevel=='模糊'">
+
+                        AND t0.competition_level LIKE '%${filters.competitionLevel}%'
+
+                    </if>
+                    <if test="filterTypes.competitionLevel=='数组'">
+                        AND t0.competition_level in
+                        <foreach collection="filters.competitionLevel" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.status!=null">
+                    <if test="filterTypes.status=='单值'">
+
+                        AND t0.status LIKE '%${filters.status}%'
+
+                    </if>
+                    <if test="filterTypes.status=='模糊'">
+
+                        AND t0.status LIKE '%${filters.status}%'
+
+                    </if>
+                    <if test="filterTypes.status=='数组'">
+                        AND t0.status in
+                        <foreach collection="filters.status" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.creatorId!=null">
+                    <if test="filterTypes.creatorId=='单值'">
+
+                        AND t0.creator_id = #{filters.creatorId}
+
+                    </if>
+                    <if test="filterTypes.creatorId=='模糊'">
+
+                        AND t0.creator_id LIKE '%${filters.creatorId}%'
+
+                    </if>
+                    <if test="filterTypes.creatorId=='数组'">
+                        AND t0.creator_id in
+                        <foreach collection="filters.creatorId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.remark!=null">
+                    <if test="filterTypes.remark=='单值'">
+
+                        AND t0.remark LIKE '%${filters.remark}%'
+
+                    </if>
+                    <if test="filterTypes.remark=='模糊'">
+
+                        AND t0.remark LIKE '%${filters.remark}%'
+
+                    </if>
+                    <if test="filterTypes.remark=='数组'">
+                        AND t0.remark in
+                        <foreach collection="filters.remark" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.createDatetime!=null">
+                    <if test="filterTypes.createDatetime=='单值'">
+                    </if>
+                    <if test="filterTypes.createDatetime=='模糊'">
+
+                        AND t0.create_datetime LIKE '%${filters.createDatetime}%'
+
+                    </if>
+                    <if test="filterTypes.createDatetime=='数组'">
+                    </if>
+                </if>
+            </if>
+        </where>
+    </sql>
+
+
+    <!-- 根据分页参数查询数据集合 -->
+    <select id="findCompetitions" resultType="com.mt.ams.entity.competitionEntity.Competition"
+            parameterType="com.mt.common.core.web.base.PageDTO">
+        select
+        t0.eid ,
+        t0.creator_name ,
+        t0.name ,
+        t0.award_level ,
+        t0.units_id ,
+        t0.competition_category ,
+        t0.competition_level ,
+        t0.status ,
+        t0.creator_id ,
+        t0.remark ,
+        t0.create_datetime
+        ,t4.name as units_name
+
+
+        <include refid="findCompetitionsWhere"></include>
+
+        <if test="orderBys!=null">
+            <foreach collection="orderBys" item="item" index="index" open="order by" separator="," close="">
+                ${item}
+            </foreach>
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!-- 根据分页参数查询数据集合总条数 -->
+    <select id="findCompetitionTotalCount" resultType="java.lang.Long"
+            parameterType="com.mt.common.core.web.base.PageDTO">
+        select count(t0.eid) as totalCount
+        <include refid="findCompetitionsWhere"></include>
+    </select>
+
+    <!-- 根据查询所有数据集合 -->
+    <select id="findAllCompetitions" resultType="com.mt.ams.entity.competitionEntity.Competition">
+        select t0.eid,
+               t0.creator_name,
+               t0.name,
+               t0.award_level,
+               t0.units_id,
+               t0.competition_category,
+               t0.competition_level,
+               t0.status,
+               t0.creator_id,
+               t0.remark,
+               t0.create_datetime
+                ,
+               t4.name as units_name
+
+        from ams_competition t0
+                 LEFT JOIN ams_unit t4 on t0.units_id = t4.eid
+        ORDER BY t0.create_datetime
+    </select>
+
+    <!-- 根据名称查询数据集合,只提取ID 和 Name -->
+    <select id="findCompetitionsWithIdNameByName" resultType="com.mt.ams.entity.competitionEntity.Competition"
+            parameterType="java.lang.String">
+        select t0.eid,
+               t0.name
+        from ams_competition t0
+        where t0.name like '%${competitionName}%'
+        ORDER BY t0.name
+    </select>
+
+
+    <!-- 查询所有数据集合,只提取ID 和 Name -->
+    <select id="findAllCompetitionsWithIdName" resultType="com.mt.ams.entity.competitionEntity.Competition">
+        select t0.eid,
+               t0.name
+        from ams_competition t0
+        ORDER BY t0.name
+    </select>
+
+    <!-- 查询指定的实体,只提取ID 和 Name -->
+    <select id="findCompetitionsWithIdNameById" resultType="com.mt.ams.entity.competitionEntity.Competition"
+            parameterType="java.lang.Long">
+        select t0.eid,
+               t0.name
+        from ams_competition t0
+        where eid = #{competitionId}
+    </select>
+
+    <!--  根据Id查询 -->
+    <select id="findCompetition" resultType="com.mt.ams.entity.competitionEntity.Competition"
+            parameterType="java.lang.Long">
+        select *
+        from ams_competition
+        where eid = #{competitionId}
+    </select>
+
+    <!-- 根据ID查询指定的实体(包含外键) -->
+    <select id="findCompetitionWithForeignName" resultType="com.mt.ams.entity.competitionEntity.Competition"
+            parameterType="java.lang.Long">
+        select t0.eid,
+               t0.creator_name,
+               t0.name,
+               t0.award_level,
+               t0.units_id,
+               t0.competition_category,
+               t0.competition_level,
+               t0.status,
+               t0.creator_id,
+               t0.remark,
+               t0.create_datetime
+                ,
+               t4.name as units_name
+
+        from ams_competition t0
+                 LEFT JOIN ams_unit t4 on t0.units_id = t4.eid
+        where t0.eid = #{competitionId}
+    </select>
+
+
+    <select id="getCompetitionEidByName" resultType="java.lang.Integer">
+        select t0.eid
+        from ams_competition t0
+        where t0.name like '%${competitionName}%'
+    </select>
+
+
+    <!--  保存 -->
+    <insert id="saveCompetition" parameterType="com.mt.ams.entity.competitionEntity.Competition"
+            useGeneratedKeys="true">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into ams_competition
+        (
+        creator_name ,
+        name ,
+        award_level ,
+        units_id ,
+        competition_category ,
+        competition_level ,
+        status ,
+        creator_id ,
+        remark ,
+        create_datetime
+        )
+        values
+        (
+        #{creatorName} ,
+        #{name} ,
+        #{awardLevel} ,
+        #{unitsId} ,
+        #{competitionCategory} ,
+        #{competitionLevel} ,
+        #{status} ,
+        #{creatorId} ,
+        #{remark} ,
+        #{createDatetime}
+        )
+    </insert>
+
+    <!--  编辑 -->
+    <update id="updateCompetition" parameterType="com.mt.ams.entity.competitionEntity.Competition">
+        update ams_competition
+        set creator_name         = #{creatorName},
+            name                 = #{name},
+            award_level          = #{awardLevel},
+            units_id             = #{unitsId},
+            competition_category = #{competitionCategory},
+            competition_level    = #{competitionLevel},
+            status               = #{status},
+            creator_id           = #{creatorId},
+            remark               = #{remark},
+            create_datetime      = #{createDatetime}
+        where eid = #{eid}
+    </update>
+
+
+    <!--  根据Id删除 -->
+    <delete id="deleteCompetition" parameterType="java.lang.Long">
+        delete
+        from ams_competition
+        where eid = #{competitionId}
+    </delete>
+
+
+</mapper>

@@ -1,0 +1,118 @@
+#set($vmType="Service")
+#set($extension=".js")
+#set($message="$message")
+#set($http="$http")
+#set($EntityNameUp="${entityClass.className}")
+#set($EntityNameLow="${entityClass.className.substring(0,1).toLowerCase()}${entityClass.className.substring(1)}")
+#set($path="${config.uiPath}/src/views/${entityClass.subSystemName}/${entityClass.moduleName}")
+#set($outputFile="${path}/${EntityNameLow}/${EntityNameLow}${vmType}${extension}")
+
+import axios from 'axios';
+
+/**
+ * ${entityClass.label}
+ */
+export class ${EntityNameUp}Service {
+    // 分页查询列表
+    static find${EntityNameUp}s (queryParams) {
+        return axios({
+            url: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameUp}/find${EntityNameUp}s',
+            method: 'POST',
+            data: queryParams
+        });
+    }
+
+    //根据ID查询指定的${entityClass.label}
+    static find${EntityNameUp} (${EntityNameLow}Id) {
+        const query = {
+            ${EntityNameLow}Id
+        }
+        return axios({
+            url: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameUp}/find${EntityNameUp}',
+            method: 'POST',
+            params: query,
+        });
+    }
+
+    //根据ID查询指定的${entityClass.label}(包含外键名称)
+    static find${EntityNameUp}ForView (${EntityNameLow}Id) {
+        const query = {
+            ${EntityNameLow}Id
+        }
+        return axios({
+            url: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameUp}/find${EntityNameUp}ForView',
+            method: 'POST',
+            params: query,
+        });
+    }
+
+    //根据ID查询指定的${entityClass.label}(包含外键名称)
+    static find${EntityNameUp}ForEdit (${EntityNameLow}Id) {
+        const query = {
+            ${EntityNameLow}Id
+        }
+        return axios({
+            url: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameUp}/find${EntityNameUp}ForEdit',
+            method: 'POST',
+            params: query,
+        });
+    }
+
+    //根据ID查询指定的${entityClass.label}(只提取ID 和 Name)
+    static find${EntityNameUp}sWithIdNameById (${EntityNameLow}Id) {
+        const query = {
+            ${EntityNameLow}Id
+        }
+        return axios({
+            url: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameUp}/find${EntityNameUp}sWithIdNameById',
+            method: 'POST',
+            params: query,
+        });
+    }
+
+    //根据名称查询${entityClass.label}集合(只提取ID 和 Name)
+    static find${EntityNameUp}sWithIdNameByName (${EntityNameLow}Name) {
+        const query = {
+            ${EntityNameLow}Name
+        }
+        return axios({
+            url: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameUp}/find${EntityNameUp}sWithIdNameByName',
+            method: 'POST',
+            params: query,
+        });
+    }
+
+    //新增保存${entityClass.label}
+    static save${EntityNameUp} (${EntityNameLow}) {
+        const query = {}
+        return axios({
+            url: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameUp}/save${EntityNameUp}',
+            method: 'POST',
+            params: query,
+            data: ${EntityNameLow}
+        });
+    }
+
+    //修改保存${entityClass.label}
+    static update${EntityNameUp} (${EntityNameLow}) {
+        const query = {}
+        return axios({
+            url: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameUp}/update${EntityNameUp}',
+            method: 'POST',
+            params: query,
+            data: ${EntityNameLow}
+        });
+    }
+
+    //根据ID查询指定的${entityClass.label}(只提取ID 和 Name)
+    static delete${EntityNameUp} (${EntityNameLow}Id) {
+        const query = {
+            ${EntityNameLow}Id
+        }
+        return axios({
+            url: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameUp}/delete${EntityNameUp}',
+            method: 'POST',
+            params: query,
+        });
+    }
+}

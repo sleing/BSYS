@@ -1,0 +1,545 @@
+#set($vmType="index")
+#set($extension=".vue")
+#set($refs="$refs")
+#set($message="$message")
+#set($confirm="$confirm")
+#set($http="$http")
+#set($util="$util")
+#set($EntityNameUp="${entityClass.className}")
+#set($EntityNameLow="${entityClass.className.substring(0,1).toLowerCase()}${entityClass.className.substring(1)}")
+#set($ModuleNameLow="${entityClass.moduleName.substring(0,1).toLowerCase()}${entityClass.moduleName.substring(1)}")
+#set($path="${config.uiPath}/src/views/${entityClass.subSystemName}/${entityClass.moduleName}")
+#set($outputFile="${path}/${EntityNameLow}/${vmType}${extension}")
+#set($permission="${entityClass.subSystemName}_${entityClass.moduleName}_${EntityNameUp}")
+
+<template>
+    <div class="ele-body">
+        <a-card :bordered="false">
+            <vxe-grid ref='xGrid' v-bind="gridOptions" class="my-grid66">
+                <!--搜索表单 -->
+                <template #form>
+                    <a-form
+                            :model="where"
+                            :rules="gridOptions.editRules"
+                            :label-col="{md: {span: 6}, sm: {span: 24}}"
+                            :wrapper-col="{md: {span: 18}, sm: {span: 24}}">
+                        <a-row>
+                           #*
+                            &&${columnInfo.fieldName}!="remark"
+                            &&${columnInfo.fieldName}!="creatorId"
+                            &&${columnInfo.fieldName}!="creatorName"
+                            &&${columnInfo.fieldName}!="createDatetime"
+                            &&${columnInfo.fieldName}!="status"
+                            &&${columnInfo.fieldName}!="name"
+                            *#
+                            #set($index=0)
+                            #foreach($columnInfo in ${entityClass.dbColumnInfos})
+                                #if(${columnInfo.fieldName}!="Eid")
+                                    <a-col #if($index>3) v-if="searchExpand" #end :lg="6" :md="12" :sm="24" :xs="24">
+                                        <a-form-item label="${columnInfo.label}:" name="${columnInfo.fieldName}">
+                                            #if($columnInfo.definitionType == "CodeTable")
+                                                <dict-select dict-item="${columnInfo.label}"   v-model:value="where.${columnInfo.fieldName}"  multiple=0 @getSelected="get${columnInfo.fieldName}"></dict-select>
+                                            #elseif($columnInfo.definitionType == "String"
+                                                || $columnInfo.definitionType == "Character")
+                                                    #if($columnInfo.fieldName == "remark")
+                                                        <a-textarea
+                                                                v-model:value="where.${columnInfo.fieldName}"
+                                                                placeholder="请输入${columnInfo.label}"
+                                                                :rows="4"/>
+                                                    #else
+                                                    <a-input
+                                                            v-model:value.trim="where.${columnInfo.fieldName}"
+                                                            placeholder="请输入${columnInfo.label}"
+                                                            allow-clear/>
+                                                    #end
+                                                #elseif($columnInfo.definitionType == "Boolean")
+                                                    <a-radio-group v-model="where.${columnInfo.fieldName}">
+                                                        <a-radio value="1">
+                                                            是
+                                                        </a-radio>
+                                                        <a-radio value="0">
+                                                            否
+                                                        </a-radio>
+                                                    </a-radio-group>
+                                                #elseif($columnInfo.definitionType == "Byte"
+                                                    || $columnInfo.definitionType == "Short"
+                                                    || $columnInfo.definitionType == "Integer"
+                                                    || $columnInfo.definitionType == "Long")
+                                                <a-input-number
+                                                        class="ele-fluid"
+                                                        allow-clear
+                                                        :precision="0.1"
+                                                        :min="0"
+                                                        :maxlength="255"
+                                                        placeholder="请输入${columnInfo.label}"
+                                                        v-model:value="where.${columnInfo.fieldName}"/>
+                                                #elseif($columnInfo.definitionType == "Float"
+                                                    || $columnInfo.definitionType == "Double")
+                                                <a-input-number
+                                                        class="ele-fluid"
+                                                        allow-clear
+                                                        :precision="2"
+                                                        :min="0"
+                                                        :maxlength="255"
+                                                        placeholder="请输入${columnInfo.label}"
+                                                        v-model:value="where.${columnInfo.fieldName}"/>
+                                                #elseif($columnInfo.definitionType == "Date")
+                                                <a-date-picker
+                                                        show-time placeholder="选择日期时间"
+                                                        v-model:value="where.${columnInfo.fieldName}"
+                                                        value-format="YYYY-MM-DD H:m:s"
+                                                        class="ele-fluid"
+                                                />
+                                            #end
+                                        </a-form-item>
+                                    </a-col>
+                                    $index++
+                                #end
+                            #end
+                            <a-col :lg="6" :md="12" :sm="24" :xs="24">
+                                <a-form-item class="ele-text-right" :wrapper-col="{span: 24}">
+                                    <a-space>
+                                        <a-button type="primary" @click="reload">查询</a-button>
+                                        <a-button @click="reset">重置</a-button>
+                                        <a @click="searchExpand = !searchExpand">
+                                            <span v-if="searchExpand">收起 <up-outlined class="ele-text-small"/></span>
+                                            <span v-else>展开 <down-outlined class="ele-text-small"/></span>
+                                        </a>
+                                    </a-space>
+                                </a-form-item>
+                            </a-col>
+                        </a-row>
+                    </a-form>
+                </template>
+                <!--自定义按钮-->
+                <template #top>
+                    <div class="alert-message">
+                        <i class="fa fa-exclamation-circle alert-message-icon"></i>
+                        <span class="alert-message-content">
+                <div>自定义模板 </div>
+              </span>
+                    </div>
+                </template>
+
+
+                <template #operate="{ row }">
+                    <vxe-button status="primary" @click="editEvent(row)">修改</vxe-button>
+                    <vxe-button status="info" @click="viewEvent(row)">查看</vxe-button>
+                    <vxe-button status="danger" @click="deleteEvent(row)">删除</vxe-button>
+                </template>
+
+                <template #ycs>
+                    <vxe-button status="primary" @click="addEvent()">新建</vxe-button>
+                    <!--        <vxe-button @click="gridOptions.showEdit = true">查看</vxe-button>-->
+                    <!--          <vxe-button status="danger" @click="batchDeleteEvent()">批量删除</vxe-button>-->
+                </template>
+            </vxe-grid>
+
+            <!--编辑弹窗-->
+            <vxe-modal v-model="gridOptions.showEdit" :title="gridOptions.showEditTitle" width="800" footer
+                       :destroy-on-close="true">
+                <template #default>
+                    <student-edit ref="student-edit"/>
+                </template>
+            </vxe-modal>
+
+            <!--查看弹窗-->
+            <vxe-modal v-model="gridOptions.showDetails" :title="gridOptions.showDetailsTitle" width="800" footer
+                       :destroy-on-close="true"><!--resize-->
+                <template #default>
+                    <student-detail ref="student-detail"/>
+                </template>
+            </vxe-modal>
+        </a-card>
+    </div>
+</template>
+
+<script>
+    import {defineComponent, reactive, ref, toRefs, provide} from 'vue'//, Ref
+    import {VXETable} from 'vxe-table'//, VxeGridInstance, VxeGridProps
+    import XEAjax from 'xe-ajax'
+    import {${EntityNameUp}Service} from "@/views/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameLow}/${EntityNameLow}Service";
+    import ${EntityNameUp}Edit from "@/views/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameLow}/${EntityNameUp}-edit";
+    import ${EntityNameUp}Detail from "@/views/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameLow}/${EntityNameUp}-detail";
+    import {
+        DownOutlined,
+        UpOutlined,
+    } from '@ant-design/icons-vue';
+
+    export default defineComponent({
+        components: {
+            ${EntityNameUp}Edit,
+            ${EntityNameUp}Detail,
+            DownOutlined,
+            UpOutlined,
+        },
+        setup() {
+            const xGrid = ref({})// as VxeGridInstance
+            // 搜索表单是否展开
+            let searchExpand = ref(false)
+            let proxyInfo = reactive({})
+            const where = ref({})
+            const eid = ref({})
+            const gridOptions = reactive({
+                border: true,
+                resizable: true,
+                showHeaderOverflow: true,
+                showOverflow: true,
+                highlightHoverRow: true,
+                keepSource: true,
+                id: 'full_edit_1',
+                height: 600,
+                rowId: 'id',
+                selectRow: null,
+                showEdit: false,
+                showDetails: false,
+                showEditTitle: '新建',
+                showDetailsTitle: '查看',
+                formData: {},//自定义的
+                detailData: [],
+                printConfig: {
+                    columns: [
+                        {field: 'name'},
+                        {field: 'email'},
+                        {field: 'nickname'},
+                        {field: 'age'},
+                        {field: 'amount'}
+                    ]
+                },
+                /*TODO:排序配置 */
+                sortConfig: {
+                    trigger: 'cell',
+                    remote: true
+                },
+                /*TODO:过滤器配置*/
+                filterConfig: {
+                    remote: true
+                },
+                /*TODO:分页配置*/
+                pagerConfig: {
+                    pageSize: 10,
+                    pageSizes: [5, 10, 15, 20, 50]
+                },
+                /*TODO:工具栏配置*/
+                toolbarConfig: {
+                    slots: {buttons: 'ycs'},
+                    refresh: true,
+                    import: true,
+                    export: true,
+                    print: true,
+                    zoom: true,
+                    custom: true
+                },
+                /*TODO:请求代理配置*/
+                proxyConfig: {
+                    seq: true, // 启用动态序号代理，每一页的序号会根据当前页数变化
+                    sort: true, // 启用排序代理，当点击排序时会自动触发 query 行为
+                    filter: true, // 启用筛选代理，当点击筛选时会自动触发 query 行为
+                    form: false, // 启用表单代理，当点击表单提交按钮时会自动触发 reload 行为
+                    // 对应响应结果 { result: [], page: { total: 100 } }
+                    props: {
+                        result: 'data.datas', // 配置响应结果列表字段
+                        total: 'data.totalCount', // 配置响应结果总页数字段
+                        message: 'data.msg'
+                    },
+                    /*TODO:请求*/
+                    ajax: {
+                        /*TODO:分页条件查询*/
+                        query: ({page, sorts, filters}) => {  // 接收 Promise
+
+                            const conditions = {...where.value}
+
+                            // 处理筛选条件
+                            filters.forEach(({property, values}) => {
+                                conditions[property] = values.join('$|$')
+                            })
+                            const queryParams = {}
+                            queryParams.currentPage = page.currentPage
+                            queryParams.pageSize = page.pageSize
+                            // // 处理筛选条件
+                            queryParams.filters = conditions;
+                            // // 处理排序条件
+                            queryParams.orderBys = sorts;
+                            //
+                            const $grid =
+                            xGrid.value
+                                $grid.queryParams = queryParams
+                            return ${EntityNameUp}Service.find${EntityNameUp}s(queryParams).catch(error => {
+                                VXETable.modal.message({content: `加载数据出错，原因是：${error.message}`, status: 'error'});
+
+                            })
+                        },
+                    }
+                },
+
+                /*TODO:数据表列*/
+                columns: [
+                    {type: 'seq', field: 'id', title: '序号', width: 120},/*checkbox*/
+                    #foreach($columnInfo in ${entityClass.dbColumnInfos})
+                        #if(${columnInfo.fieldName} != "Eid" && ${columnInfo.fieldName} != "creatorId")
+                            {
+                                field: '${columnInfo.fieldName}',
+                                title: '${columnInfo.label}',
+                                sortable: true
+                            },
+                        #end
+                    #end
+                    {title: '操作', width: 250, slots: {default: 'operate'}}
+                ],
+                /*TODO:导入配置*/
+                importConfig: {
+                    remote: true,
+                    types: ['xlsx'],
+                    modes: ['insert'],
+                    // 自定义服务端导入
+                    /*importMethod({file}) {
+                        const \$grid =
+                        xGrid.value
+                        const formBody = new FormData()
+                        formBody.append('file', file)
+                        return XEAjax.post('https://api.xuliangzhan.com:10443/demo/api/pub/import', formBody).then(data => {
+                            VXETable.modal.message({content: `成功导入 \${data.result.insertRows} 条记录！`, status: 'success'})
+                            // 导入完成，刷新表格
+                            \$grid.commitProxy('query')
+                        }).catch(() => {
+                            VXETable.modal.message({content: '导入失败，请检查数据是否正确！', status: 'error'})
+                        })
+                    }*/
+                },
+                /*TODO:导出配置*/
+                exportConfig: {
+                    remote: true,
+                    types: ['xlsx', 'csv', 'html', 'txt', 'pdf'],
+                    modes: ['current', 'selected', 'all'],
+                    // 自定义服务端导出
+                    exportMethod({options}) {
+                        const $grid =
+                        xGrid.value
+                        const proxyInfo = $grid.getProxyInfo()
+                        const queryParams = $grid.queryParams;
+                        // 传给服务端的参数
+                        const body = {
+                            ...queryParams,
+                            filename: options.filename,
+                            sheetName: options.sheetName,
+                            isHeader: options.isHeader,
+                            original1: options.original,
+                            mode: options.mode,
+                            pager: proxyInfo ? proxyInfo.pager : null,
+                            ids: options.mode === 'selected' ? options.data.map((item) => item.id) : [],
+                            fields: '%7B%22field%22:%22nickname%22,%22title%22:%22Nickname%22%7D&fields[]=%7B%22field%22:%22sex%22ge%22,%22title%22:%22Age%22%7D&fimount%22,%22title%22:%22Amount%22%7D&fields[]=%7B%22field'
+                        }
+
+                        // 开始服务端导出
+                        //return ${EntityNameUp}Service.find${EntityNameUp}sForExport(body).then(data => {
+                          //  VXETable.modal.message({content: `成功\${data}`, status: 'error'});
+                            // if (data.id) {
+                            // VXETable.modal.message({ content: '导出成功，开始下载', status: 'success' })
+                            // // 读取路径，请求文件
+                            // fetch(`https://api.xuliangzhan.com:10443/demo/api/pub/export/download/\${data.id}`).then(response => {
+                            //   response.blob().then(blob => {
+                            //     // 开始下载
+                            //     VXETable.saveFile({ filename: '导出数据', type: 'xlsx', content: blob })
+                            //   })
+                            // })
+                            // }
+                        // }).catch(error => {
+                        //    VXETable.modal.message({content: `导出失败，原因是：\${error.message}`, status: 'error'});
+
+                        //})
+
+                    }
+                },
+                /*TODO:复选框配置*/
+                checkboxConfig: {
+                    labelField: 'id',
+                    reserve: false,
+                    highlight: false,
+                    range: true
+                },
+                /*TODO:编辑验证*/
+                editRules: {
+                    #foreach(${columnInfo} in ${entityClass.dbColumnInfos})
+                        #if(${columnInfo.fieldName} != "Eid" && ${columnInfo.fieldName} != "creatorId")
+                            ${columnInfo.fieldName}: [
+                                {required:  #if(${columnInfo.nullable}) false #else true #end, message: '请输入${$columnInfo.label}'},
+                            ],
+                        #end
+                    #end
+                },
+                editConfig: {
+                    trigger: 'click',
+                    mode: 'row',
+                    showStatus: true
+                }
+            })//as VxeGridProps
+            provide('eid', eid)
+            provide('gridOptions', gridOptions)
+
+            /*TODO:新建事件*/
+            const addEvent = () => {
+                eid.value = null;
+                gridOptions.selectRow = null
+                gridOptions.showEdit = true
+                gridOptions.showEditTitle = '新建'
+                // VXETable.modal.message({content: '点了新建', status: 'success'})
+            }
+            /*TODO:编辑事件*/
+            const editEvent = (row) => {
+                eid.value = row.eid
+                gridOptions.selectRow = null
+                gridOptions.showEdit = true
+                gridOptions.showEditTitle = '修改'
+                console.log(gridOptions.formData);
+                // VXETable.modal.message({ content: '新增成功', status: 'success' })
+            }
+
+            /*TODO:编辑关闭事件*/
+            const editEventClose = () => {
+                console.log(gridOptions.formData);
+                VXETable.modal.message({content: '提交成功', status: 'success'})
+            }
+
+            /*TODO:查看事件*/
+            const viewEvent = (row) => {
+                eid.value = row.eid
+                gridOptions.selectRow = null
+                gridOptions.showDetails = true
+                gridOptions.showDetailsTitle = '查看'
+                // VXETable.modal.message({content: '点了查看', status: 'success'})
+            }
+
+            /*TODO:删除事件*/
+            const deleteEvent = (row) => {
+                console.log(row)
+                    ${EntityNameUp}Service.delete${EntityNameUp}(row.eid).then((res) => {
+                    console.log(res)
+                    VXETable.modal.message({content: '操作成功', status: 'success'})
+                }).catch(error => {
+                    VXETable.modal.message({content: `系统错误，原因是：${error.message}`, status: 'error'});
+                })
+            }
+
+            /*TODO:批量删除*/
+            const batchDeleteEvent = () => {
+                /*暂不支持*/
+                VXETable.modal.message({content: '点了批量删除', status: 'success'})
+            }
+            /*TODO:条件查询提交*/
+            const reload = () => {
+                const $grid =
+                xGrid.value
+                $grid.commitProxy('query')//TODO:执行代理方法
+            }
+            /*TODO:重置搜索*/
+            const reset = () => {
+                where.value = {}
+                const $grid =
+                xGrid.value
+                $grid.commitProxy('query')//TODO:执行代理方法
+            }
+
+            #foreach($columnInfo in ${entityClass.dbColumnInfos})
+                #if(${columnInfo.definitionType} == "CodeTable")
+                    //TODO:获取${columnInfo.label}字典项
+                    const get${columnInfo.fieldName} = (val) => {
+                        console.log(val);
+                        where.${columnInfo.fieldName}=val;
+                    }
+                #end
+            #end
+
+            //TODO:这里需要返回才能调用
+            return {
+                #foreach($columnInfo in ${entityClass.dbColumnInfos})
+                    #if(${columnInfo.definitionType} == "CodeTable")
+                        get${columnInfo.fieldName},
+                    #end
+                #end
+                eid,
+                xGrid,
+                gridOptions,
+                searchExpand,
+                addEvent,
+                editEvent,
+                viewEvent,
+                editEventClose,
+                deleteEvent,
+                batchDeleteEvent,
+                where,
+                reload,
+                reset,
+                ...toRefs(proxyInfo)
+            }
+        }
+    })
+</script>
+
+<style scoped>
+    .my-grid66 .alert-message {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        border-radius: 4px;
+        background-color: #e6f7ff;
+        border: 1px solid #91d5ff;
+    }
+
+    .my-grid66 .alert-message-icon {
+        width: 30px;
+        text-align: center;
+        color: #409eff;
+        margin-right: 8px;
+    }
+
+    .my-grid66 .alert-message-content {
+        flex-grow: 1;
+        padding-right: 20px;
+    }
+
+    .my-grid66 .page-left {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+    }
+
+    .my-grid66 .select-count {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .my-grid66 .my-input {
+        width: 100%;
+    }
+
+    .my-grid66 .first-col {
+        position: relative;
+        height: 20px;
+    }
+
+    .my-grid66 .first-col:before {
+        content: "";
+        position: absolute;
+        left: -15px;
+        top: 10px;
+        width: 110px;
+        height: 1px;
+        transform: rotate(28deg);
+        background-color: #e8eaec;
+    }
+
+    .my-grid66 .first-col .first-col-top {
+        position: absolute;
+        right: 4px;
+        top: -10px;
+    }
+
+    .my-grid66 .first-col .first-col-bottom {
+        position: absolute;
+        left: 4px;
+        bottom: -10px;
+    }
+</style>

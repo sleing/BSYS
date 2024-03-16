@@ -1,0 +1,152 @@
+# 端口
+server:
+  port: 8081
+
+# 多环境配置
+spring:
+  profiles:
+    #本地开发默认选择test 强烈建议新手  线上使用dev  生产环境使用 prod
+    active: dev
+
+  #redis配置
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    jedis:
+      pool:
+        max-active: 50
+        max-wait: 3000
+        max-idle: 20
+        min-idle: 2
+    timeout: 5000
+    password:
+
+  # 连接池配置
+  datasource:
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 30000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      test-while-idle: true
+      test-on-borrow: true
+      test-on-return: false
+      remove-abandoned: true
+      remove-abandoned-timeout: 1800
+      #pool-prepared-statements: false
+      #max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,wall
+      validation-query: SELECT 'x'
+      aop-patterns: com.mt.*.*.service.*
+      stat-view-servlet:
+        url-pattern: /druid/*
+        reset-enable: true
+        login-username: admin
+        login-password: admin
+
+
+  # json时间格式设置
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy/MM/dd HH:mm:ss
+
+  # 设置上传文件大小
+  servlet:
+    multipart.max-file-size: 100MB
+    multipart.max-request-size: 100MB
+#    location: /usr/local/web/D:\\spring_files
+    location: D:\\spring_files
+
+  # 邮件服务器配置
+  mail:
+    host: smtp.qq.com
+    username: 2319745335@qq.com
+    password: noborvxwqiaeebei
+    default-encoding: UTF-8
+    protocol: smtps #指定协议
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+            port: 465
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    database: MYSQL
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+
+# Mybatis-plus配置
+mybatis-plus:
+  mapper-locations:
+    - classpath:mapper/**/*.xml
+    - classpath:com/mt/ems/**/*.xml
+    #      - classpath:mapper/erp/**/*.xml
+    - classpath:com/mt/erp/**/*.xml
+    - classpath:com/mt/lis/**/*.xml
+    - classpath:com/mt/dddshop/**/*.xml
+    - classpath:com/mt/ams/**/*.xml
+    - classpath:com/mt/bms/**/*.xml
+    - classpath:com/mt/tms/**/*.xml
+
+  typeAliasesPackage: com.mt.**.entity,
+  global-config:
+    id-type: 0
+    field-strategy: 1
+    db-column-underline: true
+    logic-delete-value: 1
+    logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+
+# MyBatis配置
+mybatis:
+  # 搜索指定包别名
+  typeAliasesPackage:
+    - com.mt.**.entity
+
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations:
+    - classpath:mapper/**/*.xml
+    #      - classpath:mapper/erp/**/*.xml
+    - classpath:com/mt/ems/**/*.xml
+    - classpath:com/mt/erp/**/*.xml
+    - classpath:com/mt/lis/**/*.xml
+    - classpath:com/mt/dddshop/**/*.xml
+    - classpath:com/mt/ams/**/*.xml
+    - classpath:com/mt/bms/**/*.xml
+    - classpath:com/mt/tms/**/*.xml
+
+  # 加载全局的配置文件
+#  configLocation: classpath:mybatis/mybatis-config.xml
+
+
+
+# PageHelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+
+# 框架配置
+config:
+# 文件上传磁盘位置
+#upload-location: 0
+# 文件上传是否使用uuid命名
+#upload-uuid-name: false
+# 文件上传生成缩略图的大小(kb)
+#thumbnail-size: 60
+# OpenOffice的安装目录
+#open-office-home: C:/OpenOffice4/
+
+# swagger接口地址(如果用到域名会需要)
+#swagger:
+#host: https://v1.eleadmin.com

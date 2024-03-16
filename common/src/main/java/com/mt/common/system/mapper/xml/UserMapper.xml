@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mt.common.system.mapper.UserMapper">
+
+    <!-- 关联查询sql -->
+    <sql id="relSelect">
+        SELECT a.*, b.organization_name, c.dict_data_name sex_name
+        FROM sys_user a
+        LEFT JOIN sys_organization b ON a.organization_id = b.eid
+        LEFT JOIN sys_dictionary_data c ON a.sex = c.dict_data_id
+        <where>
+            <if test="page!=null and page.pageData!=null">
+                <if test="page.pageData.userId!=null">
+                    AND a.eid = #{page.pageData.userId}
+                </if>
+                <if test="page.pageData.roleId!=null">
+                    AND a.eid IN (SELECT eid FROM sys_user_role WHERE role_id=#{page.pageData.roleId})
+                </if>
+                <if test="page.pageData.username!=null">
+                    AND a.username LIKE CONCAT('%', #{page.pageData.username}, '%')
+                </if>
+                <if test="page.pageData.nickname!=null">
+                    AND a.nickname LIKE CONCAT('%', #{page.pageData.nickname}, '%')
+                </if>
+                <if test="page.pageData.phone!=null">
+                    AND a.phone LIKE CONCAT('%', #{page.pageData.phone}, '%')
+                </if>
+                <if test="page.pageData.email!=null">
+                    AND a.email LIKE CONCAT('%', #{page.pageData.email}, '%')
+                </if>
+                <if test="page.pageData.trueName!=null">
+                    AND a.true_name LIKE CONCAT('%', #{page.pageData.trueName}, '%')
+                </if>
+                <if test="page.pageData.idCard!=null">
+                    AND a.id_card LIKE CONCAT('%', #{page.pageData.idCard}, '%')
+                </if>
+                <if test="page.pageData.sex!=null">
+                    AND a.sex = #{page.pageData.sex}
+                </if>
+                <if test="page.pageData.state!=null">
+                    AND a.state = #{page.pageData.state}
+                </if>
+                <if test="page.pageData.organizationId!=null">
+                    AND a.organization_id = #{page.pageData.organizationId}
+                </if>
+                <if test="page.pageData.createTimeStart!=null">
+                    AND a.create_time &gt;= #{page.pageData.createTimeStart}
+                </if>
+                <if test="page.pageData.createTimeEnd!=null">
+                    AND a.create_time &lt;= #{page.pageData.createTimeEnd}
+                </if>
+                <if test="page.pageData.deleted!=null">
+                    AND a.deleted = #{page.pageData.deleted}
+                </if>
+                <if test="page.pageData.deleted==null">
+                    AND a.deleted = 0
+                </if>
+                <if test="page.pageData.organizationName!=null">
+                    AND b.organization_name LIKE CONCAT('%', #{page.pageData.organizationName}, '%')
+                </if>
+                <if test="page.pageData.sexName!=null">
+                    AND b.dict_data_name = #{page.pageData.sexName}
+                </if>
+                <if test="page.pageData.userType!=null">
+                    AND a.user_type = #{page.pageData.userType}
+                </if>
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询 -->
+    <select id="listPage" resultType="com.mt.common.system.entity.User">
+        <include refid="relSelect"></include>
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="listAll" resultType="com.mt.common.system.entity.User">
+        <include refid="relSelect"></include>
+    </select>
+    <!-- 需要sql排序可以在include下一行加 -->
+    <!--<if test="page!=null and page.orders!=null">
+        order by
+        <foreach collection="page.orders" item="item" separator=",">
+            #{item.column} ${item.asc?'asc':'desc'}
+        </foreach>
+    </if>-->
+
+    <!-- 查询所有数据集合 -->
+    <select id="findAllUsersWithIdName" resultType="com.mt.common.system.entity.User">
+        select t0.Eid,
+               t0.username
+        from sys_user t0
+        ORDER BY t0.username
+    </select>
+
+    <!--    更新密码-->
+    <update id="doSubmit" parameterType="java.lang.String">
+        update sys_user
+        set password=#{password}
+        where email=#{email}
+    </update>
+
+    <!--  修改密码 -->
+    <update id="updatePassword">
+        update sys_user
+        set password=#{password}
+        where email = #{email}
+    </update>
+
+</mapper>

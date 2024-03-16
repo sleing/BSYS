@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mt.tms.dao.tsdepartmentEntity.TsDepartmentDao">
+    <!-- 条件查询 -->
+    <sql id="findTsDepartmentsWhere">
+        from tms_ts_department t0
+                    LEFT JOIN tms_ts_teacher_info t4 on t0.supervisor_tea_id =t4.eid
+                    LEFT JOIN tms_ts_student_info t5 on t0.supervisor_stu_id =t5.eid
+                    LEFT JOIN tms_ts_student_info t6 on t0.leader_id =t6.eid
+                <where>
+            <if test="filters!=null">
+                                    <if test="filters.Eid!=null">
+                        <if test="filterTypes.Eid=='单值'">
+                                                        
+                                AND t0.eid = #{filters.Eid}
+
+                                                    </if>
+                        <if test="filterTypes.Eid=='模糊'">
+
+                            AND t0.eid LIKE  '%${filters.Eid}%'
+
+                        </if>
+                        <if test="filterTypes.Eid=='数组'">
+                                                                                        AND t0.eid in
+                                <foreach collection="filters.Eid" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.creatorName!=null">
+                        <if test="filterTypes.creatorName=='单值'">
+                            
+                                AND t0.creator_name LIKE  '%${filters.creatorName}%'
+
+                                                                                </if>
+                        <if test="filterTypes.creatorName=='模糊'">
+
+                            AND t0.creator_name LIKE  '%${filters.creatorName}%'
+
+                        </if>
+                        <if test="filterTypes.creatorName=='数组'">
+                                                            AND t0.creator_name in
+                                <foreach collection="filters.creatorName" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.name!=null">
+                        <if test="filterTypes.name=='单值'">
+                            
+                                AND t0.name LIKE  '%${filters.name}%'
+
+                                                                                </if>
+                        <if test="filterTypes.name=='模糊'">
+
+                            AND t0.name LIKE  '%${filters.name}%'
+
+                        </if>
+                        <if test="filterTypes.name=='数组'">
+                                                            AND t0.name in
+                                <foreach collection="filters.name" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.departmentLevel!=null">
+                        <if test="filterTypes.departmentLevel=='单值'">
+                            
+                                AND t0.department_level LIKE  '%${filters.departmentLevel}%'
+
+                                                                                </if>
+                        <if test="filterTypes.departmentLevel=='模糊'">
+
+                            AND t0.department_level LIKE  '%${filters.departmentLevel}%'
+
+                        </if>
+                        <if test="filterTypes.departmentLevel=='数组'">
+                                                            AND t0.department_level in
+                                <foreach collection="filters.departmentLevel" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.supervisorTeaId!=null">
+                        <if test="filterTypes.supervisorTeaId=='单值'">
+                                                        
+                                AND t0.supervisor_tea_id = #{filters.supervisorTeaId}
+
+                                                    </if>
+                        <if test="filterTypes.supervisorTeaId=='模糊'">
+
+                            AND t0.supervisor_tea_id LIKE  '%${filters.supervisorTeaId}%'
+
+                        </if>
+                        <if test="filterTypes.supervisorTeaId=='数组'">
+                                                                                        AND t0.supervisor_tea_id in
+                                <foreach collection="filters.supervisorTeaId" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.supervisorStuId!=null">
+                        <if test="filterTypes.supervisorStuId=='单值'">
+                                                        
+                                AND t0.supervisor_stu_id = #{filters.supervisorStuId}
+
+                                                    </if>
+                        <if test="filterTypes.supervisorStuId=='模糊'">
+
+                            AND t0.supervisor_stu_id LIKE  '%${filters.supervisorStuId}%'
+
+                        </if>
+                        <if test="filterTypes.supervisorStuId=='数组'">
+                                                                                        AND t0.supervisor_stu_id in
+                                <foreach collection="filters.supervisorStuId" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.leaderId!=null">
+                        <if test="filterTypes.leaderId=='单值'">
+                                                        
+                                AND t0.leader_id = #{filters.leaderId}
+
+                                                    </if>
+                        <if test="filterTypes.leaderId=='模糊'">
+
+                            AND t0.leader_id LIKE  '%${filters.leaderId}%'
+
+                        </if>
+                        <if test="filterTypes.leaderId=='数组'">
+                                                                                        AND t0.leader_id in
+                                <foreach collection="filters.leaderId" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.viceLeader!=null">
+                        <if test="filterTypes.viceLeader=='单值'">
+                            
+                                AND t0.vice_leader LIKE  '%${filters.viceLeader}%'
+
+                                                                                </if>
+                        <if test="filterTypes.viceLeader=='模糊'">
+
+                            AND t0.vice_leader LIKE  '%${filters.viceLeader}%'
+
+                        </if>
+                        <if test="filterTypes.viceLeader=='数组'">
+                                                            AND t0.vice_leader in
+                                <foreach collection="filters.viceLeader" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.member!=null">
+                        <if test="filterTypes.member=='单值'">
+                            
+                                AND t0.member LIKE  '%${filters.member}%'
+
+                                                                                </if>
+                        <if test="filterTypes.member=='模糊'">
+
+                            AND t0.member LIKE  '%${filters.member}%'
+
+                        </if>
+                        <if test="filterTypes.member=='数组'">
+                                                            AND t0.member in
+                                <foreach collection="filters.member" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.description!=null">
+                        <if test="filterTypes.description=='单值'">
+                            
+                                AND t0.description LIKE  '%${filters.description}%'
+
+                                                                                </if>
+                        <if test="filterTypes.description=='模糊'">
+
+                            AND t0.description LIKE  '%${filters.description}%'
+
+                        </if>
+                        <if test="filterTypes.description=='数组'">
+                                                            AND t0.description in
+                                <foreach collection="filters.description" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.foundDate!=null">
+                        <if test="filterTypes.foundDate=='单值'">
+                                                                                </if>
+                        <if test="filterTypes.foundDate=='模糊'">
+
+                            AND t0.found_date LIKE  '%${filters.foundDate}%'
+
+                        </if>
+                        <if test="filterTypes.foundDate=='数组'">
+                                                                                </if>
+                    </if>
+                                    <if test="filters.status!=null">
+                        <if test="filterTypes.status=='单值'">
+                            
+                                AND t0.status LIKE  '%${filters.status}%'
+
+                                                                                </if>
+                        <if test="filterTypes.status=='模糊'">
+
+                            AND t0.status LIKE  '%${filters.status}%'
+
+                        </if>
+                        <if test="filterTypes.status=='数组'">
+                                                            AND t0.status in
+                                <foreach collection="filters.status" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.creatorId!=null">
+                        <if test="filterTypes.creatorId=='单值'">
+                                                        
+                                AND t0.creator_id = #{filters.creatorId}
+
+                                                    </if>
+                        <if test="filterTypes.creatorId=='模糊'">
+
+                            AND t0.creator_id LIKE  '%${filters.creatorId}%'
+
+                        </if>
+                        <if test="filterTypes.creatorId=='数组'">
+                                                                                        AND t0.creator_id in
+                                <foreach collection="filters.creatorId" item="item" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                </foreach>
+                                                    </if>
+                    </if>
+                                    <if test="filters.remark!=null">
+                        <if test="filterTypes.remark=='单值'">
+                            
+                                AND t0.remark LIKE  '%${filters.remark}%'
+
+                                                                                </if>
+                        <if test="filterTypes.remark=='模糊'">
+
+                            AND t0.remark LIKE  '%${filters.remark}%'
+
+                        </if>
+                        <if test="filterTypes.remark=='数组'">
+                                                            AND t0.remark in
+                                <foreach collection="filters.remark" item="item" index="index" open="(" separator="," close=")">
+                                    '#{item}'
+                                </foreach>
+
+                                                                                </if>
+                    </if>
+                                    <if test="filters.createDatetime!=null">
+                        <if test="filterTypes.createDatetime=='单值'">
+                                                                                </if>
+                        <if test="filterTypes.createDatetime=='模糊'">
+
+                            AND t0.create_datetime LIKE  '%${filters.createDatetime}%'
+
+                        </if>
+                        <if test="filterTypes.createDatetime=='数组'">
+                                                                                </if>
+                    </if>
+                            </if>
+        </where>
+    </sql>
+
+
+    <!-- 根据分页参数查询数据集合 -->
+    <select id="findTsDepartments" resultType="com.mt.tms.entity.tsdepartmentEntity.TsDepartment" parameterType="com.mt.common.core.web.base.PageDTO">
+        select
+            t0.eid  ,
+            t0.creator_name  ,
+            t0.name  ,
+            t0.department_level  ,
+            t0.supervisor_tea_id  ,
+            t0.supervisor_stu_id  ,
+            t0.leader_id  ,
+            t0.vice_leader  ,
+            t0.member  ,
+            t0.description  ,
+            t0.found_date  ,
+            t0.status  ,
+            t0.creator_id  ,
+            t0.remark  ,
+            t0.create_datetime  
+                ,t4.name as supervisor_tea_name
+
+            ,t5.name as supervisor_stu_name
+
+            ,t6.name as leader_name
+
+    
+        <include refid="findTsDepartmentsWhere"></include>
+
+        <if test="orderBys!=null">
+            <foreach collection="orderBys" item="item" index="index" open="order by" separator="," close="">
+                ${item}
+            </foreach>
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!-- 根据分页参数查询数据集合总条数 -->
+    <select id="findTsDepartmentTotalCount" resultType="java.lang.Long" parameterType="com.mt.common.core.web.base.PageDTO">
+        select count(t0.eid) as totalCount
+        <include refid="findTsDepartmentsWhere"></include>
+    </select>
+
+    <!-- 根据查询所有数据集合 -->
+    <select id="findAllTsDepartments" resultType="com.mt.tms.entity.tsdepartmentEntity.TsDepartment" >
+        select
+                    t0.eid  ,
+                    t0.creator_name  ,
+                    t0.name  ,
+                    t0.department_level  ,
+                    t0.supervisor_tea_id  ,
+                    t0.supervisor_stu_id  ,
+                    t0.leader_id  ,
+                    t0.vice_leader  ,
+                    t0.member  ,
+                    t0.description  ,
+                    t0.found_date  ,
+                    t0.status  ,
+                    t0.creator_id  ,
+                    t0.remark  ,
+                    t0.create_datetime  
+                            ,t4.name as supervisor_tea_name
+
+                    ,t5.name as supervisor_stu_name
+
+                    ,t6.name as leader_name
+
+                from tms_ts_department t0
+                    LEFT JOIN tms_ts_teacher_info t4 on t0.supervisor_tea_id =t4.eid
+                    LEFT JOIN tms_ts_student_info t5 on t0.supervisor_stu_id =t5.eid
+                    LEFT JOIN tms_ts_student_info t6 on t0.leader_id =t6.eid
+                ORDER BY t0.create_datetime
+    </select>
+
+    <!-- 根据名称查询数据集合,只提取ID 和 Name -->
+    <select id="findTsDepartmentsWithIdNameByName" resultType="com.mt.tms.entity.tsdepartmentEntity.TsDepartment" parameterType="java.lang.String">
+        select
+            t0.eid,t0.name
+        from tms_ts_department t0
+        where t0.name like  '%${tsDepartmentName}%'
+        ORDER BY t0.name
+    </select>
+
+
+    <!-- 查询所有数据集合,只提取ID 和 Name -->
+    <select id="findAllTsDepartmentsWithIdName" resultType="com.mt.tms.entity.tsdepartmentEntity.TsDepartment" >
+        select
+        t0.eid,t0.name
+        from tms_ts_department t0
+        ORDER BY t0.name
+    </select>
+
+    <!-- 查询指定的实体,只提取ID 和 Name -->
+    <select id="findTsDepartmentsWithIdNameById" resultType="com.mt.tms.entity.tsdepartmentEntity.TsDepartment" parameterType="java.lang.Long">
+        select
+        t0.eid,t0.name
+        from tms_ts_department t0
+        where eid = #{tsDepartmentId}
+    </select>
+
+    <!--  根据Id查询 -->
+    <select id="findTsDepartment" resultType="com.mt.tms.entity.tsdepartmentEntity.TsDepartment" parameterType="java.lang.Long">
+        select * from tms_ts_department where eid = #{tsDepartmentId}
+    </select>
+
+    <!-- 根据ID查询指定的实体(包含外键) -->
+    <select id="findTsDepartmentWithForeignName" resultType="com.mt.tms.entity.tsdepartmentEntity.TsDepartment" parameterType="java.lang.Long">
+        select
+                    t0.eid  ,
+                    t0.creator_name  ,
+                    t0.name  ,
+                    t0.department_level  ,
+                    t0.supervisor_tea_id  ,
+                    t0.supervisor_stu_id  ,
+                    t0.leader_id  ,
+                    t0.vice_leader  ,
+                    t0.member  ,
+                    t0.description  ,
+                    t0.found_date  ,
+                    t0.status  ,
+                    t0.creator_id  ,
+                    t0.remark  ,
+                    t0.create_datetime  
+                            ,t4.name as supervisor_tea_name
+
+                    ,t5.name as supervisor_stu_name
+
+                    ,t6.name as leader_name
+
+                from tms_ts_department t0
+                    LEFT JOIN tms_ts_teacher_info t4 on t0.supervisor_tea_id =t4.eid
+                    LEFT JOIN tms_ts_student_info t5 on t0.supervisor_stu_id =t5.eid
+                    LEFT JOIN tms_ts_student_info t6 on t0.leader_id =t6.eid
+                where t0.eid = #{tsDepartmentId}
+    </select>
+
+
+    <!--  保存 -->
+    <insert id="saveTsDepartment" parameterType="com.mt.tms.entity.tsdepartmentEntity.TsDepartment" useGeneratedKeys="true">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long" >
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into tms_ts_department
+        (
+                                                        creator_name ,
+                                                name ,
+                                                department_level ,
+                                                supervisor_tea_id ,
+                                                supervisor_stu_id ,
+                                                leader_id ,
+                                                vice_leader ,
+                                                member ,
+                                                description ,
+                                                found_date ,
+                                                status ,
+                                                creator_id ,
+                                                remark ,
+                                                create_datetime 
+                            )
+        values
+        (
+                                                        #{creatorName} ,
+                                                #{name} ,
+                                                #{departmentLevel} ,
+                                                #{supervisorTeaId} ,
+                                                #{supervisorStuId} ,
+                                                #{leaderId} ,
+                                                #{viceLeader} ,
+                                                #{member} ,
+                                                #{description} ,
+                                                #{foundDate} ,
+                                                #{status} ,
+                                                #{creatorId} ,
+                                                #{remark} ,
+                                                #{createDatetime} 
+                            )
+    </insert>
+
+    <!--  编辑 -->
+    <update id="updateTsDepartment" parameterType="com.mt.tms.entity.tsdepartmentEntity.TsDepartment" >
+        update tms_ts_department set
+                                                        creator_name = #{creatorName} ,
+                                                name = #{name} ,
+                                                department_level = #{departmentLevel} ,
+                                                supervisor_tea_id = #{supervisorTeaId} ,
+                                                supervisor_stu_id = #{supervisorStuId} ,
+                                                leader_id = #{leaderId} ,
+                                                vice_leader = #{viceLeader} ,
+                                                member = #{member} ,
+                                                description = #{description} ,
+                                                found_date = #{foundDate} ,
+                                                status = #{status} ,
+                                                creator_id = #{creatorId} ,
+                                                remark = #{remark} ,
+                                                create_datetime = #{createDatetime} 
+                            where eid=#{eid}
+    </update>
+
+
+    <!--  根据Id删除 -->
+    <delete id="deleteTsDepartment"  parameterType="java.lang.Long">
+        delete from tms_ts_department where eid = #{tsDepartmentId}
+    </delete>
+
+
+</mapper>

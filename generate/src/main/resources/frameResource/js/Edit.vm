@@ -1,0 +1,631 @@
+#set($EntityNameUp="${entityClass.className}")
+#set($EntityNameLow="${entityClass.className.substring(0,1).toLowerCase()}${entityClass.className.substring(1)}")
+#set($vmType="${EntityNameLow}-edit")
+#set($extension=".vue")
+#set($refs="$refs")
+#set($message="$message")
+#set($confirm="$confirm")
+#set($http="$http")
+#set($util="$util")
+#set($grid="$grid")
+#set($data="${data}")
+#set($eid="${eid}")
+#set($value="${value}")
+#set($error="${error.message}")
+#set($key=0)
+#set($ModuleNameLow="${entityClass.moduleName.substring(0,1).toLowerCase()}${entityClass.moduleName.substring(1)}")
+#set($path="${config.uiPath}/src/views/${entityClass.subSystemName}/${entityClass.moduleName}")
+#set($outputFile="${path}/${EntityNameLow}/${vmType}${extension}")
+#set($permission="${entityClass.subSystemName}_${entityClass.moduleName}_${EntityNameUp}")
+
+<!-- ${entityClass.label}编辑弹窗 -->
+<template>
+    <div class="ele-body">
+        <a-card :title="${EntityNameLow}ModalApp.title" :bordered="false">
+            <a-form
+                    ref="form2"
+                    :model="${EntityNameLow}ModalApp.${EntityNameLow}"
+                    :rules="${EntityNameLow}ModalApp.rules"
+                    :label-col="{md: {span: 7}, sm: {span: 24}}"
+                    :wrapper-col="{md: {span: 17}, sm: {span: 24}}">
+                <a-row :gutter="16">
+                    #foreach($columnInfo in ${entityClass.dbColumnInfos})
+                        #if($columnInfo.component!="")
+                            #if($columnInfo.where)
+                                <a-col :lg="6" :md="12" :sm="24" :xs="24">
+                                    <a-form-item label="${columnInfo.label}:" name="${columnInfo.fieldName}">
+                                        #if($columnInfo.component=="文本")
+                                            <a-input
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :maxlength="255"
+                                                    allow-clear
+                                            />
+                                        #elseif($columnInfo.component=="数字，整数")
+                                            <a-input-number
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :min="0"
+                                                    :step="1"
+                                                    class="ele-fluid"
+                                            ></a-input-number>
+                                        #elseif($columnInfo.component=="数字，小数")
+                                            <a-input-number
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :min="0"
+                                                    :step="0.01"
+                                                    class="ele-fluid importanceI"></a-input-number>
+                                        #elseif($columnInfo.component=="数字，金额")
+                                            <a-input-number
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                                    :parser="value => value.replace(/\$\s?|(,*)|元/g, '')"
+                                                    class="ele-fluid90 importance"/>
+                                            <span class="unit importance">元</span>
+                                        #elseif($columnInfo.component=="数字，百分比")
+                                            <a-input-number
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :min="0"
+                                                    :step="0.01"
+                                                    :formatter="value => `${value}%`"
+                                                    :parser="value => value.replace('%', '')"
+                                                    class="ele-fluid90"></a-input-number>
+                                            <span>%</span>
+                                        #elseif($columnInfo.component=="文本域")
+                                            <a-textarea
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :rows="4"/>
+                                        #elseif($columnInfo.component=="富文本")
+                                            <tinymce-editor
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :init="{height: 400}"></tinymce-editor>
+                                        #elseif($columnInfo.component=="评分")
+                                            <a-rate
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    allow-half>
+                                            </a-rate>
+                                        #elseif($columnInfo.component=="日期选择")
+                                            <a-date-picker
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    value-format="YYYY-MM-DD H:m:s"
+                                                    class="ele-fluid"/>
+                                        #elseif($columnInfo.component=="日期时间选择")
+                                            <a-date-picker
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    value-format="YYYY-MM-DD H:m:s" show-time
+                                                    show-time
+                                                    class="ele-fluid"/>
+                                        #elseif($columnInfo.component=="日期范围选择")
+                                            <a-range-picker
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}s"
+                                                    class="ele-fluid"/>
+                                        #elseif($columnInfo.component=="时间选择")
+                                            <a-time-picker
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    value-format="hh:mm:ss"
+                                                    class="ele-fluid"/>
+                                        #elseif($columnInfo.component=="滑动条")
+                                            <a-slider
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    :min="0"
+                                                    :max="100"
+                                                    :step="1"
+                                                    :tooltip-visible="true"/>
+                                        #elseif($columnInfo.component=="开关")
+                                            <a-switch
+                                                    v-if="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    defaultChecked
+                                                    @change="on${columnInfo.fieldName}Change"
+                                            />
+                                            <a-switch
+                                                    v-if="!${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    @change="on${columnInfo.fieldName}Change"
+                                            />
+                                        #elseif($columnInfo.component=="字典下拉单选")
+                                            <m-dict-select
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    dict="${columnInfo.codeTable}"/>
+                                        #elseif($columnInfo.component=="字典下拉多选")
+                                            <m-dict-select
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}s"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    dict="${columnInfo.codeTable}"
+                                                    mode="multiple"/>
+                                        #elseif($columnInfo.component=="字典多选")
+                                            <m-dict-checkbox
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}s"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    dict="${columnInfo.codeTable}"/>
+                                        #elseif($columnInfo.component=="字典单选")
+                                            <m-dict-radio
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    dict="${columnInfo.codeTable}"/>
+                                        #elseif($columnInfo.component=="字典级联")
+                                            <m-dict-cascader
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}s"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    dict="${columnInfo.codeTable}"
+                                                    popup-class-name="ele-pop-wrap-higher"/>
+                                        #elseif($columnInfo.component=="对象选择")
+                                            <m-entity-select
+                                                    #set($end=$columnInfo.fieldName.length() - 2    )
+                                                    :default-value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName.substring(0,$end)}Name"
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    module="${entityClass.moduleName}"
+                                                    entity="${columnInfo.foreignEntity}"
+                                                    class="ele-fluid"
+                                            />
+                                        #end
+                                    </a-form-item>
+                                </a-col>
+                            #elseif($columnInfo.fieldName!="Eid"
+                            &&$columnInfo.fieldName!="creatorId"
+                            &&$columnInfo.fieldName!="creatorName"
+                            &&$columnInfo.fieldName!="createDatetime"
+                            &&$columnInfo.fieldName!="remark"
+                            &&$columnInfo.fieldName!="name"
+                            )
+                                #* &&$columnInfo.fieldName!="status" *#
+                                <a-col :lg="6" :md="12" :sm="24" :xs="24">
+                                    <a-form-item label="${columnInfo.label}:" name="${columnInfo.fieldName}">
+                                        #if($columnInfo.component=="文本")
+                                            <a-input
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :maxlength="255"
+                                                    allow-clear
+                                            />
+                                        #elseif($columnInfo.component=="数字，整数")
+                                            <a-input-number
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :min="0"
+                                                    :step="1"
+                                                    class="ele-fluid"
+                                            ></a-input-number>
+                                        #elseif($columnInfo.component=="数字，小数")
+                                            <a-input-number
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :min="0"
+                                                    :step="0.01"
+                                                    class="ele-fluid importanceI"></a-input-number>
+                                        #elseif($columnInfo.component=="数字，金额")
+                                            <a-input-number
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :formatter="value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                                    :parser="value => value.replace(/\$\s?|(,*)|元/g, '')"
+                                                    class="ele-fluid90 importance"/>
+                                            <span class="unit importance">元</span>
+                                        #elseif($columnInfo.component=="数字，百分比")
+                                            <a-input-number
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :min="0"
+                                                    :step="0.01"
+                                                    :formatter="value => `${value}%`"
+                                                    :parser="value => value.replace('%', '')"
+                                                    class="ele-fluid90"></a-input-number>
+                                            <span>%</span>
+                                        #elseif($columnInfo.component=="文本域")
+                                            <a-textarea
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :rows="4"/>
+                                        #elseif($columnInfo.component=="富文本")
+                                            <tinymce-editor
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请输入${columnInfo.label}"
+                                                    :init="{height: 400}"></tinymce-editor>
+                                        #elseif($columnInfo.component=="评分")
+                                            <a-rate
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    allow-half>
+                                            </a-rate>
+                                        #elseif($columnInfo.component=="日期选择")
+                                            <a-date-picker
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    value-format="YYYY-MM-DD H:m:s"
+                                                    class="ele-fluid"/>
+                                        #elseif($columnInfo.component=="日期时间选择")
+                                            <a-date-picker
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    value-format="YYYY-MM-DD H:m:s" show-time
+                                                    show-time
+                                                    class="ele-fluid"/>
+                                        #elseif($columnInfo.component=="日期范围选择")
+                                            <a-range-picker
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}s"
+                                                    class="ele-fluid"/>
+                                        #elseif($columnInfo.component=="时间选择")
+                                            <a-time-picker
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    value-format="hh:mm:ss"
+                                                    class="ele-fluid"/>
+                                        #elseif($columnInfo.component=="滑动条")
+                                            <a-slider
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    :min="0"
+                                                    :max="100"
+                                                    :step="1"
+                                                    :tooltip-visible="true"/>
+                                        #elseif($columnInfo.component=="开关")
+                                            <a-switch
+                                                    v-if="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    defaultChecked
+                                                    @change="on${columnInfo.fieldName}Change"
+                                            />
+                                            <a-switch
+                                                    v-if="!${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    @change="on${columnInfo.fieldName}Change"
+                                            />
+                                        #elseif($columnInfo.component=="字典下拉单选")
+                                            <m-dict-select
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    dict="${columnInfo.codeTable}"/>
+                                        #elseif($columnInfo.component=="字典下拉多选")
+                                            <m-dict-select
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}s"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    dict="${columnInfo.codeTable}"
+                                                    mode="multiple"/>
+                                        #elseif($columnInfo.component=="字典多选")
+                                            <m-dict-checkbox
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}s"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    dict="${columnInfo.codeTable}"/>
+                                        #elseif($columnInfo.component=="字典单选")
+                                            <m-dict-radio
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    dict="${columnInfo.codeTable}"/>
+                                        #elseif($columnInfo.component=="字典级联")
+                                            <m-dict-cascader
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}s"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    dict="${columnInfo.codeTable}"
+                                                    popup-class-name="ele-pop-wrap-higher"/>
+                                        #elseif($columnInfo.component=="对象选择")
+                                            <m-entity-select
+                                                #set($end=$columnInfo.fieldName.length() - 2)
+                                                    :default-value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName.substring(0,$end)}Name"
+                                                    v-model:value="${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}"
+                                                    placeholder="请选择${columnInfo.label}"
+                                                    module="${entityClass.moduleName}"
+                                                    entity="${columnInfo.foreignEntity}"
+                                                    class="ele-fluid"
+                                            />
+                                        #end
+                                    </a-form-item>
+                                </a-col>
+                            #end
+                        #end
+                    #end
+
+                    <a-col :md="12" :sm="24" :xs="24">
+                        <a-form-item :wrapper-col="{md: {offset: 6}}" style="margin-bottom: -20px">
+                            <!--class="ele-pull-right"-->
+                            <div v-if="${EntityNameLow}ModalApp.display">
+                                <teleport to="#${EntityNameLow}EditModalFooter">
+                                    <div>
+                                        <a-space size="middle">
+                                            <a-button @click="${EntityNameLow}ListApp.editModalShowing=false">取消
+                                            </a-button>
+                                            <a-button
+                                                    type="primary"
+                                                    @click="onSubmit(${EntityNameLow}ModalApp.${EntityNameLow})"
+                                                    :loading="loading">提交
+                                            </a-button>
+                                            <!--<a-button v-if="!eid"
+                                                      type="dashed"
+                                                      @click="continueSubmit"
+                                                      :loading="loading">继续提交
+                                            </a-button>-->
+                                        </a-space>
+                                    </div>
+                                </teleport>
+                            </div>
+                            <div v-if="!${EntityNameLow}ModalApp.display">
+                                <a-space size="middle">
+                                    <a-button @click="onBack()">返回列表</a-button>
+                                    <a-button
+                                            type="primary"
+                                            @click="onSubmit(${EntityNameLow}ModalApp.${EntityNameLow})"
+                                            :loading="loading">提交
+                                    </a-button>
+                                    <!--<a-button v-if="!eid"
+                                              type="dashed"
+                                              @click="continueSubmit"
+                                              :loading="loading">继续提交
+                                    </a-button>-->
+                                </a-space>
+                            </div>
+
+                        </a-form-item>
+                    </a-col>
+                </a-row>
+            </a-form>
+        </a-card>
+
+    </div>
+
+</template>
+
+<script>
+    import {defineComponent, inject, reactive, onMounted} from 'vue'
+    import {useRoute, useRouter} from "vue-router"
+    import {${EntityNameUp}Service} from "@/views/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameLow}/${EntityNameLow}Service";
+    import {VXETable} from 'vxe-table'
+    import {useStore} from "vuex";
+    import regions from 'ele-admin-pro/packages/regions.js';
+
+        #set($TinymceEditor=false)
+        #set($MDictSelect=false)
+        #set($MDictCheckbox=false)
+        #set($MDictRadio=false)
+        #set($MDictCascader=false)
+        #set($MEntitySelect=false)
+        #foreach($columnInfo in ${entityClass.dbColumnInfos})
+            #if($columnInfo.component=="字典下拉单选"||$columnInfo.component=="字典下拉多选")
+                #set($MDictSelect=true)
+            #elseif($columnInfo.component=="富文本")
+                #set($TinymceEditor=true)
+            #elseif($columnInfo.component=="字典多选")
+                #set($MDictCheckbox=true)
+            #elseif($columnInfo.component=="字典单选")
+                #set($MDictRadio=true)
+            #elseif($columnInfo.component=="字典级联")
+                #set($MDictCascader=true)
+            #elseif($columnInfo.component=="对象选择")
+                #set($MEntitySelect=true)
+            #end
+        #end
+
+        #if($TinymceEditor)
+        import TinymceEditor from '@/components/TinymceEditor';
+        #end
+        #if($MDictSelect)
+        import MDictSelect from "@/components/MDict/dictSelect";
+        #end
+        #if($MDictCheckbox)
+        import MDictCheckbox from "@/components/dict/dictCheckbox";
+        #end
+        #if($MDictRadio)
+        import MDictRadio from "@/components/dict/dictRadio";
+        #end
+        #if($MDictCascader)
+        import MDictCascader from "@/components/dict/dictCascader";
+        #end
+        #if($MEntitySelect)
+        import MEntitySelect from "@/components/MEntity/entitySelect";
+        #end
+
+    export default defineComponent({
+        components: {
+            #if($MDictCascader)
+                MDictCascader,
+            #end
+            #if($MDictRadio)
+                MDictRadio,
+            #end
+            #if($MDictCheckbox)
+                MDictCheckbox,
+            #end
+            #if($MDictSelect)
+                MDictSelect,
+            #end
+            #if($TinymceEditor)
+                TinymceEditor,
+            #end
+            #if($MEntitySelect)
+                MEntitySelect,
+            #end
+        },
+        setup() {
+            // 省市区数据
+            const cityData = regions
+            const route = useRoute();
+            const router = useRouter();
+            const store = useStore();
+            let routeId = route.params.id;
+            let ${EntityNameLow}ListApp = inject('${EntityNameLow}ListApp', reactive({}));
+            const ${EntityNameLow}ModalApp = reactive({
+                id: null,
+                    ${EntityNameLow}: {},
+                isEdit: false,
+                display: false
+            });
+                ${EntityNameLow}ModalApp.rules = {
+                #foreach($columnInfo in $entityClass.columnInfos)
+                    #if($columnInfo.fieldName != "Eid"
+                    && $columnInfo.fieldName != "creatorId"
+                    && $columnInfo.fieldName != "createDatetime"
+                    && $columnInfo.fieldName != "creatorName"
+                    && $columnInfo.fieldName != "name"
+                    && $columnInfo.fieldName != "remark"
+                    && $columnInfo.fieldName != "status"
+                    )
+                            ${columnInfo.fieldName}: [
+                            #set($type="string")
+                            #if($columnInfo.component=="文本")
+                            #elseif($columnInfo.component=="数字，整数")
+                                #set($type="number")
+                            #elseif($columnInfo.component=="数字，小数")
+                                #set($type="number")
+                            #elseif($columnInfo.component=="数字，金额")
+                                #set($type="number")
+                            #elseif($columnInfo.component=="数字，百分比")
+                                #set($type="number")
+                            #elseif($columnInfo.component=="文本域")
+                            #elseif($columnInfo.component=="富文本")
+                            #elseif($columnInfo.component=="评分")
+                                #set($type="number")
+                            #elseif($columnInfo.component=="日期选择")
+                                #set($type="string")
+                            #elseif($columnInfo.component=="日期时间选择")
+                                #set($type="string")
+                            #elseif($columnInfo.component=="日期范围选择")
+                                #set($type="string")
+                            #elseif($columnInfo.component=="时间选择")
+                                #set($type="string")
+                            #elseif($columnInfo.component=="滑动条")
+                                #set($type="number")
+                            #elseif($columnInfo.component=="开关")
+                                #set($type="boolean")
+                            #elseif($columnInfo.component=="字典下拉单选")
+                                #set($type="string")
+                            #elseif($columnInfo.component=="字典下拉多选")
+                                #set($type="array")
+                            #elseif($columnInfo.component=="字典多选")
+                                #set($type="array")
+                            #elseif($columnInfo.component=="字典单选")
+                                #set($type="string")
+                            #elseif($columnInfo.component=="字典级联")
+                                #set($type="array")
+                            #elseif($columnInfo.component=="对象选择")
+                                #set($type="number")
+                            #end
+                            {
+                            required: #if($columnInfo.nullable) false #else
+                                true #end,
+                                type: '${type}',
+                                message: '请输入${columnInfo.label}',
+                                trigger: 'blur'
+                            }
+                        ],
+                    #end
+                #end
+            }
+
+            onMounted(() => {
+                //清理数据
+                    ${EntityNameLow}ModalApp.${EntityNameLow} = reactive({});
+                if (routeId) {//路由
+                        ${EntityNameLow}ModalApp.id = routeId;
+                        ${EntityNameLow}ModalApp.display = false;
+                    find${EntityNameUp}(${EntityNameLow}ModalApp.id);
+                } else if (${EntityNameLow}ListApp.editModalForEdit) {//修改弹窗
+                        ${EntityNameLow}ModalApp.id = ${EntityNameLow}ListApp.currentId;
+                        ${EntityNameLow}ModalApp.display = true;
+                } else if (!${EntityNameLow}ListApp.editModalForEdit && ${EntityNameLow}ListApp.addModalForEdit) {//新增弹窗
+                        ${EntityNameLow}ModalApp.display = true;
+                } else {
+                        ${EntityNameLow}ModalApp.title = "新增学生";
+                }
+                if (${EntityNameLow}ModalApp.id) find${EntityNameUp}(${EntityNameLow}ModalApp.id);
+            })
+
+            const find${EntityNameUp} = (id) => {
+                    ${EntityNameUp}Service.find${EntityNameUp}ForView(id).then((res) => {
+                        ${EntityNameLow}ModalApp.${EntityNameLow} = res.data;
+                    //TODO:为编辑准备.
+                    #foreach($columnInfo in ${entityClass.dbColumnInfos})
+                        #if($columnInfo.component=="日期范围选择"
+                        ||$columnInfo.component=="字典下拉多选"
+                        ||$columnInfo.component=="字典多选"
+                        ||$columnInfo.component=="字典级联"
+                        )
+                                ${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}s = ${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}.split(",");
+                        #end
+                    #end
+                        ${EntityNameLow}ModalApp.title = "编辑学生 " + ${EntityNameLow}ModalApp.${EntityNameLow}.name;
+                }).catch(error => {
+                    VXETable.modal.message({content: `查找学生出错，原因是：${error.message}`, status: 'error'});
+                })
+            }
+
+            /*TODO:提交 新增&编辑*/
+            const onSubmit = (data) => {
+                // debugger;
+                //当为数组时用逗号连接
+                #foreach($columnInfo in ${entityClass.dbColumnInfos})
+                    #if($columnInfo.component=="日期范围选择"
+                    ||$columnInfo.component=="字典下拉多选"
+                    ||$columnInfo.component=="字典多选"
+                    ||$columnInfo.component=="字典级联"
+                    )
+                            ${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName} = ${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName}s.join(",");
+                    #end
+                #end
+                if (data.eid) {
+                    //修改
+                        ${EntityNameUp}Service.update${EntityNameUp}(data).then((res) => {
+                        console.log(res);
+                        VXETable.modal.message({content: '操作成功', status: 'success'});
+                        setTimeout(onBack, 3000);
+                    }).catch(error => {
+                        VXETable.modal.message({content: `系统错误，原因是：${error.message}`, status: 'error'});
+                    })
+                } else {
+                    //新增
+                        ${EntityNameUp}Service.save${EntityNameUp}(data).then((res) => {
+                        console.log(res);
+                        VXETable.modal.message({content: '操作成功', status: 'success'});
+                        setTimeout(onBack, 3000);
+                    }).catch(error => {
+                        VXETable.modal.message({content: `系统错误，原因是：${error.message}`, status: 'error'});
+                    })
+                }
+            }
+
+            /*TODO:继续提交*/
+            const continueSubmit = () => {
+                VXETable.modal.message({content: 'error 提示', status: 'error'});
+            }
+
+            /*TODO:返回列表*/
+            const onBack = () => {
+                router.push(`/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameLow}`);
+                store.dispatch('user/tabRemove', route.fullPath);
+
+            }
+            #foreach($columnInfo in ${entityClass.dbColumnInfos})
+                #if($columnInfo.component=="开关")
+                    /*TODO:${columnInfo.label} 开关改变事件*/
+                    const on${columnInfo.fieldName}Change = () => {
+                            ${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName} = !${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName};
+                    }
+                #end
+            #end
+            return {
+                cityData,
+                routeId,
+                    ${EntityNameLow}ListApp,
+                    ${EntityNameLow}ModalApp,
+                onSubmit,
+                continueSubmit,
+                onBack,
+                #foreach($columnInfo in ${entityClass.dbColumnInfos})
+                    #if($columnInfo.component=="开关")
+                        on${columnInfo.fieldName}Change,
+                    #end
+                #end
+            }
+
+        },
+    })
+</script>
+
+<style scoped>
+
+</style>

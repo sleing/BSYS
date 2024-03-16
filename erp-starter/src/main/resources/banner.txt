@@ -1,0 +1,75 @@
+ ████     ████ ██████████   ████████ ███████   ███████
+░██░██   ██░██░░░░░██░░░   ░██░░░░░ ░██░░░░██ ░██░░░░██
+░██░░██ ██ ░██    ░██      ░██      ░██   ░██ ░██   ░██
+░██ ░░███  ░██    ░██      ░███████ ░███████  ░███████
+░██  ░░█   ░██    ░██      ░██░░░░  ░██░░░██  ░██░░░░
+░██   ░    ░██    ░██      ░██      ░██  ░░██ ░██
+░██        ░██    ░██      ░████████░██   ░░██░██
+░░         ░░     ░░       ░░░░░░░░ ░░     ░░ ░░
+
+
+${AnsiColor.BRIGHT_YELLOW}
+/***
+ *
+ *   █████▒█    ██  ▄████▄   ██ ▄█▀       ██████╗ ██╗   ██╗ ██████╗
+ * ▓██   ▒ ██  ▓██▒▒██▀ ▀█   ██▄█▒        ██╔══██╗██║   ██║██╔════╝
+ * ▒████ ░▓██  ▒██░▒▓█    ▄ ▓███▄░        ██████╔╝██║   ██║██║  ███╗
+ * ░▓█▒  ░▓▓█  ░██░▒▓▓▄ ▄██▒▓██ █▄        ██╔══██╗██║   ██║██║   ██║
+ * ░▒█░   ▒▒█████▓ ▒ ▓███▀ ░▒██▒ █▄       ██████╔╝╚██████╔╝╚██████╔╝
+ *  ▒ ░   ░▒▓▒ ▒ ▒ ░ ░▒ ▒  ░▒ ▒▒ ▓▒       ╚═════╝  ╚═════╝  ╚═════╝
+ *  ░     ░░▒░ ░ ░   ░  ▒   ░ ░▒ ▒░
+ *  ░ ░    ░░░ ░ ░ ░        ░ ░░ ░
+ *           ░     ░ ░      ░  ░
+ */
+
+
+
+
+
+
+
+
+
+                       ,ttti.        i,
+          ,GD     .DKG;.    .tDKf  EKKKK,
+         KKKKKf iEj              DKKKKKKK
+        jKKKKKKK                   LKKKKKE
+        KKKKKKK,                     KKKKW
+        EKKKKKK                       DKK,
+        ,KKKKKK                        KD
+         ,KKKK                          E
+         :Di.                           f
+         K                               K
+         f                               i
+        E                                 K
+        K                                 K
+        ,                                 D
+       t                                  ::
+       E                                   j
+       K                                   L
+       E                                   D
+       K                                   K
+       K            .KK           fKK      G
+       K            KKKD   i  ;   KKK.     f
+       K            tKKi   EKGf   LKK   .: G
+       E      .,,,,                   .,,,,K
+        .    .,,,,,,                  ,,,,,K
+        K    ,,,,,,,.                :,,,,,K
+        G,   ,,,,,,,.                :,,,,,K
+         K   ,,,,,,,                  ,,,,,i
+          K  .,,,,,,                  ,,,,K
+           K, :,,,,                    :tE
+            jKL                      ;GK,
+              fjKKKKDLjjtttjjLDKKKKKtE
+             K    GKKKKKKKKKKKKKKG   K
+             K      D   fKKKKKE:  f  K
+             i          ,KKKKKE      K
+            j            KKKKK;      G
+            K           :D, fGf      ,:
+            E           D      K      t
+            G        :Kf        KD    f
+           .;        ;                G
+
+${AnsiColor.BRIGHT_RED}
+Application Version: ${application.version}${application.formatted-version}
+Spring Boot Version: ${spring-boot.version}${spring-boot.formatted-version}

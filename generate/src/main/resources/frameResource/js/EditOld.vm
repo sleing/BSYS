@@ -1,0 +1,232 @@
+#set($EntityNameUp="${entityClass.className}")
+#set($EntityNameLow="${entityClass.className.substring(0,1).toLowerCase()}${entityClass.className.substring(1)}")
+#set($vmType="${EntityNameLow}-edit")
+#set($extension=".vue")
+#set($refs="$refs")
+#set($message="$message")
+#set($confirm="$confirm")
+#set($http="$http")
+#set($util="$util")
+#set($key=0)
+#set($ModuleNameLow="${entityClass.moduleName.substring(0,1).toLowerCase()}${entityClass.moduleName.substring(1)}")
+#set($path="${config.uiPath}/src/views/${entityClass.subSystemName}/${entityClass.moduleName}")
+#set($outputFile="${path}/${EntityNameLow}/${vmType}${extension}")
+#set($permission="${entityClass.subSystemName}_${entityClass.moduleName}_${EntityNameUp}")
+
+<!-- ${entityClass.label}编辑弹窗 -->
+<template>
+    <a-modal
+            :width="680"
+            :visible="visible"
+            :confirm-loading="loading"
+            :title="isUpdate?'修改${entityClass.label}':'新建${entityClass.label}'"
+            :body-style="{paddingBottom: '8px'}"
+            @update:visible="updateVisible"
+            @ok="save">
+        <a-form
+                ref="form"
+                :model="form"
+                :rules="rules"
+                :label-col="{md: {span: 7}, sm: {span: 24}}"
+                :wrapper-col="{md: {span: 17}, sm: {span: 24}}">
+            <a-row :gutter="16">
+                #foreach($columnInfo in ${entityClass.dbColumnInfos})
+                    #if(${columnInfo.fieldName}!="createDatetime" && ${columnInfo.fieldName}!="creatorId"  && ${columnInfo.fieldName}!="EId" && ${columnInfo.fieldName}!="creatorName" && ${columnInfo.fieldName}!="status")
+                        <a-col :md="12" :sm="24" :xs="24">
+                            <a-form-item label="${columnInfo.label}:" name="${columnInfo.fieldName}">
+                                    #if($columnInfo.definitionType == "Boolean")
+                                        <a-radio-group
+                                                v-model:value="form.${columnInfo.fieldName}"
+                                                name="${columnInfo.fieldName}">
+                                            <a-radio :value="1">是</a-radio>
+                                            <a-radio :value="0">否</a-radio>
+                                        </a-radio-group>
+                                   #elseif($columnInfo.definitionType == "Date")
+                                    <a-date-picker
+                                            show-time placeholder="选择日期时间"
+                                            v-model:value="form.${columnInfo.fieldName}"
+                                            value-format="YYYY-MM-DD H:m:s"
+                                            class="ele-fluid"
+                                    />
+                                       #*   <a-date-picker
+                                                 v-model:value="form.${columnInfo.fieldName}"
+                                                value-format="YYYY-MM-DD H:m:s"
+                                                class="ele-fluid"
+                                                />*#
+
+                                  #*  <a-datetime-picker
+                                            v-model:value="form.${columnInfo.fieldName}"
+                                            value-format="YYYY-MM-DD H:m:s"
+                                            class="ele-fluid"
+                                    />*#
+                                  #*  #elseif($columnInfo.definitionType == "Date")
+                                        <a-range-picker
+                                                v-model:value="form.${columnInfo.fieldName}"
+                                                value-format="YYYY-MM-DD"
+                                                class="ele-fluid">
+                                            <template #suffixIcon>
+                                                <calendar-outlined/>
+                                            </template>
+                                        </a-range-picker>*#
+                                    #elseif(${columnInfo.length} > 255)
+                                        <a-textarea
+                                            v-model:value="form.${columnInfo.fieldName}"
+                                            placeholder="请输入${columnInfo.label}"
+                                            :rows="4"/>
+                                    #elseif($columnInfo.definitionType == "Short" || $columnInfo.definitionType == "Integer" || $columnInfo.definitionType=="Long" || $columnInfo.definitionType=="Float")
+                                        <a-input-number
+                                                class="ele-fluid"
+                                                allow-clear
+                                                :maxlength="${columnInfo.length}"
+                                                placeholder="请输入${columnInfo.label}"
+                                                v-model:value="form.${columnInfo.fieldName}"/>
+                                    #else
+                                        <a-input
+                                                allow-clear
+                                                :maxlength="${columnInfo.length}"
+                                                placeholder="请输入${columnInfo.label}"
+                                                v-model:value="form.${columnInfo.fieldName}"/>
+                                #end
+                            </a-form-item>
+                        </a-col>
+                    #end
+                #end
+            </a-row>
+        </a-form>
+    </a-modal>
+</template>
+
+<script>
+    // import validate from 'ele-admin-pro/packages/validate';
+
+    export default {
+        name: '${EntityNameUp}Edit',
+        emits: ['done', 'update:visible'],
+        props: {
+            // 弹窗是否打开
+            visible: Boolean,
+            // 修改回显的数据
+            data: Object
+        },
+        data() {
+            return {
+                // 表单数据
+                form: Object.assign({}, this.data),
+                // 表单验证规则
+                rules: {
+            #foreach($columnInfo in $entityClass.columnInfos)
+                #if($columnInfo.fieldName != "EId" && $columnInfo.fieldName != "createId"
+                && $columnInfo.fieldName != "createDatetime"&& $columnInfo.fieldName != "updateId"
+                && $columnInfo.fieldName != "updateDatetime")
+                    ${columnInfo.fieldName}: [
+                    #set($type="string")
+                    #if($columnInfo.definitionType == "CodeTable")
+##                        #set($type="")
+                    #elseif($columnInfo.definitionType == "ForeignId")
+##                        #set($type="")
+                    #elseif($columnInfo.definitionType == "ForeignName")
+##                        #set($type="")
+                    #elseif($columnInfo.definitionType == "String" || $columnInfo.definitionType == "Character")
+##                        #set($type="")
+                    #elseif($columnInfo.definitionType == "Boolean")
+                        #set($type="boolean")
+                    #elseif($columnInfo.definitionType == "Byte")
+                        #set($type="string")
+                    #elseif($columnInfo.definitionType == "Short")
+                        #set($type="integer")
+                    #elseif($columnInfo.definitionType == "Integer")
+                        #set($type="integer")
+                    #elseif($columnInfo.definitionType == "Long")
+                        #set($type="number")
+                    #elseif($columnInfo.definitionType == "Float" || $columnInfo.definitionType == "Double")
+                        #set($type="float")
+                    #elseif($columnInfo.definitionType == "Date")
+                        #set($type="string")
+                    #end
+                    {required: #if($columnInfo.nullable) false #else true #end,type:'${type}', message: '请输入${columnInfo.label}', trigger: 'blur'}
+                ],
+                #end
+            #end
+        /*        email: [
+                {pattern: validate.email, message: '邮箱格式不正确', type: 'string', trigger: 'blur'}
+            ],
+                    password: [
+                {required: true, pattern: /^[\S]{5,18}$/, message: '密码必须为5-18位非空白字符', type: 'string', trigger: 'blur'}
+            ],
+                    phone: [
+                {pattern: validate.phone, message: '手机号格式不正确', type: 'string', trigger: 'blur'}
+            ]*/
+
+                },
+                // 提交状态
+                loading: false,
+                // 是否是修改
+                isUpdate: false,
+                // 角色列表
+                // roleList: []
+            };
+        },
+        watch: {
+            data() {
+                if (this.data) {
+                    this.form = Object.assign({}, this.data);
+                    this.isUpdate = true;
+                } else {
+                    this.form = {};
+                    this.isUpdate = false;
+                }
+                if (this.${refs}.form) {
+                    this.${refs}.form.clearValidate();
+                }
+            }
+        },
+        mounted() {
+            // this.queryRoles();  // 查询角色列表
+        },
+        methods: {
+            /* 保存编辑 */
+            save() {
+                this.${refs}.form.validate().then(() => {
+                this.loading = true;
+                let url=[this.isUpdate ? '/erp/${ModuleNameLow}/${EntityNameLow}/update${EntityNameUp}' : '/erp/${ModuleNameLow}/${EntityNameLow}/add${EntityNameUp}'];
+                this.${http}.post(url.toString(), this.form).then(res => {
+                this.loading = false;
+                if (res.data.code === 0) {
+                this.${message}.success(res.data.msg);
+                if (!this.isUpdate) {
+                this.form = {};
+                }
+                this.updateVisible(false);
+                this.$emit('done');
+                } else {
+                this.${message}.error(res.data.msg);
+                }
+                }).catch(e => {
+                this.loading = false;
+                this.${message}.error(e.message);
+                });
+                }).catch(() => {
+                });
+            },
+            /* 更新visible */
+            updateVisible(value) {
+                this.$emit('update:visible', value);
+            },
+            /* 查询角色列表 */
+          /*  queryRoles() {
+                this.${http}.get('/sys/role').then(res => {
+                if (res.data.code === 0) {
+                this.roleList = res.data.data;
+                } else {
+                this.${message}.error(res.data.msg);
+                }
+                }).catch(e => {
+                this.${message}.error(e.message);
+                });
+            }*/
+        }
+    }
+</script>
+
+<style scoped>
+</style>

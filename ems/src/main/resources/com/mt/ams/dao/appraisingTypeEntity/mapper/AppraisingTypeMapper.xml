@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mt.ams.dao.appraisingTypeEntity.AppraisingTypeDao">
+    <!-- 条件查询 -->
+    <sql id="findAppraisingTypesWhere">
+        from ams_appraising_type t0
+        <where>
+            <if test="filters!=null">
+                <if test="filters.Eid!=null">
+                    <if test="filterTypes.Eid=='单值'">
+
+                        AND t0.eid = #{filters.Eid}
+
+                    </if>
+                    <if test="filterTypes.Eid=='模糊'">
+
+                        AND t0.eid LIKE '%${filters.Eid}%'
+
+                    </if>
+                    <if test="filterTypes.Eid=='数组'">
+                        AND t0.eid in
+                        <foreach collection="filters.Eid" item="item" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.creatorName!=null">
+                    <if test="filterTypes.creatorName=='单值'">
+
+                        AND t0.creator_name LIKE '%${filters.creatorName}%'
+
+                    </if>
+                    <if test="filterTypes.creatorName=='模糊'">
+
+                        AND t0.creator_name LIKE '%${filters.creatorName}%'
+
+                    </if>
+                    <if test="filterTypes.creatorName=='数组'">
+                        AND t0.creator_name in
+                        <foreach collection="filters.creatorName" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.name!=null">
+                    <if test="filterTypes.name=='单值'">
+
+                        AND t0.name LIKE '%${filters.name}%'
+
+                    </if>
+                    <if test="filterTypes.name=='模糊'">
+
+                        AND t0.name LIKE '%${filters.name}%'
+
+                    </if>
+                    <if test="filterTypes.name=='数组'">
+                        AND t0.name in
+                        <foreach collection="filters.name" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.introduction!=null">
+                    <if test="filterTypes.introduction=='单值'">
+
+                        AND t0.introduction LIKE '%${filters.introduction}%'
+
+                    </if>
+                    <if test="filterTypes.introduction=='模糊'">
+
+                        AND t0.introduction LIKE '%${filters.introduction}%'
+
+                    </if>
+                    <if test="filterTypes.introduction=='数组'">
+                        AND t0.introduction in
+                        <foreach collection="filters.introduction" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.status!=null">
+                    <if test="filterTypes.status=='单值'">
+
+                        AND t0.status LIKE '%${filters.status}%'
+
+                    </if>
+                    <if test="filterTypes.status=='模糊'">
+
+                        AND t0.status LIKE '%${filters.status}%'
+
+                    </if>
+                    <if test="filterTypes.status=='数组'">
+                        AND t0.status in
+                        <foreach collection="filters.status" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.creatorId!=null">
+                    <if test="filterTypes.creatorId=='单值'">
+
+                        AND t0.creator_id = #{filters.creatorId}
+
+                    </if>
+                    <if test="filterTypes.creatorId=='模糊'">
+
+                        AND t0.creator_id LIKE '%${filters.creatorId}%'
+
+                    </if>
+                    <if test="filterTypes.creatorId=='数组'">
+                        AND t0.creator_id in
+                        <foreach collection="filters.creatorId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.remark!=null">
+                    <if test="filterTypes.remark=='单值'">
+
+                        AND t0.remark LIKE '%${filters.remark}%'
+
+                    </if>
+                    <if test="filterTypes.remark=='模糊'">
+
+                        AND t0.remark LIKE '%${filters.remark}%'
+
+                    </if>
+                    <if test="filterTypes.remark=='数组'">
+                        AND t0.remark in
+                        <foreach collection="filters.remark" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.createDatetime!=null">
+                    <if test="filterTypes.createDatetime=='单值'">
+                    </if>
+                    <if test="filterTypes.createDatetime=='模糊'">
+
+                        AND t0.create_datetime LIKE '%${filters.createDatetime}%'
+
+                    </if>
+                    <if test="filterTypes.createDatetime=='数组'">
+                    </if>
+                </if>
+            </if>
+        </where>
+    </sql>
+
+
+    <!-- 根据分页参数查询数据集合 -->
+    <select id="findAppraisingTypes" resultType="com.mt.ams.entity.appraisingTypeEntity.AppraisingType"
+            parameterType="com.mt.common.core.web.base.PageDTO">
+        select
+        t0.eid ,
+        t0.creator_name ,
+        t0.name ,
+        t0.introduction ,
+        t0.status ,
+        t0.creator_id ,
+        t0.remark ,
+        t0.create_datetime
+
+        <include refid="findAppraisingTypesWhere"></include>
+
+        <if test="orderBys!=null">
+            <foreach collection="orderBys" item="item" index="index" open="order by" separator="," close="">
+                ${item}
+            </foreach>
+        </if>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!-- 根据分页参数查询数据集合总条数 -->
+    <select id="findAppraisingTypeTotalCount" resultType="java.lang.Long"
+            parameterType="com.mt.common.core.web.base.PageDTO">
+        select count(t0.eid) as totalCount
+        <include refid="findAppraisingTypesWhere"></include>
+    </select>
+
+    <!-- 根据查询所有数据集合 -->
+    <select id="findAllAppraisingTypes" resultType="com.mt.ams.entity.appraisingTypeEntity.AppraisingType">
+        select t0.eid,
+               t0.creator_name,
+               t0.name,
+               t0.introduction,
+               t0.status,
+               t0.creator_id,
+               t0.remark,
+               t0.create_datetime
+        from ams_appraising_type t0
+        ORDER BY t0.create_datetime
+    </select>
+
+    <!-- 根据名称查询数据集合,只提取ID 和 Name -->
+    <select id="findAppraisingTypesWithIdNameByName" resultType="com.mt.ams.entity.appraisingTypeEntity.AppraisingType"
+            parameterType="java.lang.String">
+        select t0.eid,
+               t0.name
+        from ams_appraising_type t0
+        where t0.name like '%${appraisingTypeName}%'
+        ORDER BY t0.name
+    </select>
+
+
+    <!-- 查询所有数据集合,只提取ID 和 Name -->
+    <select id="findAllAppraisingTypesWithIdName" resultType="com.mt.ams.entity.appraisingTypeEntity.AppraisingType">
+        select t0.eid,
+               t0.name
+        from ams_appraising_type t0
+        ORDER BY t0.name
+    </select>
+
+    <!-- 查询指定的实体,只提取ID 和 Name -->
+    <select id="findAppraisingTypesWithIdNameById" resultType="com.mt.ams.entity.appraisingTypeEntity.AppraisingType"
+            parameterType="java.lang.Long">
+        select t0.eid,
+               t0.name
+        from ams_appraising_type t0
+        where eid = #{appraisingTypeId}
+    </select>
+
+    <!--  根据Id查询 -->
+    <select id="findAppraisingType" resultType="com.mt.ams.entity.appraisingTypeEntity.AppraisingType"
+            parameterType="java.lang.Long">
+        select *
+        from ams_appraising_type
+        where eid = #{appraisingTypeId}
+    </select>
+
+    <!-- 根据ID查询指定的实体(包含外键) -->
+    <select id="findAppraisingTypeWithForeignName" resultType="com.mt.ams.entity.appraisingTypeEntity.AppraisingType"
+            parameterType="java.lang.Long">
+        select t0.eid,
+               t0.creator_name,
+               t0.name,
+               t0.introduction,
+               t0.status,
+               t0.creator_id,
+               t0.remark,
+               t0.create_datetime
+        from ams_appraising_type t0
+        where t0.eid = #{appraisingTypeId}
+    </select>
+
+
+    <!--  保存 -->
+    <insert id="saveAppraisingType" parameterType="com.mt.ams.entity.appraisingTypeEntity.AppraisingType"
+            useGeneratedKeys="true">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into ams_appraising_type
+        (
+        creator_name ,
+        name ,
+        introduction ,
+        status ,
+        creator_id ,
+        remark ,
+        create_datetime
+        )
+        values
+        (
+        #{creatorName} ,
+        #{name} ,
+        #{introduction} ,
+        #{status} ,
+        #{creatorId} ,
+        #{remark} ,
+        #{createDatetime}
+        )
+    </insert>
+
+    <!--  编辑 -->
+    <update id="updateAppraisingType" parameterType="com.mt.ams.entity.appraisingTypeEntity.AppraisingType">
+        update ams_appraising_type
+        set creator_name    = #{creatorName},
+            name            = #{name},
+            introduction    = #{introduction},
+            status          = #{status},
+            creator_id      = #{creatorId},
+            remark          = #{remark},
+            create_datetime = #{createDatetime}
+        where eid = #{eid}
+    </update>
+
+
+    <!--  根据Id删除 -->
+    <delete id="deleteAppraisingType" parameterType="java.lang.Long">
+        delete
+        from ams_appraising_type
+        where eid = #{appraisingTypeId}
+    </delete>
+
+
+</mapper>

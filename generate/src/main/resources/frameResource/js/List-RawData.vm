@@ -1,0 +1,327 @@
+#set($vmType="List")
+#set($extension=".vue")
+#set($EntityNameUp="${entityClass.className}")
+#set($EntityNameLow="${entityClass.className.substring(0,1).toLowerCase()}${entityClass.className.substring(1)}")
+#set($path="${config.uiPath}/src/views/${entityClass.subSystemName}/${entityClass.moduleName}")
+#set($outputFile="${path}/${EntityNameUp}${vmType}${extension}")
+#set($permission="${entityClass.subSystemName}_${entityClass.moduleName}_${EntityNameUp}")
+
+<template>
+    <div class="span-control-list" style="width: 100%;margin-left: 0!important;">
+        <el-card class="box-card set-organ" style="margin: 0px; width: 100%; min-height: 99%">
+            <div class="clearfix card-my-header">
+                <span>${entityClass.label}管理</span>
+            </div>
+            <el-row>
+                <div class="alert-container clearfix">
+                    <el-alert  v-for="alert in alerts.successes"  :key="alert.title"
+                               v-bind:title="alert.title"
+                               type="success"
+                               show-icon>
+                    </el-alert>
+                    <el-alert  v-for="alert in alerts.infos"  :key="alert.title"
+                               v-bind:title="alert.title"
+                               type="info"
+                               show-icon >
+                    </el-alert>
+                    <el-alert  v-for="alert in alerts.warnings"  :key="alert.title"
+                               v-bind:title="alert.title"
+                               type="warning"
+                               show-icon >
+                    </el-alert>
+                    <el-alert  v-for="alert in alerts.errors"  :key="alert.title"
+                               v-bind:title="alert.title"
+                               type="error"
+                               show-icon >
+                    </el-alert>
+                </div>
+            </el-row>
+            <el-row>
+                <!--数据表格-->
+                <el-col>
+                    <!-- 头部 -->
+                    <el-col class="list-header">
+                        <!--新增任务按钮-->
+                        <!--<down-search :table="$refs.table" @returnedValue="searchByCondition"></down-search>-->
+                        <d-multiple-select :table="$refs.table"  @returnValue="searchByCondition"></d-multiple-select>
+
+                        <div class="btn-plane">
+                            <div style="float: right;display: flex">
+                                <div v-if="operatorType == '录入'">
+                                    <el-button type="text" @click="add${EntityNameUp}()" style="margin-right: 10px"
+                                               v-permission:pfm_rawData_${EntityNameUp}_Add>
+                                        <i class="el-icon-circle-plus-outline" style="font-size: 24px;vertical-align: middle"></i>
+                                        <span
+                                                style="font-size: 12px;color: #333333;text-align: center;font-family: AdobeHeitiStd-Regular;vertical-align: middle">新增{{typeName}}</span>
+                                    </el-button>
+                                </div>
+                                <modify @refresh="refresh" :multipleSelection="this.multipleSelection"
+                                        :table="this.$refs.table"></modify>
+
+                                <UploadAndDownload @refresh="refresh" @changePageForDelete="changePageForDelete"
+                                                   :multipleSelection="this.multipleSelection"
+                                                   importDates="import${EntityNameUp}Datas" code="${EntityNameUp}"
+                                                   permissionAdd="pfm_rawData_${EntityNameUp}_Add"
+                                                   permissionDelete="pfm_rawData_${EntityNameUp}_Delete">
+                                </UploadAndDownload>
+                            </div>
+                        </div>
+                    </el-col>
+                    <div class="table-control">
+                        <el-table ref="table" v-loading="tableLoading" size="small" class="table-style" :data="${EntityNameLow}s" border
+                                  highlight-current-row :cell-class-name="dataState"
+                                  @current-change="handleCurrentChange"
+                                  @selection-change="handleSelectionChange"
+                                  >
+
+                            <el-table-column align="center" :selectable="selectable" type="selection" min-width="55"
+                                             fixed="left"></el-table-column>
+                            #foreach($columnInfo in $entityClass.columnInfos)
+                            #if( !$stringUtils.endsWith($columnInfo.fieldName,'Id') && $columnInfo.pageShow != false)
+                                    <el-table-column align="left" clalss="setCenter" prop="${columnInfo.fieldName}"
+                                                     v-if="rename.${columnInfo.fieldName} != null ? rename.${columnInfo.fieldName}.show:true"
+                                                     :label="rename.${columnInfo.fieldName} != null && rename.${columnInfo.fieldName}.cname ?rename.${columnInfo.fieldName}.cname:'${columnInfo.label}'"
+                                                     min-width="80" sortable resizable show-overflow-tooltip></el-table-column>
+                            #end
+                            #end
+
+                            <el-table-column fixed="right" label="操作" min-width="120" resizable>
+                                <template slot-scope="scope">
+                                    <div style="display: flex; justify-content: center">
+                                        <rawDataOperateCom :rawEntity="scope.row" @confirm="confirm" @editOrganation="editOrganation"
+                                                           @deleteEntity="delete${EntityNameUp}"
+                                                           @displayEntity="display${EntityNameUp}" permissionEdit="pfm_rawData_${EntityNameUp}_Edit"
+                                                           permission-delete="pfm_rawData_${EntityNameUp}_Delete"
+                                                           permission-view="pfm_rawData_${EntityNameUp}_View"></rawDataOperateCom>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+                        <!--分页功能-->
+                        <div class="block">
+                            <el-pagination
+                                    class="page-style" @size-change="changeSize" @current-change="changePage"
+                                    background
+                                    :current-page="currentPage"
+                                    :page-sizes="[10, 15, 20, 25]"
+                                    :page-size="pageSize"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="totalCount">
+                            </el-pagination>
+                        </div>
+                    </div>
+                </el-col>
+            </el-row>
+        </el-card>
+    </div>
+
+</template>
+<script>
+    import {mapState} from 'vuex';
+    import {${EntityNameUp}Service} from './${EntityNameUp}Service';
+    import downSearch from '@/components/select/downSearch';
+    import modify from './components/Modify'
+    import UploadAndDownload from './components/UploadAndDownload'
+    import rawDataOperateCom from './components/RawDataOperateCom'
+    import {dataState} from '../../../tools/utils';
+
+    export default {
+        components: {
+            downSearch,
+            modify,
+            UploadAndDownload,
+            rawDataOperateCom
+        },
+        data() {
+            return {
+                rules: {},
+                currentPage: 1,
+                pageSize: 10,
+                totalCount: 0,
+                hightlight: true,
+                ${EntityNameLow}s: [],
+                tableLoading: false,
+                alerts:{ remarks:[{title:"功能说明",content:"TODO: 请在这里加上功能说明"},],
+                    successes:[], //TODO:[{title:'消息内容'},]
+                    infos:[],
+                    warnings:[],
+                    errors:[]},
+                condition:{},
+                multipleSelection: [],
+                operatorType: this.$store.state.rawData.operatorType.operatorType,
+                typeName: this.$store.state.rawData.operatorType.name,
+                rename: this.$store.state.rawData.operatorType.rename ? this.$store.state.rawData.operatorType.rename : {},
+                routeTab:{
+                    title:this.$store.state.rawData.operatorType.name
+                },
+            }
+        },
+        created: function () {
+            this.refresh();
+        },
+        activated:function(){
+            if(this.$routerTab.listRefresh)
+            {
+                this.refresh();
+                this.$refs.table.doLayout();
+                this.$routerTab.listRefresh = false;
+            }
+        },
+        methods: {
+            searchByCondition(value){
+                this.condition=value;
+                this.find${EntityNameUp}s();
+            },
+            addAlert(message,title,type){
+                //type 可选的值为:remarks,successes,infos,warnings,errors
+                type = type? type:"errors";
+                type = this.alerts[type]?type:"errors";
+                title = title?title:message;
+                this.alerts[type].unshift({title:title,content:message});
+            },
+            removeAlert(title,type){
+                //type 可选的值为:remarks,successes,infos,warnings,errors
+                type = type? type:"errors";
+                type = this.alerts[type]?type:"errors";
+                for (var i = this.alerts[type].length-1; i>=0 ; i--) {
+                    delete this.alerts[type][i]
+                }
+            },
+            refresh() {
+                this.find${EntityNameUp}s();
+            },
+            installParms() {
+                var parms = {
+                     currentPage: this.currentPage,
+                    pageSize: this.pageSize,
+                    columnName:this.condition.columnName,
+                    content:this.condition.content,
+                    type: this.operatorType,
+                    resultsTypeName: this.typeName,
+                }
+                return parms;
+            },
+            find${EntityNameUp}s() {
+                var parms = this.installParms();
+                this.buttonRequestProgressStart("正在搜索,请稍后...");
+                    ${EntityNameUp}Service.find${EntityNameUp}s(parms).then((res) => {
+                        this.buttonRequestProgressClose();
+                    this.${EntityNameLow}s = res.data.datas;
+                this.totalCount = res.data.totalCount;
+            }).catch((error) => {
+                    this.buttonRequestProgressClose();
+                    this.$message({
+                    type: 'error',
+                    message: '网络繁忙，请稍候再试！'
+                })
+            })
+            },
+            display${EntityNameUp}(${EntityNameLow}Id){
+                var operatorType = this.$store.state.rawData.operatorType;
+                operatorType.operateType = "查看";//便于区别是查看还是确认/审核/分配
+                this.$store.dispatch("setOperatorType", operatorType);
+
+                var router = this.$router;
+                router.push({path: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameUp}/display/'+${EntityNameLow}Id, query: {}});
+            },
+            delete${EntityNameUp}(${EntityNameLow}Id) {
+                this.$confirm('您确定要删除吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.buttonRequestProgressStart("正在删除,请稍后...");
+                        ${EntityNameUp}Service.delete${EntityNameUp}(${EntityNameLow}Id).then((res) =>{
+                            this.buttonRequestProgressClose();
+                    this.$message({
+                    type: 'success',
+                    message: '删除成功！'
+                })
+                this.changePageForDelete(1);
+                this.refresh();
+            }).catch((error) => {
+                    this.buttonRequestProgressClose();
+                //error的data属性是后台传入的数据,data的extendedData存有后台传入的数据
+                this.isSubmiting = false;
+                this.addAlert({title:error.data.message})
+                this.$message({
+                    type: 'error',
+                    message: '删除失败，,原因是：'+error.data.message
+                })
+
+            })
+            }).catch(() => {
+                    this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                })
+            })
+            },
+            changeSize(val) {
+                this.pageSize = val;
+                this.find${EntityNameUp}s();
+            },
+            changePage(val) {
+                this.currentPage = val;
+                this.find${EntityNameUp}s();
+            },
+            add${EntityNameUp}(){
+                //新增${entityClass.label}
+                var router = this.$router;
+                router.push({path: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameUp}/add', query: {}});
+            },
+            editOrganation(${EntityNameLow}Id){
+                //编辑${entityClass.label}
+                var router = this.$router;
+                router.push({path: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameUp}/edit/'+${EntityNameLow}Id, query: {}});
+            },
+            handleCurrentChange(currentRow,oldCurrentRow) {
+                //this.currentRow = val;
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //判断多选框是否可选
+            selectable(row, index) {
+                if (this.operatorType == '确认') {
+                    if (row.reviewState == "草稿" && row.isHistoryData != '是') {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (this.operatorType == '审核') {
+                    if (row.reviewState == "待审核") {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else if (this.operatorType == '录入') {
+                    if (row.reviewState == "草稿" || row.reviewState == "驳回") {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            changePageForDelete(num) {
+                if (this.totalCount - num <= (this.currentPage - 1) * this.pageSize && this.currentPage > 1) {
+                    this.currentPage = this.currentPage - 1;
+                }
+            },
+            dataState({row, column, rowIndex, columnIndex}) {
+                return dataState({row, column, rowIndex, columnIndex});
+            },
+            //单个确认
+            confirm(${EntityNameLow}Id){
+                var operatorType = this.\$store.state.rawData.operatorType;
+                operatorType.operateType=operatorType.operatorType;//便于区别是查看还是确认/审核
+                this.\$store.dispatch("setOperatorType",operatorType);
+                var router = this.$router;
+                router.push({path: '/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameUp}/display/'+${EntityNameLow}Id, query: {}});
+            },
+        }
+    }
+</script>
+<style scoped lang="scss">
+</style>

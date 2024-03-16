@@ -1,0 +1,20 @@
+{
+  "major": {
+    "probability": 0.9865816831588745,
+    "words": "中国机器人及人工智能大事"
+  },
+  "minor": [
+    {
+      "probability": 0.9995187520980835,
+      "words": "组委会"
+    }
+  ],
+  "probability": 0.9974399209022522,
+  "location": {
+    "top": 528,
+    "left": 746,
+    "width": 151,
+    "height": 148
+  },
+  "type": "circle"
+}

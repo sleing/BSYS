@@ -1,0 +1,81 @@
+#set($EntityNameUp="${entityClass.className}")
+#set($EntityNameLow="${entityClass.className.substring(0,1).toLowerCase()}${entityClass.className.substring(1)}")
+#set($vmType="${EntityNameLow}-detail")
+#set($extension=".vue")
+#set($refs="$refs")
+#set($message="$message")
+#set($confirm="$confirm")
+#set($http="$http")
+#set($util="$util")
+#set($grid="$grid")
+#set($data="${data}")
+#set($eid="${eid}")
+#set($value="${value}")
+#set($error="${error.message}")
+#set($key=0)
+#set($ModuleNameLow="${entityClass.moduleName.substring(0,1).toLowerCase()}${entityClass.moduleName.substring(1)}")
+#set($path="${config.uiPath}/src/views/${entityClass.subSystemName}/${entityClass.moduleName}")
+#set($outputFile="${path}/${EntityNameLow}/${vmType}${extension}")
+#set($permission="${entityClass.subSystemName}_${entityClass.moduleName}_${EntityNameUp}")
+<!-- ${entityClass.label}详情弹窗 -->
+<template>
+            <a-form
+                    ref="form3"
+                    class="ele-form-detail"
+                    :model="${EntityNameLow}ModalApp.${EntityNameLow}"
+                    :label-col="{md: {span: 2}, sm: {span: 4}, xs: {span: 6}}"
+                    :wrapper-col="{md: {span: 22}, sm: {span: 20}, xs: {span: 18}}">
+                <a-descriptions :title="${EntityNameLow}ModalApp.title" bordered>
+                #foreach($columnInfo in ${entityClass.dbColumnInfos})
+                    <a-descriptions-item label="${columnInfo.label}">
+                        {{ ${EntityNameLow}ModalApp.${EntityNameLow}.${columnInfo.fieldName} }}
+                    </a-descriptions-item>
+                #end
+                </a-descriptions>
+            </a-form>
+</template>
+
+<script>
+    import {defineComponent, reactive, onMounted, inject} from "vue";
+    import {useRoute} from "vue-router"
+    import {${EntityNameUp}Service} from "@/views/${entityClass.subSystemName}/${entityClass.moduleName}/${EntityNameLow}/${EntityNameLow}Service";
+
+    export default defineComponent({
+        setup() {
+            const route = useRoute();
+            let routeId = route.params.id;
+            let ${EntityNameLow}ListApp = inject('${EntityNameLow}ListApp', reactive({}));
+            const ${EntityNameLow}ModalApp = reactive({id: null, ${EntityNameLow}: {}, display: false});
+
+            onMounted(() => {
+                    ${EntityNameLow}ModalApp.${EntityNameLow} = {};
+                if (routeId) {
+                        ${EntityNameLow}ModalApp.id = routeId;
+                } else if (${EntityNameLow}ListApp.viewModalShowing) {
+                        ${EntityNameLow}ModalApp.id = ${EntityNameLow}ListApp.currentId;
+                        ${EntityNameLow}ModalApp.display = true;
+                }
+                if (${EntityNameLow}ModalApp.id) {
+                    getInfo(${EntityNameLow}ModalApp.id);
+                }
+            })
+
+            const getInfo = (id) => {
+                    ${EntityNameUp}Service.find${EntityNameUp}(id).then((res) => {
+                            ${EntityNameLow}ModalApp.${EntityNameLow} = res.data;
+                            ${EntityNameLow}ModalApp.title = "查看 " + ${EntityNameLow}ModalApp.${EntityNameLow}.name;
+                })
+            }
+
+            return {
+                    ${EntityNameLow}ModalApp,
+                routeId,
+                getInfo,
+            }
+        }
+    })
+</script>
+
+<style scoped>
+</style>
+

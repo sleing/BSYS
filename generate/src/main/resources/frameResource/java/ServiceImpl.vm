@@ -1,0 +1,272 @@
+#set($vmType="serviceBean")
+#set($extension=".java")
+#set($packageName="${entityClass.packages.replace('entity', 'service')}.impl")
+#set($EntityNameUp="${entityClass.className}")
+#set($EntityNameLow="${entityClass.className.substring(0,1).toLowerCase()}${entityClass.className.substring(1)}")
+#set($className="${entityClass.className}${stringUtils.capitalize(${vmType})}")
+#set($path="${config.serverPath}/src/main/java/${packageName.replace('.', '/')}")
+#set($outputFile="${path}/$className${extension}")
+package ${packageName};
+
+import ${config.basePackage}.${entityClass.subSystemName}.dao.${entityClass.moduleName}.${EntityNameUp}Dao;
+
+import com.mt.common.core.exception.BusinessException;
+import com.mt.common.core.web.base.PageDTO;
+import com.mt.common.core.web.base.PageResultDTO;
+import com.mt.common.core.web.base.BaseEntity;
+import com.mt.common.core.web.BaseService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import ${entityClass.clazz.name};
+import ${config.basePackage}.${entityClass.subSystemName}.service.${entityClass.moduleName}.${EntityNameUp}Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+@Service
+@Transactional
+public class ${EntityNameUp}ServiceBean extends BaseService implements ${EntityNameUp}Service {
+
+    private static Logger logger = LogManager.getLogger();
+
+	@Autowired
+	private ${EntityNameUp}Dao ${EntityNameLow}Dao;
+
+	@Resource
+	private RedisTemplate<String, List<${EntityNameUp}>> redisTemplate;
+
+	@Autowired
+	StringRedisTemplate stringRedisTemplate;
+
+	/**
+	 * 根据分页参数查询${entityClass.label}集合
+	 *
+	 * @param pageDTO 分页条件
+	 */
+	@Override
+	public PageResultDTO find${EntityNameUp}s(PageDTO pageDTO){
+        pageDTO.setStartIndex((pageDTO.getCurrentPage()-1)*pageDTO.getPageSize());
+		//TODO:请在此校验参数的合法性
+		this.validateFind${EntityNameUp}s(pageDTO);
+		List<${EntityNameUp}> ${EntityNameLow}DTOS = this.${EntityNameLow}Dao.find${EntityNameUp}s(pageDTO);
+		Long totalCount = this.${EntityNameLow}Dao.find${EntityNameUp}TotalCount(pageDTO);
+
+		PageResultDTO pageResultDTO = new PageResultDTO();
+		pageResultDTO.setTotalCount(totalCount);
+		pageResultDTO.setDatas(${EntityNameLow}DTOS);
+
+		return pageResultDTO;
+	}
+
+	/**
+	 * 查询全部${entityClass.label}集合
+	 *
+	 */
+	@Override
+	public List<${EntityNameUp}> findAll${EntityNameUp}s(){
+		return this.${EntityNameLow}Dao.findAll${EntityNameUp}s();
+	}
+
+	/**
+	 * 查询所有${entityClass.label}集合(只提取ID 和 Name)
+	 *
+	 */
+	@Override
+	public List<${EntityNameUp}> findAll${EntityNameUp}sWithIdName(){
+		//TODO:请在此校验参数的合法性
+		this.validateFindAll${EntityNameUp}sWithIdName();
+		return this.${EntityNameLow}Dao.findAll${EntityNameUp}sWithIdName();
+	}
+
+	/**
+	 * 根据名称查询${entityClass.label}集合(只提取ID 和 Name)
+	 *
+	 * @param ${EntityNameLow}Name 名称
+	 */
+	@Override
+	public List<${EntityNameUp}> find${EntityNameUp}sWithIdNameByName(String ${EntityNameLow}Name){
+		//TODO:请在此校验参数的合法性
+		this.validateFind${EntityNameUp}sWithIdNameByName(${EntityNameLow}Name);
+		//TODO:缓存取对应参数
+		Set<String> keys = stringRedisTemplate.keys("searchData:${EntityNameUp}_where_${EntityNameLow}Name_" + ${EntityNameLow}Name);
+		List<${EntityNameUp}> ${EntityNameLow}s = new ArrayList<>();
+		if (keys.isEmpty()) {
+		${EntityNameLow}s = this.${EntityNameLow}Dao.find${EntityNameUp}sWithIdNameByName(${EntityNameLow}Name);
+		redisTemplate.opsForValue().set("searchData:${EntityNameUp}_where_${EntityNameLow}Name_" + ${EntityNameLow}Name, ${EntityNameLow}s, 30, TimeUnit.DAYS);
+		} else {
+		${EntityNameLow}s = redisTemplate.opsForValue().get("searchData:${EntityNameUp}_where_${EntityNameLow}Name_" + ${EntityNameLow}Name);
+		}
+		return ${EntityNameLow}s;
+	}
+
+	/**
+	 * 根据ID查询指定的${entityClass.label}(只提取ID 和 Name)
+	 *
+	 * @param ${EntityNameLow}Id Id
+	 */
+	@Override
+	public ${EntityNameUp} find${EntityNameUp}sWithIdNameById(Long ${EntityNameLow}Id){
+		//TODO:请在此校验参数的合法性
+		this.validateFind${EntityNameUp}sWithIdNameById(${EntityNameLow}Id);
+		return this.${EntityNameLow}Dao.find${EntityNameUp}sWithIdNameById(${EntityNameLow}Id);
+	}
+
+	/**
+	 * 根据ID查询指定的${entityClass.label}
+	 *
+	 * @param ${EntityNameLow}Id Id
+	 */
+	@Override
+	public ${EntityNameUp} find${EntityNameUp}(Long ${EntityNameLow}Id){
+		//TODO:请在此校验参数的合法性
+		this.validateFind${EntityNameUp}(${EntityNameLow}Id);
+		return this.${EntityNameLow}Dao.find${EntityNameUp}(${EntityNameLow}Id);
+	}
+
+	/**
+	 * 根据ID查询指定的${entityClass.label}(包含外键)
+	 *
+	 * @param ${EntityNameLow}Id Id
+	 */
+	@Override
+	public ${EntityNameUp} find${EntityNameUp}WithForeignName(Long ${EntityNameLow}Id){
+		//TODO:请在此校验参数的合法性
+		this.validateFind${EntityNameUp}WithForeignName(${EntityNameLow}Id);
+		return this.${EntityNameLow}Dao.find${EntityNameUp}WithForeignName(${EntityNameLow}Id);
+	}
+
+	/**
+	 * 新增${entityClass.label}
+	 *
+	 * @param ${EntityNameLow} 实体对象
+	 */
+	@Override
+	public ${EntityNameUp} save${EntityNameUp}(${EntityNameUp} ${EntityNameLow}){
+		//TODO:请在此校验参数的合法性
+		this.validateSave${EntityNameUp}(${EntityNameLow});
+		//TODO:填充公共参数
+		this.setSavePulicColumns(${EntityNameLow});
+		Long rows = this.${EntityNameLow}Dao.save${EntityNameUp}(${EntityNameLow});
+		if(rows != 1)
+		{
+			String error = "新增保存${entityClass.label}出错，数据库应该返回1,但返回了 "+rows;
+			throw new BusinessException(error);
+		}
+		return ${EntityNameLow};
+	}
+
+	/**
+	 * 更新${entityClass.label}
+	 *
+	 * @param ${EntityNameLow} 实体对象
+	 */
+	@Override
+	public ${EntityNameUp} update${EntityNameUp}(${EntityNameUp} ${EntityNameLow}){
+		//TODO:请在此校验参数的合法性
+		this.validateUpdate${EntityNameUp}(${EntityNameLow});
+		Long rows = this.${EntityNameLow}Dao.update${EntityNameUp}(${EntityNameLow});
+		if(rows != 1)
+		{
+			String error = "修改保存${entityClass.label}出错，数据库应该返回1,但返回了 "+rows+",数据可能被删除";
+			throw new BusinessException(error);
+		}
+		return ${EntityNameLow};
+	}
+
+	/**
+	 * 根据ID删除${entityClass.label}
+	 *
+	 * @param ${EntityNameLow}Id ID
+	 */
+	@Override
+	public void delete${EntityNameUp}(Long ${EntityNameLow}Id){
+		//TODO:请在此校验参数的合法性
+		this.validateDelete${EntityNameUp}(${EntityNameLow}Id);
+
+		Map<Class<? extends BaseEntity>,EntityUsage> entityUsageMap = this.checkForeignEntity(${EntityNameUp}.class, ${EntityNameLow}Id);
+		if(entityUsageMap != null && entityUsageMap.size() >0){
+			StringBuilder errors = new StringBuilder();
+			errors.append("计划删除的数据正在被以下数引用\n");
+			for(EntityUsage entityUsage : entityUsageMap.values()){
+				errors.append("\t").append(entityUsage.getEntityLabel()).append("\n");
+				for(Map.Entry<Long,String> entry : entityUsage.getUsageIdNames().entrySet() ){
+					errors.append("\t\t").append(entry.getKey()).append("\t").append(entry.getValue()).append("\n");
+				}
+			}
+			errors.append("，不能删除，请检查处理后再删除");
+			throw  new BusinessException(errors.toString());
+		}
+
+		Long rows = this.${EntityNameLow}Dao.delete${EntityNameUp}(${EntityNameLow}Id);
+		if(rows != 1){
+			String error = "删除${entityClass.label}出错，数据可能已经被删除";
+			throw new BusinessException(error);
+		}
+	}
+
+	//TODO:---------------验证-------------------
+
+	private void validateFind${EntityNameUp}s(PageDTO pageDTO) {
+	//TODO:请使用下面方法添加数据过滤条件
+	//		pageDTO.addFilter("creatorId",this.getLoginUserId());
+	//TODO:请完善数据校验规则和数据权限判断，如果有问题请抛出异常，参看下面validateUpdate${EntityNameUp}()写法
+	}
+
+	private void validateFind${EntityNameUp}sWithIdNameByName(String ${EntityNameLow}Name) {
+	//TODO:请完善数据校验规则和数据权限判断，如果有问题请抛出异常，参看下面validateUpdate${EntityNameUp}()写法
+	}
+
+
+	private void validateFindAll${EntityNameUp}sWithIdName() {
+	//TODO:请完善数据校验规则和数据权限判断，如果有问题请抛出异常，参看下面validateUpdate${EntityNameUp}()写法
+	}
+
+	private void validateFind${EntityNameUp}sWithIdNameById(Long ${EntityNameLow}Id) {
+	//TODO:请完善数据校验规则和数据权限判断，如果有问题请抛出异常，参看下面validateUpdate${EntityNameUp}()写法
+	}
+
+	private void validateFind${EntityNameUp}(Long ${EntityNameLow}Id) {
+	//TODO:请完善数据校验规则和数据权限判断，如果有问题请抛出异常，参看下面validateUpdate${EntityNameUp}()写法
+	}
+
+	private void validateFind${EntityNameUp}WithForeignName(Long ${EntityNameLow}Id) {
+	//TODO:请完善数据校验规则和数据权限判断，如果有问题请抛出异常，参看下面validateUpdate${EntityNameUp}()写法
+	}
+
+	private void validateSave${EntityNameUp}(${EntityNameUp} ${EntityNameLow}) {
+	//不为空判断
+	if (${EntityNameLow}.getEid() != null || ${EntityNameLow}.getCreatorId() != null || ${EntityNameLow}.getCreateDatetime() != null) {
+	throw new BusinessException("非法请求");
+	}
+	//TODO:请完善数据校验规则和数据权限判断，如果有问题请抛出异常，参看下面validateUpdate${EntityNameUp}()写法
+	}
+
+	private void validateUpdate${EntityNameUp}(${EntityNameUp} ${EntityNameLow}) {
+	//不为空判断
+	if (${EntityNameLow}.getEid() == null) {
+	throw new BusinessException("唯一标识不能为空");
+	}
+	//是否存在判断
+	if (this.${EntityNameLow}Dao.find${EntityNameUp}TotalCount(PageDTO.create(${EntityNameUp}.FIELD_ID, ${EntityNameLow}.getEid())) == 0) {
+	throw new BusinessException("修改的${entityClass.label} " + ${EntityNameLow}.getName() + " 不存在，修改失败，请重试或联系管理员");
+	}
+	//TODO:请完善数据校验规则和数据权限判断，如果有问题请抛出异常，参看下面validateUpdate${EntityNameUp}()写法
+	}
+
+	private void validateDelete${EntityNameUp}(Long ${EntityNameLow}Id) {
+	//TODO:请完善数据校验规则和数据权限判断，如果有问题请抛出异常，参看下面validateUpdate${EntityNameUp}()写法
+	}
+
+	@Override
+	public boolean canDownloadAttachment(String formName, Long id) {
+	return true;
+	}
+}

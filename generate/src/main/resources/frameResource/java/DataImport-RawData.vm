@@ -1,0 +1,130 @@
+#set($vmType="dataImport")
+#set($extension=".java")
+#set($packageName="com.ddd.info.pfm.strategy.impl")
+#set($EntityNameUp="${entityClass.className}")
+#set($EntityNameLow="${entityClass.className.substring(0,1).toLowerCase()}${entityClass.className.substring(1)}")
+#set($className="${entityClass.className}${stringUtils.capitalize(${vmType})}")
+#set($path="${config.serverPath}/src/main/java/${packageName.replace('.', '/')}")
+#set($outputFile="${path}/$className${extension}")
+
+package com.ddd.info.pfm.strategy.impl;
+
+import com.ddd.info.pfm.entity.rawData.RawDataBaseEntity;
+import com.ddd.info.pfm.entity.rawData.${EntityNameUp};
+import com.ddd.info.pfm.service.rawData.${EntityNameUp}Service;
+import com.ddd.info.pfm.strategy.RawDataImportAbstract;
+import com.ddd.info.pfm.strategy.RawDataImportInterface;
+import com.ddd.info.simple.util.ListUtils;
+import com.ddd.info.simple.dto.system.DataImportDto;
+import com.ddd.info.simple.entity.system.ImportSetting;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+/**
+* 标准导入类
+*/
+@Service
+public class ${EntityNameUp}DataImport extends RawDataImportAbstract implements RawDataImportInterface<${EntityNameUp}> {
+    private static Logger logger = LogManager.getLogger();
+
+    @Autowired
+    private ${EntityNameUp}Service ${EntityNameLow}Service;
+
+    /**
+    * 初始化参数
+    *
+    * @param importSetting
+    * @param lists
+    * @param typeName
+    */
+    @Override
+    public void init(ImportSetting importSetting, List<Map<String, Object>> lists, String typeName) {
+    super.setParms(this,importSetting,lists,typeName);
+    }
+
+    /**
+    * 根据关键字查询
+    *
+    * @param rawDataBaseEntitys
+    * @return
+    */
+    @Override
+    public Map<String,RawDataBaseEntity> findRawDataBaseEntityByKeys(List<${EntityNameUp}> rawDataBaseEntitys) {
+        List<List> rawDataBaseEntityss = ListUtils.groupForLists(rawDataBaseEntitys);
+        List<${EntityNameUp}> ${EntityNameLow}List = this.${EntityNameLow}Service.import${EntityNameUp}ByKeys(rawDataBaseEntityss);
+            Map<String, RawDataBaseEntity> results = ${EntityNameLow}List.stream().collect(Collectors.toMap(${EntityNameUp}::getUnitKeys, Function.identity()));
+            return results;
+            //        return this.${EntityNameLow}Service.find${EntityNameUp}ByKeys(rawDataBaseEntity);
+            }
+
+    /**
+    * 批量保存
+    *
+    * @param rawDataBaseEntitys
+    */
+    @Override
+    public void saveRawDataBaseEntitys(List<${EntityNameUp}> rawDataBaseEntitys) {
+
+        this.${EntityNameLow}Service.save${EntityNameUp}s(rawDataBaseEntitys);
+        }
+
+        /**
+        * 批量更新
+        *
+        * @param rawDataBaseEntitys
+        */
+        @Override
+        public void updateRawDataBaseEntitys(List<${EntityNameUp}> rawDataBaseEntitys) {
+
+            this.${EntityNameLow}Service.update${EntityNameUp}s(rawDataBaseEntitys);
+            }
+
+        /**
+        * 数据特殊处理
+        *
+        * @param rawDataBaseEntity
+        * @param data
+        * @param rowCount
+        * @return
+        */
+        @Override
+        public RawDataBaseEntity dataHandle(${EntityNameUp} rawDataBaseEntity, Map<String, Object> data, Long rowCount) {
+            return rawDataBaseEntity;
+        }
+
+        /**
+        * 自定义验证，每个子类自己验证
+        *
+        * @return
+        */
+        @Override
+        protected DataImportDto customValidateData() {
+             return super.parentValidateData();
+        }
+
+        /**
+        * 自定义导入，每个子类自己导入
+        *
+        * @return
+        */
+        @Override
+        protected DataImportDto customImportData() {
+             return super.parentImportData();
+        }
+
+        /**
+        * 数据处理之前的操作，比如放入人员集合等等操作
+        *
+        * @return
+        */
+        @Override
+        public Map dataHandlerBefore() {
+            return null;
+        }
+}
