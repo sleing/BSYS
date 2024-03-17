@@ -6,167 +6,171 @@
     <!-- 条件查询 -->
     <sql id="findTsCollegesWhere">
         from tms_ts_college t0
-                <where>
+        <where>
             <if test="filters!=null">
-                                    <if test="filters.Eid!=null">
-                        <if test="filterTypes.Eid=='单值'">
-                                                        
-                                AND t0.eid = #{filters.Eid}
+                <if test="filters.Eid!=null">
+                    <if test="filterTypes.Eid=='单值'">
 
-                                                    </if>
-                        <if test="filterTypes.Eid=='模糊'">
+                        AND t0.eid = #{filters.Eid}
 
-                            AND t0.eid LIKE  '%${filters.Eid}%'
-
-                        </if>
-                        <if test="filterTypes.Eid=='数组'">
-                                                                                        AND t0.eid in
-                                <foreach collection="filters.Eid" item="item" index="index" open="(" separator="," close=")">
-                                    #{item}
-                                </foreach>
-                                                    </if>
                     </if>
-                                    <if test="filters.creatorName!=null">
-                        <if test="filterTypes.creatorName=='单值'">
-                            
-                                AND t0.creator_name LIKE  '%${filters.creatorName}%'
+                    <if test="filterTypes.Eid=='模糊'">
 
-                                                                                </if>
-                        <if test="filterTypes.creatorName=='模糊'">
+                        AND t0.eid LIKE '%${filters.Eid}%'
 
-                            AND t0.creator_name LIKE  '%${filters.creatorName}%'
-
-                        </if>
-                        <if test="filterTypes.creatorName=='数组'">
-                                                            AND t0.creator_name in
-                                <foreach collection="filters.creatorName" item="item" index="index" open="(" separator="," close=")">
-                                    '#{item}'
-                                </foreach>
-
-                                                                                </if>
                     </if>
-                                    <if test="filters.name!=null">
-                        <if test="filterTypes.name=='单值'">
-                            
-                                AND t0.name LIKE  '%${filters.name}%'
-
-                                                                                </if>
-                        <if test="filterTypes.name=='模糊'">
-
-                            AND t0.name LIKE  '%${filters.name}%'
-
-                        </if>
-                        <if test="filterTypes.name=='数组'">
-                                                            AND t0.name in
-                                <foreach collection="filters.name" item="item" index="index" open="(" separator="," close=")">
-                                    '#{item}'
-                                </foreach>
-
-                                                                                </if>
+                    <if test="filterTypes.Eid=='数组'">
+                        AND t0.eid in
+                        <foreach collection="filters.Eid" item="item" index="index" open="(" separator="," close=")">
+                            #{item}
+                        </foreach>
                     </if>
-                                    <if test="filters.tsRemark!=null">
-                        <if test="filterTypes.tsRemark=='单值'">
-                            
-                                AND t0.ts_remark LIKE  '%${filters.tsRemark}%'
+                </if>
+                <if test="filters.creatorName!=null">
+                    <if test="filterTypes.creatorName=='单值'">
 
-                                                                                </if>
-                        <if test="filterTypes.tsRemark=='模糊'">
+                        AND t0.creator_name LIKE '%${filters.creatorName}%'
 
-                            AND t0.ts_remark LIKE  '%${filters.tsRemark}%'
-
-                        </if>
-                        <if test="filterTypes.tsRemark=='数组'">
-                                                            AND t0.ts_remark in
-                                <foreach collection="filters.tsRemark" item="item" index="index" open="(" separator="," close=")">
-                                    '#{item}'
-                                </foreach>
-
-                                                                                </if>
                     </if>
-                                    <if test="filters.status!=null">
-                        <if test="filterTypes.status=='单值'">
-                            
-                                AND t0.status LIKE  '%${filters.status}%'
+                    <if test="filterTypes.creatorName=='模糊'">
 
-                                                                                </if>
-                        <if test="filterTypes.status=='模糊'">
+                        AND t0.creator_name LIKE '%${filters.creatorName}%'
 
-                            AND t0.status LIKE  '%${filters.status}%'
-
-                        </if>
-                        <if test="filterTypes.status=='数组'">
-                                                            AND t0.status in
-                                <foreach collection="filters.status" item="item" index="index" open="(" separator="," close=")">
-                                    '#{item}'
-                                </foreach>
-
-                                                                                </if>
                     </if>
-                                    <if test="filters.creatorId!=null">
-                        <if test="filterTypes.creatorId=='单值'">
-                                                        
-                                AND t0.creator_id = #{filters.creatorId}
+                    <if test="filterTypes.creatorName=='数组'">
+                        AND t0.creator_name in
+                        <foreach collection="filters.creatorName" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
 
-                                                    </if>
-                        <if test="filterTypes.creatorId=='模糊'">
-
-                            AND t0.creator_id LIKE  '%${filters.creatorId}%'
-
-                        </if>
-                        <if test="filterTypes.creatorId=='数组'">
-                                                                                        AND t0.creator_id in
-                                <foreach collection="filters.creatorId" item="item" index="index" open="(" separator="," close=")">
-                                    #{item}
-                                </foreach>
-                                                    </if>
                     </if>
-                                    <if test="filters.remark!=null">
-                        <if test="filterTypes.remark=='单值'">
-                            
-                                AND t0.remark LIKE  '%${filters.remark}%'
+                </if>
+                <if test="filters.name!=null">
+                    <if test="filterTypes.name=='单值'">
 
-                                                                                </if>
-                        <if test="filterTypes.remark=='模糊'">
+                        AND t0.name LIKE '%${filters.name}%'
 
-                            AND t0.remark LIKE  '%${filters.remark}%'
-
-                        </if>
-                        <if test="filterTypes.remark=='数组'">
-                                                            AND t0.remark in
-                                <foreach collection="filters.remark" item="item" index="index" open="(" separator="," close=")">
-                                    '#{item}'
-                                </foreach>
-
-                                                                                </if>
                     </if>
-                                    <if test="filters.createDatetime!=null">
-                        <if test="filterTypes.createDatetime=='单值'">
-                                                                                </if>
-                        <if test="filterTypes.createDatetime=='模糊'">
+                    <if test="filterTypes.name=='模糊'">
 
-                            AND t0.create_datetime LIKE  '%${filters.createDatetime}%'
+                        AND t0.name LIKE '%${filters.name}%'
 
-                        </if>
-                        <if test="filterTypes.createDatetime=='数组'">
-                                                                                </if>
                     </if>
-                            </if>
+                    <if test="filterTypes.name=='数组'">
+                        AND t0.name in
+                        <foreach collection="filters.name" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.tsRemark!=null">
+                    <if test="filterTypes.tsRemark=='单值'">
+
+                        AND t0.ts_remark LIKE '%${filters.tsRemark}%'
+
+                    </if>
+                    <if test="filterTypes.tsRemark=='模糊'">
+
+                        AND t0.ts_remark LIKE '%${filters.tsRemark}%'
+
+                    </if>
+                    <if test="filterTypes.tsRemark=='数组'">
+                        AND t0.ts_remark in
+                        <foreach collection="filters.tsRemark" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.status!=null">
+                    <if test="filterTypes.status=='单值'">
+
+                        AND t0.status LIKE '%${filters.status}%'
+
+                    </if>
+                    <if test="filterTypes.status=='模糊'">
+
+                        AND t0.status LIKE '%${filters.status}%'
+
+                    </if>
+                    <if test="filterTypes.status=='数组'">
+                        AND t0.status in
+                        <foreach collection="filters.status" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.creatorId!=null">
+                    <if test="filterTypes.creatorId=='单值'">
+
+                        AND t0.creator_id = #{filters.creatorId}
+
+                    </if>
+                    <if test="filterTypes.creatorId=='模糊'">
+
+                        AND t0.creator_id LIKE '%${filters.creatorId}%'
+
+                    </if>
+                    <if test="filterTypes.creatorId=='数组'">
+                        AND t0.creator_id in
+                        <foreach collection="filters.creatorId" item="item" index="index" open="(" separator=","
+                                 close=")">
+                            #{item}
+                        </foreach>
+                    </if>
+                </if>
+                <if test="filters.remark!=null">
+                    <if test="filterTypes.remark=='单值'">
+
+                        AND t0.remark LIKE '%${filters.remark}%'
+
+                    </if>
+                    <if test="filterTypes.remark=='模糊'">
+
+                        AND t0.remark LIKE '%${filters.remark}%'
+
+                    </if>
+                    <if test="filterTypes.remark=='数组'">
+                        AND t0.remark in
+                        <foreach collection="filters.remark" item="item" index="index" open="(" separator="," close=")">
+                            '#{item}'
+                        </foreach>
+
+                    </if>
+                </if>
+                <if test="filters.createDatetime!=null">
+                    <if test="filterTypes.createDatetime=='单值'">
+                    </if>
+                    <if test="filterTypes.createDatetime=='模糊'">
+
+                        AND t0.create_datetime LIKE '%${filters.createDatetime}%'
+
+                    </if>
+                    <if test="filterTypes.createDatetime=='数组'">
+                    </if>
+                </if>
+            </if>
         </where>
     </sql>
 
 
     <!-- 根据分页参数查询数据集合 -->
-    <select id="findTsColleges" resultType="com.mt.tms.entity.tsCollegeEntity.TsCollege" parameterType="com.mt.common.core.web.base.PageDTO">
+    <select id="findTsColleges" resultType="com.mt.tms.entity.tsCollegeEntity.TsCollege"
+            parameterType="com.mt.common.core.web.base.PageDTO">
         select
-            t0.eid  ,
-            t0.creator_name  ,
-            t0.name  ,
-            t0.ts_remark  ,
-            t0.status  ,
-            t0.creator_id  ,
-            t0.remark  ,
-            t0.create_datetime  
-        
+        t0.eid ,
+        t0.creator_name ,
+        t0.name ,
+        t0.ts_remark ,
+        t0.status ,
+        t0.creator_id ,
+        t0.remark ,
+        t0.create_datetime
+
         <include refid="findTsCollegesWhere"></include>
 
         <if test="orderBys!=null">
@@ -178,117 +182,123 @@
     </select>
 
     <!-- 根据分页参数查询数据集合总条数 -->
-    <select id="findTsCollegeTotalCount" resultType="java.lang.Long" parameterType="com.mt.common.core.web.base.PageDTO">
+    <select id="findTsCollegeTotalCount" resultType="java.lang.Long"
+            parameterType="com.mt.common.core.web.base.PageDTO">
         select count(t0.eid) as totalCount
         <include refid="findTsCollegesWhere"></include>
     </select>
 
     <!-- 根据查询所有数据集合 -->
-    <select id="findAllTsColleges" resultType="com.mt.tms.entity.tsCollegeEntity.TsCollege" >
-        select
-                    t0.eid  ,
-                    t0.creator_name  ,
-                    t0.name  ,
-                    t0.ts_remark  ,
-                    t0.status  ,
-                    t0.creator_id  ,
-                    t0.remark  ,
-                    t0.create_datetime  
-                        from tms_ts_college t0
-                ORDER BY t0.create_datetime
+    <select id="findAllTsColleges" resultType="com.mt.tms.entity.tsCollegeEntity.TsCollege">
+        select t0.eid,
+               t0.creator_name,
+               t0.name,
+               t0.ts_remark,
+               t0.status,
+               t0.creator_id,
+               t0.remark,
+               t0.create_datetime
+        from tms_ts_college t0
+        ORDER BY t0.create_datetime
     </select>
 
     <!-- 根据名称查询数据集合,只提取ID 和 Name -->
-    <select id="findTsCollegesWithIdNameByName" resultType="com.mt.tms.entity.tsCollegeEntity.TsCollege" parameterType="java.lang.String">
-        select
-            t0.eid,t0.name
+    <select id="findTsCollegesWithIdNameByName" resultType="com.mt.tms.entity.tsCollegeEntity.TsCollege"
+            parameterType="java.lang.String">
+        select t0.eid,
+               t0.name
         from tms_ts_college t0
-        where t0.name like  '%${tsCollegeName}%'
+        where t0.name like '%${tsCollegeName}%'
         ORDER BY t0.name
     </select>
 
 
     <!-- 查询所有数据集合,只提取ID 和 Name -->
-    <select id="findAllTsCollegesWithIdName" resultType="com.mt.tms.entity.tsCollegeEntity.TsCollege" >
-        select
-        t0.eid,t0.name
+    <select id="findAllTsCollegesWithIdName" resultType="com.mt.tms.entity.tsCollegeEntity.TsCollege">
+        select t0.eid,
+               t0.name
         from tms_ts_college t0
         ORDER BY t0.name
     </select>
 
     <!-- 查询指定的实体,只提取ID 和 Name -->
-    <select id="findTsCollegesWithIdNameById" resultType="com.mt.tms.entity.tsCollegeEntity.TsCollege" parameterType="java.lang.Long">
-        select
-        t0.eid,t0.name
+    <select id="findTsCollegesWithIdNameById" resultType="com.mt.tms.entity.tsCollegeEntity.TsCollege"
+            parameterType="java.lang.Long">
+        select t0.eid,
+               t0.name
         from tms_ts_college t0
         where eid = #{tsCollegeId}
     </select>
 
     <!--  根据Id查询 -->
     <select id="findTsCollege" resultType="com.mt.tms.entity.tsCollegeEntity.TsCollege" parameterType="java.lang.Long">
-        select * from tms_ts_college where eid = #{tsCollegeId}
+        select *
+        from tms_ts_college
+        where eid = #{tsCollegeId}
     </select>
 
     <!-- 根据ID查询指定的实体(包含外键) -->
-    <select id="findTsCollegeWithForeignName" resultType="com.mt.tms.entity.tsCollegeEntity.TsCollege" parameterType="java.lang.Long">
-        select
-                    t0.eid  ,
-                    t0.creator_name  ,
-                    t0.name  ,
-                    t0.ts_remark  ,
-                    t0.status  ,
-                    t0.creator_id  ,
-                    t0.remark  ,
-                    t0.create_datetime  
-                        from tms_ts_college t0
-                where t0.eid = #{tsCollegeId}
+    <select id="findTsCollegeWithForeignName" resultType="com.mt.tms.entity.tsCollegeEntity.TsCollege"
+            parameterType="java.lang.Long">
+        select t0.eid,
+               t0.creator_name,
+               t0.name,
+               t0.ts_remark,
+               t0.status,
+               t0.creator_id,
+               t0.remark,
+               t0.create_datetime
+        from tms_ts_college t0
+        where t0.eid = #{tsCollegeId}
     </select>
 
 
     <!--  保存 -->
     <insert id="saveTsCollege" parameterType="com.mt.tms.entity.tsCollegeEntity.TsCollege" useGeneratedKeys="true">
-        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long" >
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
         insert into tms_ts_college
         (
-                                                        creator_name ,
-                                                name ,
-                                                ts_remark ,
-                                                status ,
-                                                creator_id ,
-                                                remark ,
-                                                create_datetime 
-                            )
+        creator_name ,
+        name ,
+        ts_remark ,
+        status ,
+        creator_id ,
+        remark ,
+        create_datetime
+        )
         values
         (
-                                                        #{creatorName} ,
-                                                #{name} ,
-                                                #{tsRemark} ,
-                                                #{status} ,
-                                                #{creatorId} ,
-                                                #{remark} ,
-                                                #{createDatetime} 
-                            )
+        #{creatorName} ,
+        #{name} ,
+        #{tsRemark} ,
+        #{status} ,
+        #{creatorId} ,
+        #{remark} ,
+        #{createDatetime}
+        )
     </insert>
 
     <!--  编辑 -->
-    <update id="updateTsCollege" parameterType="com.mt.tms.entity.tsCollegeEntity.TsCollege" >
-        update tms_ts_college set
-                                                        creator_name = #{creatorName} ,
-                                                name = #{name} ,
-                                                ts_remark = #{tsRemark} ,
-                                                status = #{status} ,
-                                                creator_id = #{creatorId} ,
-                                                remark = #{remark} ,
-                                                create_datetime = #{createDatetime} 
-                            where eid=#{eid}
+    <update id="updateTsCollege" parameterType="com.mt.tms.entity.tsCollegeEntity.TsCollege">
+        update tms_ts_college
+        set creator_name    = #{creatorName},
+            name            = #{name},
+            ts_remark       = #{tsRemark},
+            status          = #{status},
+            creator_id      = #{creatorId},
+            remark          = #{remark},
+            create_datetime = #{createDatetime}
+        where eid = #{eid}
     </update>
 
 
     <!--  根据Id删除 -->
-    <delete id="deleteTsCollege"  parameterType="java.lang.Long">
-        delete from tms_ts_college where eid = #{tsCollegeId}
+    <delete id="deleteTsCollege" parameterType="java.lang.Long">
+        delete
+        from tms_ts_college
+        where eid = #{tsCollegeId}
     </delete>
 
 
