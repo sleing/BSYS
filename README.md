@@ -1,4 +1,4 @@
-# awardManagementDDD5
+# 团学会管理系统
 Back end of Student Award management system on github
 
 注意：
