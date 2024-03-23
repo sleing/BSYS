@@ -288,5 +288,14 @@ public class AttachmentController {
     public List<Attachment> findAttachmentsWithIdNameByAwardId(@RequestParam Long awardId) {
         return this.attachmentService.findAttachmentsWithIdNameByAwardId(awardId);
     }
+
+    /**
+     * 查询所有文件
+     */
+    @PostMapping("/findAllFiles")
+    public List<Attachment>findAllFiles(){
+        return this.attachmentService.findAllAttachments();
+    }
+
 }
 

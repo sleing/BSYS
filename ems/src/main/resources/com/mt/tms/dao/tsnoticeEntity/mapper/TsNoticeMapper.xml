@@ -371,7 +371,7 @@
         #{noticeDate} ,
         #{noticeDepartmentId} ,
         #{content} ,
-        #{auditStatu} ,
+        '未审核' ,
         #{status} ,
         #{creatorId} ,
         #{remark} ,
