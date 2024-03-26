@@ -2,6 +2,7 @@ package com.mt.common.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.mt.common.system.entity.User;
 import com.mt.common.system.entity.UserRole;
 import com.mt.common.system.mapper.UserRoleMapper;
 import com.mt.common.system.service.UserRoleService;
@@ -33,6 +34,11 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     @Override
     public void insertBatchSingle(Long userId,Long roleId) {
         userRoleMapper.insertBatchSingle(userId,roleId);
+    }
+
+    @Override
+    public void mutiImportUserRole(List<UserRole> userRoles) {
+        userRoleMapper.mutiImportUserRole(userRoles);
     }
 
 }

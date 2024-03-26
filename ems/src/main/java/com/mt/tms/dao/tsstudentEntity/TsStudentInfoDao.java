@@ -86,4 +86,10 @@ public interface TsStudentInfoDao {
     * @param tsStudentInfoId ID
     */
     public Long deleteTsStudentInfo(@Param("tsStudentInfoId") Long tsStudentInfoId);
+
+    /**
+     * 批量导入学生信息
+     * @param dataInsert
+     */
+    void mutiImport(List<TsStudentInfo> dataInsert);
 }

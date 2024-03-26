@@ -33,5 +33,19 @@
         INSERT INTO sys_user_role(user_id, role_id) VALUES (#{userId}, #{roleId})
     </insert>
 
+    <insert id="mutiImportUserRole">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO sys_user_role
+        (user_id, role_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId}, #{item.roleId})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        user_id=values (user_id)
+    </insert>
+
 
 </mapper>

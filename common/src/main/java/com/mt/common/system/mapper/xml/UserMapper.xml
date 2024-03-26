@@ -68,6 +68,43 @@
         </where>
     </sql>
 
+<!--    批量添加用户-->
+    <insert id="mutiImportUser">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into sys_user
+        (
+        deleted,
+        email,
+        email_verified,
+        nickname,
+        password,
+        state,
+        username
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.deleted},
+            #{item.email},
+            #{item.email_verified},
+            #{item.nickname},
+            #{item.password},
+            #{item.state},
+            #{item.username}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        password values (password),
+        email values (email),
+        deleted values (deleted),
+        email_verified values (email_verified),
+        nickname values(nickname),
+        state values (state),
+        username values (username)
+    </insert>
+
     <!-- 分页查询 -->
     <select id="listPage" resultType="com.mt.common.system.entity.User">
         <include refid="relSelect"></include>

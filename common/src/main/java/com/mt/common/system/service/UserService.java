@@ -104,4 +104,10 @@ public interface UserService extends IService<User> {
     public Long getUserEidByEmail(String email);
 
     public List<User> findAllUsersWithIdNameEmail();
+
+    /**
+     * 批量添加用户
+     * @param users
+     */
+    void mutiImportUser(List<User> users);
 }

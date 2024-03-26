@@ -44,4 +44,9 @@ public interface UserMapper extends BaseMapper<User> {
 
     public List<User> findAllUsersWithIdNameEmail();
 
+    /**
+     * 批量添加用户
+     * @param users
+     */
+    void mutiImportUser(List<User> users);
 }

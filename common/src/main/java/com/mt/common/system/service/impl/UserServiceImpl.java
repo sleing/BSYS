@@ -317,6 +317,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
+    public void mutiImportUser(List<User> users) {
+        userMapper.mutiImportUser(users);
+    }
+
+    @Override
     public Long getUserEidByEmail(String email) {
         List<User> allUsers = userMapper.findAllUsersWithIdNameEmail();
 

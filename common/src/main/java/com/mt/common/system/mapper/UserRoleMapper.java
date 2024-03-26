@@ -2,6 +2,7 @@ package com.mt.common.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.mt.common.system.entity.Role;
+import com.mt.common.system.entity.User;
 import com.mt.common.system.entity.UserRole;
 import org.apache.ibatis.annotations.Param;
 
@@ -36,4 +37,8 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
     //添加到user_role表中
     void insertBatchSingle(@Param("userId")Long userId,@Param("roleId")Long roleId);
 
+    /**
+     * 批量添加用户角色
+     */
+    void mutiImportUserRole(List<UserRole> userRoles);
 }

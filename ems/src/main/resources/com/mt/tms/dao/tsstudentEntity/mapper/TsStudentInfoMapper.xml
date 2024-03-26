@@ -463,6 +463,57 @@
         #{createDatetime}
         )
     </insert>
+    <insert id="mutiImport">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into tms_ts_student_info
+        (
+        creator_name ,
+        name ,
+        student_id ,
+        college_id ,
+        major ,
+        grade ,
+        class_grade ,
+        contact_tel ,
+        email ,
+        politics ,
+        status ,
+        creator_id ,
+        remark ,
+        create_datetime
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.creatorName} ,
+            #{item.name} ,
+            #{item.studentId} ,
+            #{item.collegeId} ,
+            #{item.major} ,
+            #{item.grade} ,
+            #{item.classGrade} ,
+            #{item.contactTel} ,
+            #{item.email} ,
+            #{item.politics} ,
+            #{item.status} ,
+            #{item.creatorId} ,
+            #{item.remark} ,
+            #{item.createDatetime}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        name=values (name),
+        student_id=values (student_id),
+        college_id=values (college_id),
+        major=values (major),
+        grade=values (grade),
+        class_grade=values (class_grade),
+        contact_tel=values (contact_tel),
+        email=values (email),
+        politics=values (politics)
+      </insert>
 
     <!--  编辑 -->
     <update id="updateTsStudentInfo" parameterType="com.mt.tms.entity.tsstudentEntity.TsStudentInfo">

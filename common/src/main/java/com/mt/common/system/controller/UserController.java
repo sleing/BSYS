@@ -8,10 +8,7 @@ import com.mt.common.core.annotation.ApiPageParam;
 import com.mt.common.core.annotation.OperLog;
 import com.mt.common.core.web.*;
 import com.mt.common.core.utils.CoreUtil;
-import com.mt.common.system.entity.DictionaryData;
-import com.mt.common.system.entity.Organization;
-import com.mt.common.system.entity.Role;
-import com.mt.common.system.entity.User;
+import com.mt.common.system.entity.*;
 import com.mt.common.system.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -366,4 +363,21 @@ public class UserController extends BaseController {
         return userService.getUserEid(username);
     }
 
+    /**
+     * 批量添加用户
+     */
+    @ApiOperation("获取用户eid")
+    @PostMapping("/mutiImportUser")
+    public void mutiImportUser(List<User> users) {
+        userService.mutiImportUser(users);
+    }
+
+    /**
+     * 批量添加用户角色
+     */
+    @ApiOperation("获取用户eid")
+    @PostMapping("/mutiImportUserRole")
+    public void mutiImportUserRole(List<UserRole> userRoles) {
+        userRoleService.mutiImportUserRole(userRoles);
+    }
 }

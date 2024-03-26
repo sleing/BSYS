@@ -171,6 +171,16 @@ private static Logger logger = LoggerFactory.getLogger(TsStudentInfoController.c
 		this.tsStudentInfoService.deleteTsStudentInfo(tsStudentInfoId);
 	}
 
+	/**
+	 * 学生信息批量导入
+	 */
+	@PreAuthorize("hasAuthority('tms:tsstudentEntity:TsStudentInfo:remove')")
+	@ApiOperation("根据ID删除团学会学生信息管理")
+	@PostMapping("/mutiImport")
+	public void  mutiImport(@RequestBody String students){
+		this.tsStudentInfoService. mutiImport(students);
+	}
+
 
 
 }

@@ -153,4 +153,37 @@
         from sys_user t0
         ORDER BY t0.username
     </select>
+
+    <!--    批量添加用户-->
+    <insert id="mutiImportUser">
+        <selectKey keyProperty="eid" order="AFTER" resultType="java.lang.Long">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into sys_user
+        (
+        deleted,
+        email,
+        email_verified,
+        nickname,
+        password,
+        state,
+        username
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.deleted},
+            #{item.email},
+            #{item.emailVerified},
+            #{item.nickname},
+            #{item.password},
+            #{item.state},
+            #{item.username}
+            )
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        username= values (username)
+    </insert>
+
+
 </mapper>

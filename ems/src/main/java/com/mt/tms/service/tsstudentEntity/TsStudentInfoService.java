@@ -74,4 +74,9 @@ public interface TsStudentInfoService {
      * @param tsStudentInfoId ID
      */
     public void deleteTsStudentInfo(Long tsStudentInfoId);
+
+    /**
+     * 学生信息批量导入
+     */
+    void mutiImport(String data);
 }
