@@ -22,6 +22,7 @@ import com.mt.common.system.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +32,10 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -609,12 +613,12 @@ public class AttachmentServiceBean extends BaseService implements AttachmentServ
         attachment.setAssociateFormName(name);
         List<Attachment> list = attachmentDao.findAllUploadedFilesByIdAndNameMy(attachment);
 
-        for(Iterator<Attachment> it = list.iterator(); it.hasNext();){
+        for (Iterator<Attachment> it = list.iterator(); it.hasNext(); ) {
             Attachment i = it.next();
             String fileName = i.getAttachmentRealName();
-            String fileType = fileName.substring(fileName.lastIndexOf("."),fileName.length());
+            String fileType = fileName.substring(fileName.lastIndexOf("."), fileName.length());
 //            System.out.println(fileType);
-            if(!(fileType.equals(".7z") || fileType.equals(".zip") || fileType.equals(".rar"))) {
+            if (!(fileType.equals(".7z") || fileType.equals(".zip") || fileType.equals(".rar"))) {
                 list.remove(i);
                 break;
             }
@@ -630,12 +634,12 @@ public class AttachmentServiceBean extends BaseService implements AttachmentServ
         attachment.setAssociateFormId(id);
         attachment.setAssociateFormName(name);
         List<Attachment> list = attachmentDao.findAllUploadedFilesByIdAndName(attachment);
-        for(Iterator<Attachment> it = list.iterator(); it.hasNext();){
+        for (Iterator<Attachment> it = list.iterator(); it.hasNext(); ) {
             Attachment i = it.next();
             String fileName = i.getAttachmentRealName();
-            String fileType = fileName.substring(fileName.lastIndexOf("."),fileName.length());
+            String fileType = fileName.substring(fileName.lastIndexOf("."), fileName.length());
             System.out.println(fileType);
-            if(fileType.equals(".7z") || fileType.equals(".zip") || fileType.equals(".rar")) {
+            if (fileType.equals(".7z") || fileType.equals(".zip") || fileType.equals(".rar")) {
                 list.remove(i);
                 break;
             }
@@ -768,5 +772,130 @@ public class AttachmentServiceBean extends BaseService implements AttachmentServ
     public List<Attachment> findAttachmentsWithIdNameByAwardId(Long awardId) {
         return this.attachmentDao.findAttachmentsWithIdNameByAwardId(awardId);
     }
+
+
+    /**
+     * 批量下载文件
+     */
+
+    @Override
+    public void mutiDownload() throws IOException {
+        List<String> paths = this.attachmentDao.getAttachmentAddresses();
+        int count = paths.size();
+        List<String> finalPaths = new ArrayList<String>();
+        for (String path : paths){
+            finalPaths.add("D:\\spring_files\\"+path);
+        }
+        ZipOutputStream zipOutputStream = null;
+        try {
+            if (CollectionUtils.isEmpty(paths)) {
+                return;
+            }
+
+            final CountDownLatch countDownLatch = new CountDownLatch(count);
+            ExecutorService pools = Executors.newWorkStealingPool();
+            List<TempData> lists = new ArrayList<>(count);
+            finalPaths.forEach(p -> {
+                WorkCallable workCallable = new WorkCallable(p);
+                Future<BufferedInputStream> submit = pools.submit(workCallable);
+                countDownLatch.countDown();
+                try {
+                    TempData tempData = new TempData();
+                    tempData.setBis(submit.get());
+                    tempData.setPath(p);
+                    lists.add(tempData);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            if (CollectionUtils.isEmpty(lists)) {
+                return;
+            }
+
+            //压缩后的zip包名
+            String zipName = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE) + ".zip";
+
+            packageResponse(request, response, zipName);
+            zipOutputStream = new ZipOutputStream(response.getOutputStream());
+            zipOutputStream.setMethod(ZipOutputStream.DEFLATED);
+            final int BUFFER = 1024;
+            for (TempData tempData : lists) {
+                try {
+                    ZipEntry entry = new ZipEntry(new File(tempData.getPath()).getName());
+                    zipOutputStream.putNextEntry(entry);
+                    byte[] data = new byte[BUFFER];
+                    while ((tempData.getBis().read(data, 0, BUFFER)) != -1) {
+                        zipOutputStream.write(data, 0, data.length);
+                    }
+                } catch (Exception e) {
+                    throw e;
+                } finally {
+                    tempData.getBis().close();
+                    tempData.getBis().close();
+                    zipOutputStream.flush();
+                    zipOutputStream.closeEntry();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != zipOutputStream) {
+                zipOutputStream.close();
+            }
+        }
+    }
+
+    private void packageResponse(HttpServletRequest request, HttpServletResponse response, String zipName) throws UnsupportedEncodingException {
+        response.setHeader("content-type", "application/octet-stream");
+        response.setCharacterEncoding("utf-8");
+        final String userAgent = request.getHeader("user-agent");
+        boolean flag = null != userAgent && (userAgent.indexOf("Firefox") >= 0
+                || userAgent.indexOf("Chrome") >= 0 || userAgent.indexOf("Safari") >= 0);
+        if (flag) {
+            zipName = new String(zipName.getBytes(), "ISO8859-1");
+        } else {
+            zipName = URLEncoder.encode(zipName, "UTF8");
+        }
+        response.setHeader("Content-disposition",
+                "attachment;filename=" + new String(zipName.getBytes("gbk"), "iso8859-1"));
+    }
 }
+
+class WorkCallable implements Callable<BufferedInputStream> {
+    private String path;
+
+    public WorkCallable(String path) {
+        this.path = path;
+    }
+
+    @Override
+    public BufferedInputStream call() throws Exception {
+        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(path));
+        return bis;
+    }
+}
+
+class TempData {
+
+    private BufferedInputStream bis;
+    private String path;
+
+    public BufferedInputStream getBis() {
+        return bis;
+    }
+
+    public void setBis(BufferedInputStream bis) {
+        this.bis = bis;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+}
+
+
 

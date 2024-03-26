@@ -122,4 +122,20 @@ public interface AttachmentDao {
     public List<Attachment> findAttachmentByFormIdAndFromName(@Param("formId") String formId,@Param("formName") String formName);
 
     public List<Attachment> findAttachmentsWithIdNameByAwardId(Long awardId);
+
+    /**
+     * 查询附件总数
+     */
+    public Long getAttachmentCount();
+
+    /**
+     * 查询所有文件attachmentId
+     */
+    public List<String> getAttachmentIds();
+
+    /**
+     * 获得所有文件路劲
+     */
+    public List<String> getAttachmentAddresses();
+
 }

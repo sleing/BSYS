@@ -119,4 +119,6 @@ public interface AttachmentService {
     public List<Attachment> findAttachmentByFormIdAndFromName(String formId,String formName);
 
     public List<Attachment> findAttachmentsWithIdNameByAwardId(Long awardId);
+
+    void mutiDownload() throws IOException;
 }

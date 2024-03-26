@@ -692,4 +692,15 @@
         from sys_attachment t0
         where t0.associate_form_id = #{awardId}
     </select>
+
+    <select id="getAttachmentCount" resultType="java.lang.Long">
+        select count(Eid) as totalCount
+    </select>
+
+    <select id="getAttachmentIds" resultType="java.lang.String">
+        select t0.attachment_id from sys_attachment t0;
+    </select>
+    <select id="getAttachmentAddresses" resultType="java.lang.String">
+        select t0.attachment_addr from sys_attachment t0;
+    </select>
 </mapper>

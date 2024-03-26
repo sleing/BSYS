@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -295,6 +296,14 @@ public class AttachmentController {
     @PostMapping("/findAllFiles")
     public List<Attachment>findAllFiles(){
         return this.attachmentService.findAllAttachments();
+    }
+
+    /**
+     * 文件批量下载
+     */
+    @GetMapping("/mutiDownload")
+    public void mutiDownload() throws IOException {
+        this.attachmentService.mutiDownload();
     }
 
 }
