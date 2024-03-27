@@ -74,4 +74,24 @@ public interface TsNoticeService {
      * @param tsNoticeId ID
      */
     public void deleteTsNotice(Long tsNoticeId);
+
+    /**
+     * 查询所有未审核通知
+     * @param pageDTO
+     */
+    public PageResultDTO findTsNoticesWithoutAudition(PageDTO pageDTO);
+
+    /**
+     * 审核通过
+     * @param eid
+     * @return
+     */
+    void receiveEvent(Long eid,String remark);
+
+    /**
+     * 驳回
+     * @param eid
+     * @return
+     */
+    void rejectEvent(Long eid,String remark);
 }

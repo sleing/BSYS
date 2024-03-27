@@ -171,6 +171,40 @@ public class TsNoticeController {
         this.tsNoticeService.deleteTsNotice(tsNoticeId);
     }
 
+    /**
+     * 查询所有未审核的通知
+     *
+     */
+    @PreAuthorize("hasAuthority('tms:tsnoticeEntity:TsNotice:remove')")
+    @ApiOperation("根据ID删除通知管理")
+    @PostMapping("/findTsNoticesWithoutAudition")
+    public PageResultDTO findTsNoticesWithoutAudition(@RequestBody PageDTO pageDTO) {
+        return this.tsNoticeService.findTsNoticesWithoutAudition(pageDTO);
+    }
+
+    /**
+     * 审核通过
+     * @param eid
+     * @return
+     */
+    @PreAuthorize("hasAuthority('tms:tsnoticeEntity:TsNotice:remove')")
+    @ApiOperation("根据ID删除通知管理")
+    @PostMapping("/receiveEvent")
+    public void receiveEvent(@RequestParam Long eid,@RequestParam String remark) {
+        this.tsNoticeService.receiveEvent(eid,remark);
+    }
+
+    /**
+     * 驳回
+     * @param eid
+     * @return
+     */
+    @PreAuthorize("hasAuthority('tms:tsnoticeEntity:TsNotice:remove')")
+    @ApiOperation("根据ID删除通知管理")
+    @PostMapping("/rejectEvent")
+    public void rejectEvent(@RequestParam Long eid,@RequestParam String remark) {
+        this.tsNoticeService.rejectEvent(eid,remark);
+    }
 
 }
 

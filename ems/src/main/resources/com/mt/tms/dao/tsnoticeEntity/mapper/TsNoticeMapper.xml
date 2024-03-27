@@ -388,11 +388,23 @@
             notice_date          = #{noticeDate},
             notice_department_id = #{noticeDepartmentId},
             content              = #{content},
-            audit_statu          = #{auditStatu},
+            audit_statu          = '未审核',
             status               = #{status},
             creator_id           = #{creatorId},
-            remark               = #{remark},
+            remark               = '',
             create_datetime      = #{createDatetime}
+        where eid = #{eid}
+    </update>
+
+    <update id="receiveEvent">
+        update tms_ts_notice
+        set audit_statu = "已通过",remark = #{remark}
+        where eid = #{eid}
+    </update>
+
+    <update id="rejectEvent">
+        update tms_ts_notice
+        set audit_statu = "驳回",remark = #{remark}
         where eid = #{eid}
     </update>
 

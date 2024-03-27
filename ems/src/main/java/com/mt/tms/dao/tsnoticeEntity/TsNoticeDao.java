@@ -86,4 +86,18 @@ public interface TsNoticeDao {
     * @param tsNoticeId ID
     */
     public Long deleteTsNotice(@Param("tsNoticeId") Long tsNoticeId);
+
+    /**
+     * 审核通过
+     * @param eid
+     * @return
+     */
+    void receiveEvent(Long eid,String remark);
+
+    /**
+     * 驳回
+     * @param eid
+     * @return
+     */
+    void rejectEvent(Long eid,String remark);
 }

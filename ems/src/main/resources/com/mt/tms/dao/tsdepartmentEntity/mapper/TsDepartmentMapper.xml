@@ -303,10 +303,9 @@
             ,t5.name as supervisor_stu_name
 
             ,t6.name as leader_name
-
-    
         <include refid="findTsDepartmentsWhere"></include>
 
+        order by t0.name
         <if test="orderBys!=null">
             <foreach collection="orderBys" item="item" index="index" open="order by" separator="," close="">
                 ${item}

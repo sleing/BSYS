@@ -58,6 +58,42 @@ public class TsNoticeServiceBean extends BaseService implements TsNoticeService 
 		return pageResultDTO;
 	}
 
+	@Override
+	public PageResultDTO findTsNoticesWithoutAudition(PageDTO pageDTO) {
+		pageDTO.setStartIndex((pageDTO.getCurrentPage()-1)*pageDTO.getPageSize());
+		//TODO:请在此校验参数的合法性
+		this.validateFindTsNoticesWithoutAudition(pageDTO);
+		List<TsNotice> tsNoticeDTOS = this.tsNoticeDao.findTsNotices(pageDTO);
+		Long totalCount = this.tsNoticeDao.findTsNoticeTotalCount(pageDTO);
+
+		PageResultDTO pageResultDTO = new PageResultDTO();
+		pageResultDTO.setTotalCount(totalCount);
+		pageResultDTO.setDatas(tsNoticeDTOS);
+
+		return pageResultDTO;
+	}
+
+
+	/**
+	 * 审核通过
+	 * @param eid
+	 * @return
+	 */
+	@Override
+	public void receiveEvent(Long eid,String remark) {
+		this.tsNoticeDao.receiveEvent(eid,remark);
+	}
+
+	/**
+	 * 驳回
+	 * @param eid
+	 * @return
+	 */
+	@Override
+	public void rejectEvent(Long eid,String remark) {
+		this.tsNoticeDao.rejectEvent(eid,remark);
+	}
+
 	/**
 	 * 查询全部通知管理集合
 	 *
@@ -204,12 +240,21 @@ public class TsNoticeServiceBean extends BaseService implements TsNoticeService 
 		}
 	}
 
+
+
 	//TODO:---------------验证-------------------
 
 	private void validateFindTsNotices(PageDTO pageDTO) {
 	//TODO:请使用下面方法添加数据过滤条件
 	//		pageDTO.addFilter("creatorId",this.getLoginUserId());
 	//TODO:请完善数据校验规则和数据权限判断，如果有问题请抛出异常，参看下面validateUpdateTsNotice()写法
+	}
+
+	private void validateFindTsNoticesWithoutAudition(PageDTO pageDTO) {
+		pageDTO.addFilter("auditStatu","未审核");
+		//TODO:请使用下面方法添加数据过滤条件
+		//		pageDTO.addFilter("creatorId",this.getLoginUserId());
+		//TODO:请完善数据校验规则和数据权限判断，如果有问题请抛出异常，参看下面validateUpdateTsNotice()写法
 	}
 
 	private void validateFindTsNoticesWithIdNameByName(String tsNoticeName) {
