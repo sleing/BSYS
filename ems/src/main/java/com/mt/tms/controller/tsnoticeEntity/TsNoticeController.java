@@ -206,5 +206,18 @@ public class TsNoticeController {
         this.tsNoticeService.rejectEvent(eid,remark);
     }
 
+    /**
+     * 邮箱通知
+     * @param subject
+     * @param body
+     */
+    @PreAuthorize("hasAuthority('tms:tsnoticeEntity:TsNotice:remove')")
+    @ApiOperation("根据ID删除通知管理")
+    @PostMapping("/sendEmail")
+    public void sendEmail(@RequestParam String subject,@RequestParam String body) {
+        this.tsNoticeService.sendEmail(subject,body);
+    }
+
+
 }
 

@@ -92,4 +92,9 @@ public interface TsStudentInfoDao {
      * @param dataInsert
      */
     void mutiImport(List<TsStudentInfo> dataInsert);
+
+    /**
+     * 查询所有的学生邮箱
+     */
+    public List<String> getStudentsEmails();
 }

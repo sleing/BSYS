@@ -199,6 +199,15 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- 邮件依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <!-- 版本是你springboot的版本 -->
+            <version>2.3.4.RELEASE</version>
+        </dependency>
+
     </dependencies>
 
 <!--    <build>-->

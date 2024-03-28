@@ -420,6 +420,9 @@
                  LEFT JOIN tms_ts_college t4 on t0.college_id = t4.eid
         where t0.eid = #{tsStudentInfoId}
     </select>
+    <select id="getStudentsEmails" resultType="java.lang.String">
+        select t0.email from tms_ts_student_info t0
+    </select>
 
 
     <!--  保存 -->

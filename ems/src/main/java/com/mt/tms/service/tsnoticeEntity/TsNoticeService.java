@@ -94,4 +94,11 @@ public interface TsNoticeService {
      * @return
      */
     void rejectEvent(Long eid,String remark);
+
+    /**
+     * 邮箱通知
+     * @param subject
+     * @param body
+     */
+    void sendEmail(String subject, String body);
 }
