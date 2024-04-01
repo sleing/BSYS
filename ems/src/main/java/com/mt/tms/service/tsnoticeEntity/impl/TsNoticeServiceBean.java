@@ -1,5 +1,6 @@
 package com.mt.tms.service.tsnoticeEntity.impl;
 
+import com.hankcs.hanlp.HanLP;
 import com.mt.tms.dao.tsnoticeEntity.TsNoticeDao;
 
 import com.mt.common.core.exception.BusinessException;
@@ -8,6 +9,7 @@ import com.mt.common.core.web.base.PageResultDTO;
 import com.mt.common.core.web.base.BaseEntity;
 import com.mt.common.core.web.BaseService;
 import com.mt.tms.dao.tsstudentEntity.TsStudentInfoDao;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.mt.tms.entity.tsnoticeEntity.TsNotice;
@@ -22,11 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -66,7 +66,11 @@ public class TsNoticeServiceBean extends BaseService implements TsNoticeService 
         this.validateFindTsNotices(pageDTO);
         List<TsNotice> tsNoticeDTOS = this.tsNoticeDao.findTsNotices(pageDTO);
         Long totalCount = this.tsNoticeDao.findTsNoticeTotalCount(pageDTO);
-
+        for (TsNotice tsNotice : tsNoticeDTOS) {
+            String text=tsNotice.getContent();
+            text=text.replaceAll("<p>","").replaceAll("</p>","").replaceAll("&nbsp","").replaceAll(";","").replaceAll("<h2>","").replaceAll("/h2","").replaceAll("<span>","").replaceAll("</sapn>","");
+            tsNotice.setName(getSummary(text));
+        }
         PageResultDTO pageResultDTO = new PageResultDTO();
         pageResultDTO.setTotalCount(totalCount);
         pageResultDTO.setDatas(tsNoticeDTOS);
@@ -81,7 +85,11 @@ public class TsNoticeServiceBean extends BaseService implements TsNoticeService 
         this.validateFindTsNoticesWithoutAudition(pageDTO);
         List<TsNotice> tsNoticeDTOS = this.tsNoticeDao.findTsNotices(pageDTO);
         Long totalCount = this.tsNoticeDao.findTsNoticeTotalCount(pageDTO);
-
+        for (TsNotice tsNotice : tsNoticeDTOS) {
+            String text=tsNotice.getContent();
+            text=text.replaceAll("<p>","").replaceAll("</p>","").replaceAll("&nbsp","").replaceAll(";","").replaceAll("<h2>","").replaceAll("/h2","").replaceAll("<span>","").replaceAll("</sapn>","");
+            tsNotice.setName(getSummary(text));
+        }
         PageResultDTO pageResultDTO = new PageResultDTO();
         pageResultDTO.setTotalCount(totalCount);
         pageResultDTO.setDatas(tsNoticeDTOS);
@@ -275,6 +283,90 @@ public class TsNoticeServiceBean extends BaseService implements TsNoticeService 
             throw new BusinessException(error);
         }
     }
+
+    public static String getSummary(String text) {
+        // 分割句子
+        List<String> sentenceList = splitSentence(text);
+        int sentenceCount = sentenceList.size();
+
+        // 计算每个句子的分数
+        double[] scores = new double[sentenceCount];
+        Arrays.fill(scores, 1.0);
+        for (int i = 0; i < 10; i++) { // 自定义 TextRank 迭代次数
+            double[] tempScores = Arrays.copyOf(scores, scores.length);
+            for (int j = 0; j < sentenceCount; j++) {
+                double score = 0.0;
+                for (int k = 0; k < sentenceCount; k++) {
+                    if (k != j) {
+                        score += similarity(sentenceList.get(j), sentenceList.get(k));
+                    }
+                }
+                tempScores[j] = 0.15 + 0.85 * score;
+            }
+            scores = tempScores;
+        }
+
+        // 排序提取文本摘要
+        int summarySize = Math.max(sentenceCount / 10, 1);
+        PriorityQueue<Sentence> queue = new PriorityQueue<>(summarySize);
+        for (int i = 0; i < sentenceCount; i++) {
+            queue.offer(new Sentence(scores[i], i));
+        }
+        List<Integer> indexList = new ArrayList<>();
+        for (int i = 0; i < summarySize; i++) {
+            indexList.add(queue.poll().index);
+        }
+        Collections.sort(indexList);
+        StringBuilder summary = new StringBuilder();
+        for (Integer index : indexList) {
+            summary.append(sentenceList.get(index)).append("。");
+        }
+        return summary.toString();
+    }
+
+    /**
+     * 分割句子
+     */
+    private static List<String> splitSentence(String text) {
+        List<String> sentenceList = new ArrayList<>();
+        String[] sentences = text.split("[\\n。？！；]");
+        for (String sentence : sentences) {
+            sentence = sentence.trim();
+            if (sentence.length() > 0) {
+                sentenceList.add(sentence);
+            }
+        }
+        return sentenceList;
+    }
+
+    /**
+     * 计算句子相似度
+     */
+    private static double similarity(String sentence1, String sentence2) {
+        // 使用余弦相似度计算
+        List<String> words1 = HanLP.segment(sentence1).stream().map(term -> term.word).collect(Collectors.toList());
+        List<String> words2 = HanLP.segment(sentence2).stream().map(term -> term.word).collect(Collectors.toList());
+        int intersection = CollectionUtils.intersection(words1, words2).size();
+        return intersection/Math.sqrt(words1.size() * words2.size());
+    }
+
+    public static class Sentence implements Comparable<Sentence>{
+        double score;
+        int index;
+
+        public Sentence(double score, int index) {
+            this.score = score;
+            this.index = index;
+        }
+
+        @Override
+        public int compareTo(Sentence o) {
+            return Double.compare(o.score, score);
+        }
+    }
+
+
+
 
 
     //TODO:---------------验证-------------------
